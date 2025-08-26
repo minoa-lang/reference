@@ -1,0 +1,8 @@
+[book]
+authors = ["Jelte Meganck"]
+language = "en"
+src = "src"
+title = "Minoa Language Reference"
+
+[output.html]
+additional-css = ["custom.css"]
