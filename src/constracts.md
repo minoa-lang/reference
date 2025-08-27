@@ -40,7 +40,7 @@ Postconditions also allow use of the contract capture operator to capture a valu
 An invariant conditions is used to check the invariance of certain conditions, meaning that they cannot change the result of this condition over the functions lifetime.
 Invariant conditions are evaluated when pre- or postconditions are evaluated.
 
-Contracts may make use of the [contract capture operator](./operators/special-operators.md#contract-capture-operator-)
+Contracts may make use of the [contract capture operator]
 
 ## Asserts [↵](#contracts-)
 
@@ -77,3 +77,7 @@ The are located together with a contract group, but are set after an `if`.
 Contract groups are also used for testing and are hooked into by the testing framework.
 
 > _Note_: The testing framework has not entirely been figured out yet
+
+
+
+[contract capture operator]: ./operators/special-operators.md#contract-capture-operator-

@@ -290,7 +290,7 @@ They are also limited to being on a single line.
 
 A string literal is of type `core:.StringLiteral`
 
-> _Note_: String literals do not get impacted by normalization, unlike any other text in the source data, as defined in [Normalization](./source-representation.md#normalization)
+> _Note_: String literals do not get impacted by normalization, unlike any other text in the source data, as defined in [Normalization]
 
 ### Multi-line string literals
 
@@ -399,3 +399,6 @@ The expression used within the interpolation have no requirements by themselves,
 In cases where a string with an interpolation does not need special interpolation, this will be converted into just a string representation, as if the `\` was not present.
 
 The format specifier may be any sequence of tokens, and its representation is interpreted by one or more formatters.
+
+
+[Normalization]: ./source-representation.md#normalization

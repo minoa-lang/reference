@@ -25,7 +25,7 @@ Each variant can be on of the following:
 - tuple variant: a name, followed by a tuple defintion
 - struct varaiant: a name, followed by a struct body with only fields
 
-Each field in a variant may be made mutable, allow it to be modified after the structure is initially created, as by default each field may only be assigned when defining it in a [struct expression](../../expressions/constructing-expressions.md#struct-expressions-), and may not be modified later on.
+Each field in a variant may be made mutable, allow it to be modified after the structure is initially created, as by default each field may only be assigned when defining it in a [struct expression], and may not be modified later on.
 
 > _Note_: struct fields may not have an anonymous generic struct type.
 
@@ -69,7 +69,7 @@ By default, this value is represented as an `isize` value.
 However, the compiler is allowed to substitute this with a smaller integer types that fits all determinants, including unsigned types if no distriminant needs to hold a signed value.
 This is in order to reduce the amount of memory that is taken in by each enum instance.
 
-The underlying type discriminant is represented by, can be defined explicitly using a [`repr` attribute](../../attributes.md#repr-).
+The underlying type discriminant is represented by, can be defined explicitly using a [`repr` attribute].
 
 > _Todo_ Add support for non-integer discriminants, e.g. char
 
@@ -163,3 +163,8 @@ A flag will always have a set of implicitly generated methods and operators impl
 The following function, operators and traits are implemented:
 
 > _Todo_: Add function, operators, and traits here
+
+
+
+[`repr` attribute]:  ../../attributes.md#repr-
+[struct expression]: ../../expressions/constructing-expressions.md#struct-expressions-

@@ -7,7 +7,7 @@ A string slice typre repesents a special slice, encoding a string.
 This is a separate type, which allows string specific functionality.
 In addition, they assure that the underlying data is valid data for their representive encoding type.
 
-Calling a string slice method on invalid underlying data is [illegal behavior](../../illegal-behavior.md)
+Calling a string slice method on invalid underlying data is [illegal behavior].
 
 String slices, like regular slices, are dynamically sized types and can therefore only be instantiated through a pointer or reference type.
 
@@ -21,3 +21,7 @@ Type    | character type | internal representation | Meaning
 `str16` | `char16`       | `[]char16`              | utf-16 string
 `str32` | `char32`       | `[]char32`              | utf-32 string
 `cstr`  | `char8`        | `[;0]char8`             | C-style string, includes null-terminator
+
+
+
+[illegal behavior]: ../../illegal-behavior.md

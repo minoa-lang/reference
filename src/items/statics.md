@@ -25,7 +25,7 @@ All access to statics is safe, but there are a number of restrictions:
 Static values may also be allocated as thread local storage, using the weak `tls` keyword before the `static` keyword.
 Tls statics are unique to the thread they are running on and are not shared with other threads.
 
-Unlike static items, a thread local static can be mutable without requiring [interior mutability](../type-system/interior-mutability.md), as it can only be accessed from the current thread.
+Unlike static items, a thread local static can be mutable without requiring [interior mutability], as it can only be accessed from the current thread.
 
 ## Statics and generics [↵](#static-items)
 
@@ -45,3 +45,6 @@ If a static is `extern`, it cannot have an explicit value, meanwhile `export` st
 
 Unlike normal statics, both `extern` and `export` statics are allowed to be declared mutable, without needing to rely on interior mutability.
 An immutable static must be initialized before any code is executed.
+
+
+[interior mutability]: ../type-system/interior-mutability.md

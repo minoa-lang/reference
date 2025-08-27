@@ -19,4 +19,8 @@ This value is meant to prevent accidental out of bounds writes.
 Sentinel value mainly exist for interoperability with C and OS libraries that commonly expect a range of values ending in a sentinal value,
 but these are not that useful when writing Minoa code itself
 
-See the [index expression](../../expressions/index-expressions.md) for more info about how to create a sentinal terminated array.
+See the [index expression] for more info about how to create a sentinal terminated array.
+
+
+
+[index expression]: ../../expressions/index-expressions.md

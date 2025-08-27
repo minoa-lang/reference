@@ -36,7 +36,7 @@ Built-in attributes are attributes that the compiler can use to change its behav
 #### `cfg` [↵](#conditional-compilation-attributes-)
 
 The `cfg` attribute can be used to change the what code is compiled when certain configuration condtions are matched.
-The `cfg` attribute is similar to the [`when` expression](./expressions/when-expressions.md), but is only allowed to access configuration values, these can be combined with lazy boolean operators and the not operator to define the condition for when the code should be compiled in.
+The `cfg` attribute is similar to the [`when` expression], but is only allowed to access configuration values, these can be combined with lazy boolean operators and the not operator to define the condition for when the code should be compiled in.
 
 #### `cfg_attr` [↵](#conditional-compilation-attributes-)
 
@@ -64,7 +64,7 @@ This attribute has no effect, but allows for tools and lints to detct that these
 
 #### `meta_order` [↵](#derive-attributes-)
 
-The `meta_order` attribute is used to wrap [meta-attributes](./metaprogramming.md#meta-attributes-) and control their order of execution.
+The `meta_order` attribute is used to wrap [meta attributes] and control their order of execution.
 
 The attribute contain the attribute to wrap, followed by a `before` and/or `after` argument with the names of the attribute that it should run before or after.
 
@@ -109,6 +109,7 @@ The `unavailable` attribute is the oposite of `available` and specifiers for whi
 In addition, it may also define on which systems it is available and which system flags needs to be supported.
 
 The attribute contains a version number, in addition to zero or more of the following sub-attributes and their respective configuration options:
+
 sub-attribute | configuration option
 --------------|----------------------
 `arch`        | [`target_arch`](./configuration-options.md#target_arch-)
@@ -196,7 +197,7 @@ The ordinal is a unique number identifying a symbol exported by a dynamic librar
 
 #### `repr` [↵](#abi-link-symbol-and-ffi-attributes-)
 
-The `repr` trait controls the type layout as defined in the [Layout representation section](./type-system/type-layout/layout-representation.md)
+The `repr` trait controls the type layout as defined in the [layout representation section]
 
 #### `export_name` [↵](#abi-link-symbol-and-ffi-attributes-)
 
@@ -222,8 +223,8 @@ The `callconv` attribute defined which calling convention a function will use wh
 
 #### `contextless` [↵](#abi-link-symbol-and-ffi-attributes-)
 
-The `contextless` attribute defines a function as running without access to the implicit context, maning that it will use the `contextless` ABI without having to be declared as [`extern` or `export`](./items/functions.md#external--exported-functions- ).
-This means that this also can be applied on [methods](./items/functions.md#methods-).
+The `contextless` attribute defines a function as running without access to the implicit context, maning that it will use the `contextless` ABI without having to be declared as [`extern` or `export`].
+This means that this also can be applied on [methods].
 
 ### Code generation attributes [↵](#built-in-attributes-)
 
@@ -274,12 +275,12 @@ The `no_alias` attribute is applied to function parameters with a pointer or poi
 
 #### `bit_size` [↵](#code-generation-attributes-)
 
-The `bit_size` attribute is used to explicitly define the bitsize of a type when used in a [bitfield](./type-system/types/bitfield-types.md).
+The `bit_size` attribute is used to explicitly define the bitsize of a type when used in a [bitfield].
 The attribute takes an integer literal value defining the bitwidth of a type in bits.
 
 #### `field_prioity` [↵](#code-generation-attributes-)
 
-The `field_priority` attribute is used to define the priority of field within a `struct` with a Minoa representation, see [field priority](./type-system/type-layout/layout-representation.md#field-priority-).
+The `field_priority` attribute is used to define the priority of field within a `struct` with a Minoa representation, see [field priority].
 
 #### `val_range` [↵](#code-generation-attributes-)
 
@@ -292,7 +293,7 @@ This marks an argument that receives a closure as being allowed to implicitly co
 
 #### `spec_priority` [↵](#code-generation-attributes-)
 
-The `spec_priority` attribute is uses in case there is a possible collision between specialization, see [resolving collisions](./generics.md#resolving-collisions-)
+The `spec_priority` attribute is uses in case there is a possible collision between specialization, see [resolving collisions].
 
 #### `panic_handler` [↵](#code-generation-attributes-)
 
@@ -314,17 +315,17 @@ Below is a table with mappings between `safety_check` attribute categories and t
 
 category  | sub-category    | illegal behavior
 ----------|-----------------|--------------------
-`integer` |                 | [all integer IB](./illegal-behavior.md#integer-)
-`integer` | `truncation`    | [integer truncation](./illegal-behavior.md#trunctation-)
-`integer` | `overflow`      | [integer overflow/underflow](./illegal-behavior.md#overflowunderflow--)
-`integer` | `div_by_0`      | [division by 0](./illegal-behavior.md#division-by-0--)
-`fp`      |                 | [all floating point IB](./illegal-behavior.md#floating-point-)
-`fp`      | `illegal_fp`    | [illegal operations](./illegal-behavior.md#illegal-operations-)
-`fp`      | `fptoi_oob`     | [Floating-point to integer out-of-bounds](./illegal-behavior.md#floating-point-to-integer-out-of-bounds-)
-`memory`  |                 | [all memory IB](./illegal-behavior.md#memory-)
-`memory`  | `out_of_bounds` | [Out-of-bounds](./illegal-behavior.md#out-of-bounds-)
-`memory`  | `ptr_align`     | [Incorrect memory alignment](./illegal-behavior.md#incorrect-pointer-alignment-)
-`memory`  | `sentinel`      | [Sentinel access](./illegal-behavior.md#sen)
+`integer` |                 | [all integer IB]
+`integer` | `truncation`    | [integer truncation]
+`integer` | `overflow`      | [integer overflow/underflow]
+`integer` | `div_by_0`      | [division by 0]
+`fp`      |                 | [all floating point IB]
+`fp`      | `illegal_fp`    | [illegal operations]
+`fp`      | `fptoi_oob`     | [Floating-point to integer out-of-bounds]
+`memory`  |                 | [All memory IB]
+`memory`  | `out_of_bounds` | [Out-of-bounds]
+`memory`  | `ptr_align`     | [Incorrect memory alignment]
+`memory`  | `sentinel`      | [Sentinel access]
 
 Categories and sub-categories may be set in addition to a more general value.
 
@@ -459,7 +460,7 @@ These are module specific attributes
 
 #### `path` [↵](#1717-module-attributes-)
 
-The `path` attribute defines a path a module uses, as defined in [module path attribute section](./items/modules.md#path-attribute-)
+The `path` attribute defines a path a module uses, as defined in [module path attribute section]
 
 ### 17.1.8. Debug attributes [↵](#built-in-attributes-)
 
@@ -473,8 +474,8 @@ This enables an improved debugger experience for displaying values in the debugg
 The attribute exists out of a `kind` and either a `file` or `inline` specifier.
 
 The `kind` specifier can be one of the following
-- `natvis`: XML-based natvis for microsoft debuggers. More detail on the format can be found in Microsoft's [natvis documentation](https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2022).
-- `gdb`: GDB uses a python script based visualizer. More details on the format can be found in GDB's [pretty printing documentation](https://sourceware.org/gdb/current/onlinedocs/gdb.html/Pretty-Printing.html).
+- `natvis`: XML-based natvis for microsoft debuggers. More detail on the format can be found in Microsoft's [natvis documentation].
+- `gdb`: GDB uses a python script based visualizer. More details on the format can be found in GDB's [pretty printing documentation].
 - `minoa`: Minoa specific debug visualization (not supported yet)
 
 The actual visualization can be specified in 2 ways:
@@ -493,6 +494,35 @@ Tool attributes allow for external tools to supply its own attributes, with thei
 
 ## User-defined attributes [↵](#attributes)
 
-User-defined attributes are done using [meta attributes](./metaprogramming.md#meta-attributes-).
+User-defined attributes are done using [meta attributes].
 
 In addition, result builders can also be used as the name in these attributes.
+
+
+
+[`when` expression]:                       ./expressions/when-expressions.md
+[meta attributes]:                         ./metaprogramming.md#meta-attributes-
+[`target_arch`]:                           ./configuration-options.md#target_arch-
+[`target_features`]:                       ./configuration-options.md#target_feature-
+[`target_os`]:                             ./configuration-options.md#target_os-
+[layout representation section]:           ./type-system/type-layout/layout-representation.md
+[`extern` or `export`]:                    ./items/functions.md#external--exported-functions-
+[methods]:                                 ./items/functions.md#methods-
+[bitfield]:                                ./type-system/types/bitfield-types.md
+[field priority]:                          ./type-system/type-layout/layout-representation.md#field-priority-
+[resolving collisions]:                    ./generics.md#resolving-collisions-
+[all integer IB]:                          ./illegal-behavior.md#integer-
+[integer truncation]:                      ./illegal-behavior.md#trunctation-
+[integer overflow/underflow]:              ./illegal-behavior.md#overflowunderflow--
+[division by 0]:                           ./illegal-behavior.md#division-by-0--
+[all floating point IB]:                   ./illegal-behavior.md#floating-point-
+[illegal operations]:                      ./illegal-behavior.md#illegal-operations-
+[Floating-point to integer out-of-bounds]: ./illegal-behavior.md#floating-point-to-integer-out-of-bounds-
+[all memory IB]:                           ./illegal-behavior.md#memory-
+[Out-of-bounds]:                           ./illegal-behavior.md#out-of-bounds-
+[Incorrect memory alignment]:              ./illegal-behavior.md#incorrect-pointer-alignment-
+[Sentinel access]:                         ./illegal-behavior.md#sen
+[module path attribute section]:           ./items/modules.md#path-attribute-
+[doc comments]:                            ./lexical-structure/comments.md#doc-attribute-
+[natvis documentation]:                    https://learn.microsoft.com/en-us/visualstudio/debugger/create-custom-views-of-native-objects?view=vs-2022
+[pretty printing documentation]:           https://sourceware.org/gdb/current/onlinedocs/gdb.html/Pretty-Printing.html

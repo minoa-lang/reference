@@ -11,7 +11,7 @@ Union must always contain at least 1 field to be valid.
 
 > _Note_: union fields may not have an anonymous generic struct type.
 
-Each field may be made mutable, allow it to be modified after the structure is initially created, as by default each field may only be assigned when defining it in a [struct expression](../../expressions/constructing-expressions.md#struct-expressions-), and may not be modified later on.
+Each field may be made mutable, allow it to be modified after the structure is initially created, as by default each field may only be assigned when defining it in a [struct expression], and may not be modified later on.
 In addition, the entire union type may also be declared as mutable, this will propagate the `mut` property to all fields, as follows:
 ```
 mut union {
@@ -113,3 +113,7 @@ unsafe {
 
 Since union fileds share a common storage, gaining writing access to one field of hte union can give write access to all its remaining fields.
 Therefore, if any field is borrowed mutably, no ther field can be borrwoed mutably at the same time.
+
+
+
+[struct expression]: ../../expressions/constructing-expressions.md#struct-expressions-

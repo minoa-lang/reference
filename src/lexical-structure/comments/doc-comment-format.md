@@ -201,7 +201,7 @@ The info can be split across multiple lines by having the following lines indent
 The issue element allows an issue to be associated with an item.
 
 An issue can be provided in a comment as `/// \issue {issue}`, or in a sub-attribute as `@doc(issue={issue})`.
-When `{issue}` is just a number, it will generated a link based on the [issue tracker base](#issue-tracker-base-), otherwise an issue can be provided with a URL to the specific issue.
+When `{issue}` is just a number, it will generated a link based on the [issue tracker base], otherwise an issue can be provided with a URL to the specific issue.
 
 ## General notes & exhortations [↵](#doc-comment-format)
 
@@ -424,3 +424,4 @@ mod foo {
 }
 ```
 
+[issue tracker base]: #issue-tracker-base-

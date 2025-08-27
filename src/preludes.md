@@ -20,4 +20,8 @@ If needed, the build system can be told to not include this prelude
 
 Libraries can add their own custom prelude, by having a `prelude.mn` file next to the `lib.mn` file.
 
-This file is solely used for public re-exportimg imports, and cannot contain any other code, other than [`when` items](./items/when-items.md) with other re-exports.
+This file is solely used for public re-exportimg imports, and cannot contain any other code, other than [`when` items] with other re-exports.
+
+
+
+[`when` items]: ./items/when-items.md

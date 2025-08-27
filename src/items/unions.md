@@ -2,7 +2,7 @@
 ```
 <union-item> := { <attribute> }* [ <vis> ] [ 'mut' ] 'union' <name>  [ <generic-params> ] [ <where-clause> ] '{' <union-members> '}'
 ```
-A union item is syntactic sugar to more easily define a named [union type](../type-system/types/union-types.md).
+A union item is syntactic sugar to more easily define a named [union type].
 
 A union's visibility defines only the visibility of the union, and not any of its fields.
 
@@ -28,3 +28,5 @@ type Bar = union[T: type, N: usize] {
     // ...
 };
 ```
+
+[union type]: ../type-system/types/union-types.md

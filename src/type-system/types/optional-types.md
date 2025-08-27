@@ -14,3 +14,7 @@ This is synctactic suger of `Option(T)`, which comes with some additinal feature
 - `None` can be used to set the value to none, and `Some(...)` to set the value to a valid value, as they are imported via the core prelude
 - when assigning a non-`.None` value, impliclty warps the value within `.Some(...)`. This also works for returns
 - control flow expression have additional syntax to make using them more ergonomic
+
+
+
+[`allowzero` pointers]: ./pointer-types.md#allowzero-

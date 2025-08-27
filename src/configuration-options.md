@@ -1,6 +1,6 @@
 # Configuration options
 
-Configuration options can be used inside [conditional compilation attributes](./attributes.md#conditional-compilation-attributes-) and the [`when` expressions](./expressions/when-expressions.md).
+Configuration options can be used inside [conditional compilation attributes] and the [`when` expressions](./expressions/when-expressions.md).
 
 The possible configuration options are generated per-project and may be extended past the built-in values by compilation set extensions (_TODO: link to compiler docs_).
 
@@ -125,3 +125,57 @@ This value defines whether assertions are enabled:
 This value defined the panic mode
 - `.unwind`
 - `.abort`
+
+
+
+[conditional compilation attributes]: ./attributes.md#conditional-compilation-attributes-
+[`when` expressions]:                 ./expressions/when-expressions.md)
+[ADX]:                                https://en.wikipedia.org/wiki/Intel_ADX
+[AES]:                                https://en.wikipedia.org/wiki/AES_instruction_set
+[AVX]:                                https://en.wikipedia.org/wiki/Advanced_Vector_Extensions
+[AVX2]:                               https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#AVX2
+[AVX512F]:                            https://en.wikipedia.org/wiki/AVX-512
+[AVX512CD]:                           https://en.wikipedia.org/wiki/AVX-512#Conflict_detection
+[AVX512ER]:                           https://en.wikipedia.org/wiki/AVX-512#Exponential_and_reciprocal
+[AVX512PF]:                           https://en.wikipedia.org/wiki/AVX-512#Prefetch
+[AVX512VL]:                           https://en.wikipedia.org/wiki/AVX-512
+[AVX512DQ]:                           https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI
+[AVX512BW]:                           https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI
+[AVX512IFMA]:                         https://en.wikipedia.org/wiki/AVX-512#IFMA
+[AVX512VBMI]:                         https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI
+[AVX512_4VNNI]:                       https://en.wikipedia.org/wiki/AVX-512#4FMAPS_and_4VNNIW
+[AVX512_4FMAPS]:                      https://en.wikipedia.org/wiki/AVX-512#4FMAPS_and_4VNNIW
+[AVX512VPOPCNTDQ]:                    https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG
+[AVX512VNNI]:                         https://en.wikipedia.org/wiki/AVX-512#VNNI
+[AVX512VBMI2]:                        https://en.wikipedia.org/wiki/AVX-512#VBMI2
+[AVX512BITALG]:                       https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG
+[AVX512VP2INTERSECT]:                 https://en.wikipedia.org/wiki/AVX-512#VP2INTERSECT
+[AVX512GFNI]:                         https://en.wikipedia.org/wiki/AVX-512#GFNI
+[AVX512VPCLMULQDQ]:                   https://en.wikipedia.org/wiki/AVX-512#VPCLMULQDQ
+[AVX512VEAS]:                         https://en.wikipedia.org/wiki/AVX-512#VAES
+[AVX512BF16]:                         https://en.wikipedia.org/wiki/AVX-512#BF16
+[AVX512FP16]:                         https://en.wikipedia.org/wiki/AVX-512#FP16
+[BMI1]:                               https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set#BMI1
+[BMI2]:                               https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set#BMI2
+[cmpxchg16]:                          https://www.felixcloutier.com/x86/cmpxchg8b:cmpxchg16b
+[F16C]:                               https://en.wikipedia.org/wiki/F16C
+[FMA3]:                               https://en.wikipedia.org/wiki/FMA_instruction_set
+[fxsave]:                             https://www.felixcloutier.com/x86/fxsave
+[fxrstor]:                            https://www.felixcloutier.com/x86/fxrstor
+[lzcnt]:                              https://www.felixcloutier.com/x86/lzcnt
+[movbe]:                              https://www.felixcloutier.com/x86/movbe
+[pclmulqdq]:                          https://www.felixcloutier.com/x86/pclmulqdq
+[popcnt]:                             https://www.felixcloutier.com/x86/popcnt
+[rdrand]:                             https://en.wikipedia.org/wiki/RDRAND
+[rdseed]:                             https://en.wikipedia.org/wiki/RDRAND
+[SHA]:                                https://en.wikipedia.org/wiki/Intel_SHA_extensions
+[SSE]:                                https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions
+[SSE2]:                               https://en.wikipedia.org/wiki/SSE2
+[SSE3]:                               https://en.wikipedia.org/wiki/SSE3
+[SSE4.1]:                             https://en.wikipedia.org/wiki/SSE4#SSE4.1
+[SSE4.2]:                             https://en.wikipedia.org/wiki/SSE4#SSE4.2
+[SSSE3]:                              https://en.wikipedia.org/wiki/SSSE3
+[xsave]:                              https://www.felixcloutier.com/x86/xsave
+[xsavec]:                             https://www.felixcloutier.com/x86/xsavec
+[xsaveopt]:                           https://www.felixcloutier.com/x86/xsaveopt
+[xsaves]:                             https://www.felixcloutier.com/x86/xsaves

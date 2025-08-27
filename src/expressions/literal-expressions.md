@@ -29,12 +29,12 @@ Each kind of literal can be converted into a set of type defined below:
 
 Literal kind                 | Possible types
 -----------------------------|----------------
-Integral decimal literal     | [Signed integers](../type-system/types/primitive-types.md#signed-types) and [unsigned integers](#unsigned-types)
-Float decimal literal        | [Floating point](../type-system/types/primitive-types.md#floating-point-types)
-Binary literal               | [Signed integers](../type-system/types/primitive-types.md#signed-types) and [Unsigned integers](../type-system/types/primitive-types.md#unsigned-types)
-Octal literal                | [Signed integers](../type-system/types/primitive-types.md#signed-types) and [Unsigned integers](../type-system/types/primitive-types.md#unsigned-types)
-Integral hexadecimal literal | [Signed integers](../type-system/types/primitive-types.md#signed-types) and [Unsigned integers](../type-system/types/primitive-types.md#unsigned-types)
-Float hexadecimal literal    | [Floating point](../type-system/types/primitive-types.md##floating-point-types)
+Integral decimal literal     | [Signed integers] and [unsigned integers]
+Float decimal literal        | [Floating point]
+Binary literal               | [Signed integers] and [Unsigned integers]
+Octal literal                | [Signed integers] and [Unsigned integers]
+Integral hexadecimal literal | [Signed integers] and [Unsigned integers]
+Float hexadecimal literal    | [Floating point]
 Boolean literal              | [Booleans](../type-system/types/primitive-types.md##boolean-types)
 Character literal            | [Characters](../type-system/types/primitive-types.md##character-types)
 String literal               | [String slices](../type-system/types/string-slice-type.md)
@@ -52,3 +52,13 @@ Float hexadecimal literal    | `f64`
 Boolean literal              | `bool`
 Character literal            | `char`
 String literal               | `str`
+
+
+
+[Literals section]:  ../literals.md)
+[Characters]:        ../type-system/types/primitive-types.md##character-types
+[Booleans]:          ../type-system/types/primitive-types.md##boolean-types
+[Floating point]:    ../type-system/types/primitive-types.md#floating-point-types
+[Signed integers]:   ../type-system/types/primitive-types.md#signed-types
+[unsigned integers]: ../type-system/types/primitive-types.md#unsigned-types
+[String slices]:     ../type-system/types/string-slice-type.md

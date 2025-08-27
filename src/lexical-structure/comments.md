@@ -17,8 +17,8 @@ Regular comments are used to just add additional info to code, or used to commen
 
 Some elements that are in doc comments are also available in a regular comment and can be uses by tooling, but these will not end up in generated documentation.
 These elements are:
-- [General notes & exhortations](#general-notes--exhortations-)
-- [Issue](#issue-)
+- [General notes & exhortations]
+- [Issue]
 
 In addition, a regular comment only element is also supported: a mark.
 A mark is used for easier code navigation in tools that support it.
@@ -50,6 +50,8 @@ A carriage return (CR) is not allowed within a doc comment, except when followed
 
 Regular doc comments are only allowed before items, and module-level doc comments are only allowed before any item within a module, anything else will cause an error.
 
+It's format is defined [here](./doc-comment-format.md)
+
 #### `doc` attribute [↵](#doc-comments-)
 
 Since doc comment map into a `doc` attribute, all elements within the format described above are converted to a doc attribute.
@@ -74,4 +76,5 @@ The below section also explains the mapping between a given doc element and it's
 
 > _Note_: It's generally prefered to use comments instead of explicit `doc` attributes where possible for readability
 
-[Doc comment format](./doc-comment-format.md)
+[General notes & exhortations]: ./comments/doc-comment-format.md#general-notes--exhortations-
+[Issue]:                        ./comments/doc-comment-format.md#issue-

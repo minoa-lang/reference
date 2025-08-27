@@ -32,7 +32,7 @@ type name = enum {
 <flag-enum-item> := 'flag' 'enum' <name> '{' <flag-enum-members> '}'
 ```
 
-A flag enum item is similar to the one above, and declares a [flag enum type](#flag-enum-types-).
+A flag enum item is similar to the one above, and declares a [flag enum type].
 
 A flag enum meanwhile cannot be declared with generics
 ```
@@ -46,3 +46,6 @@ type name = flag enum {
     // ...
 }
 ```
+
+[enum type]:      ../type-system/types/enum-types.md
+[flag enum type]: ../type-system/types/enum-types.md#flag-enum-types-

@@ -18,6 +18,10 @@ Moreover, by holding a shared reference while evaluating the guard, mutation ins
 Any bound values within the guard cannot be used outside of it.
 
 If a `|` is encountered in the expression, it will be interpreted as part of an alternative pattern.
-If a `|` is required in the expression, it should be wrapped in a [paranthesized expression](../expressions/paren-expressions.md)
+If a `|` is required in the expression, it should be wrapped in a [paranthesized expression]
 
 Guard patterns are refutable.
+
+
+
+[paranthesized expression]: ../expressions/paren-expressions.md

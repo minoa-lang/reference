@@ -4,7 +4,7 @@ Literal operators are special pseudo-operator that work on literals, and not val
 
 When calling an operator label on a literal, there may be no space on either side of the `:`.
 
-### Literal operator item [↵](#145-literal-operators-)
+### Literal operator item [↵](#literal-operators-)
 ```
 <literal-operator-item> := 'literal' 'trait' <name> '(' <type> ')' '->' <type> ';'
 ```
@@ -76,5 +76,3 @@ utf32            | String       | str32          | UTF-32 string literal        
 
 > _Note_: `Integral` means any of the following: DecLiteral, BinLiteral, OctLiteral or HexLiteral, and
 >         `Float` means any of the following: DecFloatLiteral or HexFloatLiteral
-
-For more info, see the [Operator](#operators) section.

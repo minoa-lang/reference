@@ -20,4 +20,8 @@ An extension is a trait extension when the type refer to a given trait.
 Doing this allows additional functionality to be added to any type that implements the trait.
 
 This comes a the caveat that all extensions need to have an implementation withing the extension.
-This is because when a trait is used as a [trait object type](../type-system/types/trait-object-types.md), the extension is not stored within the object's vtable, but is instead placed in a function utilizing the interface that is provided by the trait object itself.
+This is because when a trait is used as a [trait object type], the extension is not stored within the object's vtable, but is instead placed in a function utilizing the interface that is provided by the trait object itself.
+
+
+
+[trait object type]: ../type-system/types/trait-object-types.md

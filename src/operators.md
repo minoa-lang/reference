@@ -77,7 +77,7 @@ Each operator may have some additional modifiers applied on them to define how t
 
 #### `lazy` [↵](#operator-modifiers-)
 
-This indicates that that the right-hand operand will be passed to the operator as a [lazily parameter](./items/functions.md#lazy-parameters-).
+This indicates that that the right-hand operand will be passed to the operator as a [lazily parameter].
 
 This is only allowed on infix and assign operators.
 
@@ -104,7 +104,7 @@ This indicates that the operator will receiver a right-hand operand, consisting 
 These values will be consumed until an expression on its right side is encountered with a lower precedence.
 
 The values may be provided either as:
-- a [parameter pack](./generics.md#parameter-packs-)
+- a [parameter pack]
 - a tuple, if not all elements are provided, but the elements they represent are optional, these values will default to `.None`
 - an iterable type that can generate a number of values
 
@@ -234,7 +234,7 @@ Next, it will either copy or move the assigned value in the location of hte assi
 Destructuring assignment is a counterpart to destructuring patterns for variable declarations, permitting assignment of complex values such as tuples and structures.
 
 In contrast to destructuring declarations using `let`, patterns may not appear on the left-hand side of an assignment due to syntactical ambiguities.
-Instead a group of expressions are designated to be [assignee expressions](#assign-expressions-), and are permitted on the left-hand side of an assignment.
+Instead a group of expressions are designated to be [assignee expressions], and are permitted on the left-hand side of an assignment.
 Assignee expressions are then desugared to pattern matches followed by subsequent assignments.
 The desugared patterns must be irrifutable: in particular, this means that only slice pattens whose lenght is known at compile time, and the trivial slice `[..]` are permitted during structuring assignment.
 
@@ -275,3 +275,9 @@ Unlike importing their associated traits, `op use`s are required to be within th
 One of the main purposes of this rule is to keep a consistent meaning of operators accross a library, i.e. avoiding a situation where an operator in 1 file has a different meaning than in another file, even if both are in the same library.
 
 The core operators will be included by default via the core prelude.
+
+
+
+[assignee expressions]: ./expressions.md#assign-expressions-
+[lazily parameter]:     ./items/functions.md#lazy-parameters-
+[parameter pack]:       ./generics.md#parameter-packs-

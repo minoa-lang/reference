@@ -10,7 +10,7 @@
 A primitive type is a type that exists directly within the langauge and can be handled specially by the compiler.
 These are commonly types that fit in machine register and have specialized instruction for these types.
 
-Primitive types are susceptible to [illegal behavior](../../illegal-behavior.md)
+Primitive types are susceptible to [illegal behavior].
 
 > _Todo_: Support for different endianess in types
 
@@ -151,4 +151,8 @@ Type     | Meaning           | Bit-width | Bit-width in bitfield | Valid range
 Both the size and alignment of the characters are defined by their bit-width.
 When used in a bitfield, specific bit-with mentioned above is used.
 
-If a character has a value outside of its valid range, it is [illegal behavior](../../illegal-behavior.md)
+If a character has a value outside of its valid range, it is [illegal behavior].
+
+
+
+[illegal behavior]: ../../illegal-behavior.md

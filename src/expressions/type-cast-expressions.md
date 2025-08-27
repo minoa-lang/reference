@@ -37,29 +37,29 @@ If a cast is set as bidirectional, it means that a value of `U` can also be cast
 
 Type of `e`                         | `U`                                 | Cast performed by `e as U`               
 ------------------------------------|-------------------------------------|------------------------------------------
-Integer or Float type               | Integer or float type               | [Numeric cast](#numeric-cast-semantics-)
-Enumeration                         | Integer type                        | [Enum cast](#enum-cast-semantics-)
-Boolean or character type           | Integer type                        | [Primitive to integer cast](#primtive-to-integer-cast-semantics-)
-`u8`                                | Character type                      | [Integer to character cast](#integer-to-character-cast-semantics-)
-`^T`                                | `^U` where `U` is sized *           | [Pointer to pointer cast](#pointer-to-pointer-semantics-) †
-`^T` where `T` is sized             | Integer type                        | [Pointer to address cast](#pointer-to-address-cast-semantics-) †
-`&m1 T`                             | `^m2 T` **                          | [Reference to pointer cast](#reference-to-pointer-casts-) †
-`&m1 [N]T`/`^m1 [N]T`               | `^m2 T`/`[^]m2 T` **                | [Array to pointer cast](#array-and-slice-to-pointer-casts-) †
-`&m1 [N]T`/`^m1 [N]T`               | `^[]T` **                           | [Array to slice pointer cast](#array-and-slice-to-pointer-casts-) †
-`^m1 []T`/`^m1 []T`                 | `^m2 T`/`[^]m2 T` **                | [Array to pointer cast](#array-and-slice-to-pointer-casts-) †
-Function item                       | Function pointer                    | [Function item to function pointer cast](#function-item-casts-semantics-) †
-Function item                       | `^U` where `U` is a supported type  | [Function item to pointer cast](#function-cast-semantics-) †
-Function item                       | Integer                             | [Function item to address cast](#function-cast-semantics-) †
-Function pointer                    | `^U` where `U` is a supported type  | [Function pointer to pointer cast](#function-cast-semantics-) †
-`^T` where `T`  is a supported type | Function pointer                    | [Pointer to function pointer cast](#function-cast-semantics-) 
-Function pointer                    | Integer                             | [Function pointer to address cast](#function-cast-semantics-) †
-Closure ***                         | Function pointer                    | [Closure to function pointer cast](#function-cast-semantics-) †
-`T`                                 | Opaque type with same size as `T`   | [Type to opaque cast](#type-to-opaque-cast-semantics-)
-`^T`                                | `^U` where `U` is an opaque type    | [Type to opaque cast](#type-to-opaque-cast-semantics-)
-`&m1 T`                             | `&m2 U` where `U` is an opaque type | [Type to opaque cast](#type-to-opaque-cast-semantics-)
-Opaque type with same size as `U`   | `U`                                 | [Opaque to type cast](#opaque-to-type-cast-semantics-) †
-`^T` where 'U' is an opaque type    | `^U`                                | [Opaque to type cast](#opaque-to-type-cast-semantics-) †
-`&m1 T` where 'U' is an opaque type | `&m2 U`                             | [Opaque to type cast](#opaque-to-type-cast-semantics-) †
+Integer or Float type               | Integer or float type               | [Numeric cast]
+Enumeration                         | Integer type                        | [Enum cast]
+Boolean or character type           | Integer type                        | [Primitive to integer cast]
+`u8`                                | Character type                      | [Integer to character cast]
+`^T`                                | `^U` where `U` is sized *           | [Pointer to pointer cast] †
+`^T` where `T` is sized             | Integer type                        | [Pointer to address cast] †
+`&m1 T`                             | `^m2 T` **                          | [Reference to pointer cast] †
+`&m1 [N]T`/`^m1 [N]T`               | `^m2 T`/`[^]m2 T` **                | [Array to pointer cast] †
+`&m1 [N]T`/`^m1 [N]T`               | `^[]T` **                           | [Array to slice pointer cast] †
+`^m1 []T`/`^m1 []T`                 | `^m2 T`/`[^]m2 T` **                | [Array to pointer cast] †
+Function item                       | Function pointer                    | [Function item to function pointer cast] †
+Function item                       | `^U` where `U` is a supported type  | [Function item to pointer cast] †
+Function item                       | Integer                             | [Function item to address cast] †
+Function pointer                    | `^U` where `U` is a supported type  | [Function pointer to pointer cast] †
+`^T` where `T`  is a supported type | Function pointer                    | [Pointer to function pointer cast] 
+Function pointer                    | Integer                             | [Function pointer to address cast] †
+Closure ***                         | Function pointer                    | [Closure to function pointer cast] †
+`T`                                 | Opaque type with same size as `T`   | [Type to opaque cast]
+`^T`                                | `^U` where `U` is an opaque type    | [Type to opaque cast]
+`&m1 T`                             | `&m2 U` where `U` is an opaque type | [Type to opaque cast]
+Opaque type with same size as `U`   | `U`                                 | [Opaque to type cast] †
+`^T` where 'U' is an opaque type    | `^U`                                | [Opaque to type cast] †
+`&m1 T` where 'U' is an opaque type | `&m2 U`                             | [Opaque to type cast] †
 
 \* or `T` and `U` are compatible unsized types, e.g. both slices, both are the same interface 
 
@@ -82,7 +82,7 @@ Opaque type with same size as `U`   | `U`                                 | [Opa
   - Values larger than the maximum value, including `INFINITY`, will saturate to the maximum value of the integer type
   - Values samller than the minimum integer value, including `-INFINITY`, will saturate to the minimum value of the integer type
 - Casting from an integer to a floating point will produce the closest possible float *
-  - if necessary, rounding is according to the currently set [rounding mode](../attributes.md#rounding-)
+  - if necessary, rounding is according to the currently set [rounding mode]
   - on overflow, infinity (of the same sign as the input) is produced
   - note: with the current set of numeric types, overflow can only happen on `u128 as f32` for values greater or equal to `f32::MAX + 0.5`, for for casts to an `f16`
 - Casting from an f32 to an f64 is perfect and lossless
@@ -185,3 +185,26 @@ This could also be written as `(a as? T)!`.
 By default, it will panic when the cast is not available, but in certain configuration, this can be changed into a cast that always passes, so may return in UB if not used correctly.
 
 Any cast that happens on a generic or impl interface object will be resolved at compile time.
+
+
+
+[Array to pointer cast]:                  #array-and-slice-to-pointer-casts-
+[Array to slice pointer cast]:            #array-and-slice-to-pointer-casts-
+[Array to pointer cast]:                  #array-and-slice-to-pointer-casts-
+[Enum cast]:                              #enum-cast-semantics-
+[Function item to pointer cast]:          #function-cast-semantics-
+[Function item to address cast]:          #function-cast-semantics-
+[Function pointer to pointer cast]:       #function-cast-semantics-
+[Pointer to function pointer cast]:       #function-cast-semantics-
+[Function pointer to address cast]:       #function-cast-semantics-
+[Closure to function pointer cast]:       #function-cast-semantics-
+[Function item to function pointer cast]: #function-item-casts-semantics-
+[Integer to character cast]:              #integer-to-character-cast-semantics-
+[Numeric cast]:                           #numeric-cast-semantics-
+[Reference to pointer cast]:              #reference-to-pointer-casts-
+[Type to opaque cast]:                    #type-to-opaque-cast-semantics-
+[Opaque to type cast]:                    #opaque-to-type-cast-semantics-
+[Primitive to integer cast]:              #primtive-to-integer-cast-semantics-
+[Pointer to pointer cast]:                #pointer-to-pointer-semantics-
+[Pointer to address cast]:                #pointer-to-address-cast-semantics-
+[rounding mode]:                          ../attributes.md#rounding-

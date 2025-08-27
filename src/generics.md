@@ -86,7 +86,7 @@ The description also specifies the group size, i.e. how many elements are in eac
 
 A parameter pack may also be optional, by provided a default value, the number of default values must consists of an integer mulitple of the description's group size, and must be compatible with the type in the description.
 
-> _Note_: This is related to [variadic parameters](./items/functions.md#variadic-parameters-) in functions
+> _Note_: This is related to [variadic parameters] in functions
 
 > _Todo_: Figure out ergonimics, i.e. number of params, looping over them, etc. A set of metafunction will be used for this, as they are a SOA of values
 
@@ -153,7 +153,7 @@ Constraint items may only act on directly associated items, meaning associated i
 <constraint-method>    := [ 'unsafe' ] [ 'const' ] 'fn' '(' <receiver> ')' <name> '(' <constraint-fn-params> ')' [ '->' <fn-return> ] [ <where-clause> ] ';'
 ```
 
-Constraint functions and methods are very similar to [trait functions & methods](./items/functions.md#trait-functions--methods-).
+Constraint functions and methods are very similar to [trait functions & methods].
 
 But they use a simplified set of parameters and may not contain:
 - attributes
@@ -171,7 +171,7 @@ If a function contains an parameter with `N` names, it needs to be expressed by 
 <constraint-type-alias> := 'type' <name> [ <generic-params> ] [ <where-clause> ] ';'
 ```
 
-Constraint type aliases are very similar to [trait type aliases](./items/type-aliases.md), but cannot have a default value.
+Constraint type aliases are very similar to [trait type aliases], but cannot have a default value.
 They require that any type has a type alias with a matching name and type.
 
 ### Constraint constants [↵](#126-constraints-)
@@ -179,7 +179,7 @@ They require that any type has a type alias with a matching name and type.
 <constraint-const> := 'const' <name> ':' <type> ';'
 ```
 
-Constraint constants are very similar to [trait constants](./items/consts.md#trait-constant-), but cannot have a default value.
+Constraint constants are very similar to [trait constants], but cannot have a default value.
 They require that any type has a constant with a matching name and type.
 
 ### Contraint properties [↵](#126-constraints-)
@@ -189,7 +189,7 @@ They require that any type has a constant with a matching name and type.
                           | 'set' ';'
 ```
 
-Constaint properties are very similar to [trait properties](./items/properties.md#trait-properties-), but cannot have default implementations.
+Constaint properties are very similar to [trait properties], but cannot have default implementations.
 The requires that any type has either a property of field matching the name and type.
 
 When a property has an integer literal instead of a name, this is associated with a tuple index field withing the constained type.
@@ -357,3 +357,10 @@ Below are some more examples which would cause this issue:
 impl(T) DynArr<T> where T is DynArr<T> {}
 impl(T) DynArr<T> where T is []T {}
 ```
+
+
+[trait constants]:           ./items/consts.md#trait-constant-
+[trait functions & methods]: ./items/functions.md#trait-functions--methods-
+[variadic parameters]:       ./items/functions.md#variadic-parameters-
+[trait properties]:          ./items/properties.md#trait-properties-
+[trait type aliases]:        ./items/type-aliases.md

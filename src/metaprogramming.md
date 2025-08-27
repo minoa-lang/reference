@@ -102,24 +102,25 @@ Each pattern type is syntactic sugar for the corresponding AST node, each corres
 
 pattern kind | fragment type         | corresponding language 'item'
 -------------|-----------------------|-------------------------------
-`item`       | `meta.ast.Item`       | an [item](./items.md)
-`block`      | `meta.ast.Block`      | a [block](./expressions/block-expressions.md)
-`stmt`       | `meta.ast.Stmt`       | a [statement](./statements.md)
-`pat`        | `meta.ast.Pattern`    | a [pattern](./patterns.md)
-`expr`       | `meta.ast.Expr`       | an [expression](./expressions.md)
-`ty`         | `meta.ast.Type`       | a [type](./type-system/types.md)
-`name`       | `meta.ast.Identifier` | a [name](./lexical-structure/names.md)
-`path`       | `meta.ast.Path`       | a [path](./identifiers-paths.md#paths-)
-`meta`       | `meta.ast.Meta`       | an [attribute](./attributes.md)
-`vis`        | `meta.ast.Vis`        | a [visibility](./visibility.md)
-`lit`        | `meta.ast.Literal`    | a [literals](./literals.md)
-`toks`       | `meta.TokenStream`    | Any lexical [token](./lexical-structure.md)
+`item`       | `meta.ast.Item`       | an [item]
+`block`      | `meta.ast.Block`      | a [block]
+`stmt`       | `meta.ast.Stmt`       | a [statement]
+`pat`        | `meta.ast.Pattern`    | a [pattern]
+`expr`       | `meta.ast.Expr`       | an [expression]
+`ty`         | `meta.ast.Type`       | a [type]
+`name`       | `meta.ast.Identifier` | a [name]
+`path`       | `meta.ast.Path`       | a [path]
+`meta`       | `meta.ast.Meta`       | an [attribute]
+`vis`        | `meta.ast.Vis`        | a [visibility]
+`lit`        | `meta.ast.Literal`    | a [literals]
+`toks`       | `meta.TokenStream`    | Any lexical [token]
 
 > _Note_: The fragments themselves are wrapped in type `meta.Fragment(T)`, where `T` is the fragment type
 
 
 WHen using a special group pattern, indicated by a sub-pattern surrounded by `${}`, the amount of repetition are decided by the character following it.
-This is one of the following
+This is one of the following:
+
 char | meaning
 -----|-------------------------
 `?`  | zero or one occurance
@@ -212,7 +213,7 @@ The role of meta-attribute is supplied directly after the `attr` keyword, and is
 - `member`: adds code within the fragment. The fragment must be an item. The original fragment is unaffected.
 - `member_attr`: adds attributes to the any of the members of the item it is applied to. The original fragment is unaffected.
 - `accessor`: adds accessors to a field or property. When implemented on a field, it might automatically convert the field into a property, depending on the additional info that is provided.
-- `derive(Trait)`: used to add an implementation of the associated trait to the type. This function can be called by either using the meta-attribute directly, or when the trait is given to the [`derive` attribute](#derive-). The original fragment is unaffected.\
+- `derive(Trait)`: used to add an implementation of the associated trait to the type. This function can be called by either using the meta-attribute directly, or when the trait is given to the [`derive` attribute]. The original fragment is unaffected.\
   In addition, a derive attribute may also declare a set of helper macros it can use.
   These are defined after the trait within the `derive` role.
   They may take in any amount of additional info.
@@ -324,11 +325,11 @@ Each invocation will be replaced by the code produced by the meta-function.
 A meta invocation can be located anywhere in code, but requires the surrounding delimiters to match, as a meta-function may not introduce unmatched delimiters.
 
 A meta-invocation may appear in the following situations:
-- [expressions](./expressions.md)
-- [statements](./statements.md)
-- [patterns](./patterns.md)
-- [types](./type-system.md)
-- [items](./items.md)
+- [expressions]
+- [statements]
+- [patterns]
+- [types]
+- [items]
 
 ## Meta hygiene
 
@@ -346,3 +347,24 @@ In this case, the same `meta_shadow` lint will be used.
 
 To ensure that variable names generated within not to conflict with any name that could be passed into the generated code, the `make_unique_name()` function can be used.
 This is accessible from the context provided into the meta function.
+
+
+
+[attribute]:          ./attributes.md
+[`derive` attribute]: ./attributes.md#derive-
+[block]:              ./expressions/block-expressions.md
+[expression]:         ./expressions.md
+[expressions]:        ./expressions.md
+[path]:               ./identifiers-paths.md#paths-
+[item]:               ./items.md
+[items]:              ./items.md
+[token]:              ./lexical-structure.md
+[name]:               ./lexical-structure/names.md
+[literals]:           ./literals.md
+[pattern]:            ./patterns.md
+[patterns]:           ./patterns.md
+[statement]:          ./statements.md
+[statements]:         ./statements.md
+[type]:               ./type-system/types.md
+[types]:              ./type-system/types.md
+[visibility]:         ./visibility.md

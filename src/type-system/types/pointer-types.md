@@ -82,7 +82,7 @@ Alignment can be added decided manually by using the `align` pointer specifier.
 
 Since alignment cannot be guaranteed to be at an address with greater alignment, pointer can only be implicitly cast to another pointer with the same alignment of less.
 If the programmer can guarantee a pointer has a larger alignment, the core library contains use to cast a pointer with a lower alignment to one with a larger alignment.
-If the value given does not adhere to the larger alignment, either an error value can be created, or [illegal behavior might occur](../../illegal-behavior.md#incorrect-pointer-alignment-)
+If the value given does not adhere to the larger alignment, either an error value can be created, or [illegal behavior might occur].
 
 > _Todo_: Specify which utilites
 
@@ -116,3 +116,7 @@ This can cause issues, as the compiler can see that `p` and `q` are supposed to 
 In an actual usecase, we can derive that they will overlap, as we have a compile time known offset, but if the `3` is a the result of a more complex runtime computation, we suddenly don't have this guarantee anymore (this is ignoring the fact we could actually insert a safety_check on the value we get out of the computation here).
 
 > _Note_: This section is currently mainly informational, as provenence handling is still unresolved. An intersting writeup around this problem can be found [here](https://www.ralfj.de/blog/2022/04/11/provenance-exposed.html). Provence will be something that will be looked at later in the development cycle.
+
+
+
+[illegal behavior might occur]: ../../illegal-behavior.md#incorrect-pointer-alignment-

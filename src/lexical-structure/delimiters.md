@@ -9,6 +9,7 @@ Delimiters are special forms of punctuation that are used to surround an inner s
 An opening delimiter always needs to be paired with a closing delimiter.
 
 There are 3 types of delimiters:
+
 Delimiter   | Type
 ------------|----------------
 `{` and `}` | (Curly) braces

@@ -17,4 +17,7 @@ if val = (expr).(Catch.check)()! {
 };
 ```
 
-For a non-error capturing equivalent, use the corresponding [`??` operator](../operators/special-operators.md#catch-operator-)
+For a non-error capturing equivalent, use the corresponding [`??` operator].
+
+
+[`??` operator]: ../operators/special-operators.md#catch-operator-

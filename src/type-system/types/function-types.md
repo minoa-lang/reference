@@ -16,12 +16,17 @@ x := &mut foo(i32);
 *x = foo(u32); // error: type mismatch
 ```
 
-Function types are however able to coerce into [function pointer types](./function-pointer-types.md) that have a matching signature.
+Function types are however able to coerce into [function pointer types] that have a matching signature.
 This can happen at the following sites:
 - when a function is passed to place where a matching function type is expected
 - when a function is returned in different arms of a control flow expression.
 
 During coercion, all constant parameters will be collapsed before coercing, for more info can be found [here]()
 
-> _Todo_: is 'collapsing' correct terminology? + fix link
+> _Todo_: is 'collapsing' correct terminology? + add an actual description for it
+
 > _Todo_: We somehow need to bake lifetimes propagation into this type
+
+
+
+[function pointer types]: ./function-pointer-types.md

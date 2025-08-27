@@ -15,7 +15,7 @@ Meanwhile, a structure's mutability will be propagated as the mutability of the 
 <struct> := [ 'mut' | 'record' ] 'struct' [ <generic-params> ] [ <where-clause> ] '{' { <struct-elements> } '}'
 ```
 
-A struct item generates a named [struct type](../type-system/types/struct-types.md).
+A struct item generates a named [struct type].
 Its contents are declared in the same way as a struct type.
 
 The following struct declaration:
@@ -46,7 +46,7 @@ type Bar = struct[T: type, N: usize] {
                      | '{' { <assoc-item> }* '}'
 ```
 
-A tuple struct item generates a named [tuple struct type](../type-system/types/tuple-struct-types.md).
+A tuple struct item generates a named [tuple struct type].
 Its content are declared the same way as a tuple struct type.
 
 A tuple struct declaration without any generic arguments, like:
@@ -71,7 +71,7 @@ type name2 = struct ( ... ) { ... };
                          | '{' { <struct-element> }* '}'
 ```
 
-A unit struct item declares a named [unit struct type](../type-system/types/struct-types.md#unit-structs-).
+A unit struct item declares a named [unit struct type].
 Its declaration, like its related type, is identical to a regular struct, except that is contains no fields.
 
 A unit struct declaration:
@@ -84,3 +84,8 @@ Is equal to the following
 type Unit = struct;
 type Unit2 = struct { ... };
 ```
+
+
+[struct type]:       ../type-system/types/struct-types.md
+[unit struct type]:  ../type-system/types/struct-types.md#unit-structs-
+[tuple struct type]: ../type-system/types/tuple-struct-types.md

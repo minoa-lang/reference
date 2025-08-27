@@ -55,7 +55,7 @@ This means that `#tokenize { ... }` or `#synthesize { ... }`, can simple be writ
 
 The `#pattern_parse` meta-function allows for a slice of tokens to be parse according to a provided pattern.
 
-The possible patterns are defined in the following [section](../metaprogramming.md#133-meta-patterns-).
+The possible patterns are defined in the following [section](../metaprogramming.md#meta-patterns-).
 
 For example:
 ```
@@ -90,22 +90,22 @@ fn meta(tokens: []meta.Token) -> ... {
 }
 ```
 
-## `#invoke_repr` [↵](#meta-utilities)
+## `#invoked_repr` [↵](#meta-utilities)
 
-The `#invoke_repr` meta-function allows the program to get the token or AST representation of the value passed to meta-function invocation.
+The `#invoked_repr` meta-function allows the program to get the token or AST representation of the value passed to meta-function invocation.
 This allows the meta-function to use the representation, in addition to the computed value, of an argument.
 
-`#invoke_repr` can only be called on the parameters of the meta-function.
+`#invoked_repr` can only be called on the parameters of the meta-function.
 
 For example, when we invoke the following macro:
 ```
 #stringify(1 + 1)
 ```
-the `#invoke_repr` allows use to get the actual expression passed:
+the `#invoked_repr` allows use to get the actual expression passed:
 ```
 meta fn stringify(val: i32) -> (i32, &str) {
     // Get the representation that was passed to the invocation
-    val_repr := #invoke_repr(val);
+    val_repr := #invoked_repr(val);
     (val, val_repr.to_str())
 }
 ```

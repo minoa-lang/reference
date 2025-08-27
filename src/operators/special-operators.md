@@ -31,7 +31,7 @@ This is indicated using the `raw` keyword.
 `&raw` creates a `^T`, and `&raw mut` creates a `^mut T`.
 
 The raw borrow operators should be used in a place where the borrow operator could evaluate to a place that is not properly aligned, or does not store a valid value as determined by its type, or whenever creating a reference that would introduce inccorrect aliassing assumptions.
-These are situations which would result in [illegal behavior](../illegal-behavior.md).
+These are situations which would result in [illegal behavior].
 
 Unlike other operators, the raw borrow operator cannot be implemented.
 
@@ -71,11 +71,11 @@ If a valid value will be generated, it will return this value.
 #### Propagating try [↵](#1423-try-operator-)
 
 The propagating try operator (`?`) allows a function to shortcut an return an erronous value from the current function.
-It will cause also all in-scope [defer-on-error statements](../statements/defer-statements.md#defer-on-error-statement-) to be evaluated.
+It will cause also all in-scope [defer-on-error statements] to be evaluated.
 
 The associated trait for the operator is `Try`
 
-> _Note_: This should not be confused with the ['err'-checked field access](../expressions/field-access-expressions.md)
+> _Note_: This should not be confused with the ['err'-checked field access]
 
 The operator has the `Unary` precedence.
 
@@ -114,7 +114,7 @@ Lazy boolean operators can only be applied to boolean values and cannot be overl
 That is, `||` only evaluates the right-hand operand if the left-hand operand evaluates to `false`.
 On the other hand, the `&&` only evaluated the right-hand operand if the left-hand operand evaluates to `true`.
 
-They are [lazy infix operators](../operators.md#lazy-)
+They are [lazy infix operators].
 
 The `&&` operator has the `LogicalAnd` precedence, and `||` has the `LogicalOr` precedence.
 
@@ -127,7 +127,7 @@ Catch operators are infix operators.
 
 This is similar to the or-else operator, but instead of being based on a 'thruthy' value, it is based on an explicit erronous value.
 
-This is shorthand for the non-error capturing [catch expression](../expressions/catch-expressions.md).
+This is shorthand for the non-error capturing [catch expression].
 Unlike the catch expression, this operator follows a different precedence.
 
 The associated trait is `Catch`.
@@ -143,8 +143,18 @@ The in-place operator allows for the direct construction of a type directly in i
 This can be useful in case the type takes up a lot of space and allows to avoid generating an intermediate.
 
 The in-place operator may take either of the following expressions on it's right-hand side:
-- a [constructing expression](../expressions/constructing-expressions.md)
+- a [constructing expression]
 - a function or closure, taking a single argument of type `&mut MaybeUninit(T)`
-- an [initializer](../items/initializers.md)
+- an [initializer]
 
 This operator has no associated trait (i.e. can't be manually implemented), and has assign precedence.
+
+
+
+[catch expression]:           ../expressions/catch-expressions.md
+[constructing expression]:    ../expressions/constructing-expressions.md
+['err'-checked field access]: ../expressions/field-access-expressions.md
+[illegal behavior]:           ../illegal-behavior.md
+[initializer]:                ../items/initializers.md
+[lazy infix operators]:       ../operators.md#lazy-
+[defer-on-error statements]:  ../statements/defer-statements.md#defer-on-error-statement-

@@ -23,7 +23,7 @@ For ergonomics reasons, identifier patterns can operate in different binding mod
 The binding mode is dependent on the value being matched, the pattern, and the explicitly defined binding mode.
 
 When matching a pattern, the value being matched and the pattern are used to determine the binding mode, as defined [below](#determining-the-default-binding-move-).
-To avoid the default binding mode being something other than 'move', the value being matched against can either be derefenced before matching, or have the outer pattern being a [reference pattern](./reference-patterns.md).
+To avoid the default binding mode being something other than 'move', the value being matched against can either be derefenced before matching, or have the outer pattern being a [reference pattern].
 
 If no explicit `mut`, `ref`, or `ref mut` is defined, the binding uses the default mode.
 
@@ -34,7 +34,7 @@ let [mut a] = &[()]; // error
 let [ref a] = &[()]; // error
 let [ref mut a] = &[()]; // error
 ```
-The same counts for a [reference pattern](./reference-patterns.md).
+The same counts for a [reference pattern].
 Meaning the following is also not allowed:
 ```
 let [&a] = &[&()]; // error
@@ -75,7 +75,15 @@ If instead it does not contain a non-mutable `&` and only `&mut`, the default mo
 And otherwise it will be 'move'
 
 > _Note_: A non-reference pattern is any pattern, with the exception of the following:
-> - [bindings i.e. identifer patterns](./identifier-patterns.md)
-> - [wildcard pattern](./wildcard-patterns.md)
-> - [paths to constant items](./path-patterns.md) of a reference type
-> - [reference patterns](./reference-patterns.md)
+> - [bindings i.e. identifer patte
+> - [wildcard pattern]
+> - [paths to constant items] of a reference type
+> - [reference patterns]
+
+
+
+[bindings i.e. identifer patterns]: ./identifier-patterns.md
+[paths to constant items]:          ./path-patterns.md
+[reference pattern]:                ./reference-patterns.md
+[reference patterns]:               ./reference-patterns.md
+[wildcard pattern]:                 ./wildcard-patterns.md

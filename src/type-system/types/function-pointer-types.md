@@ -1,6 +1,6 @@
 # Function pointer types
 ```
-<fn-type> := [ 'unsafe' [ 'extern' <abi> ] ] 'fn' '(' <fn-type-params> ')' [ '->' <type-no-bounds> ]
+<fn-type> := [ 'unsafe' [ 'extern' [ '(' <abi> ')' ] ] ] 'fn' '(' <fn-type-params> ')' [ '->' <type-no-bounds> ]
 <fn-type-params> := <fn-type-param> { ',' <fn-type-param> }* [ ',' ]
 <fn-type-param> := { <attribute> }* [ ( <name> | '_' ) { ',' ( <name> | '_' ) }* ':' ] <type>
 ```
@@ -9,7 +9,7 @@ A function pointer type can refer to a function whose identity is not known at c
 The can be created via coercion from functions and non-capturing closures with a matching signature.
 
 If a function is marked `unsafe`, it is able to be assgined from both safe and unsafe functions, and must be called from an unsafe context.
-To assign a pointer with a specific ABI, the function needs to be marked as an `extern` function with a matching ABI.
+To assign a pointer with a specific ABI, the function needs to be marked as an `extern` function with a matching ABI, which is provided in parentheses, this is the only location where the calling convention is defined like this..
 If not marked with a ABI, it will default to the `"C"` ABI.
 
 Parameters may contain one or more names, but for the purposes of a function pointer these names are ignored, but are instead useful for documentation.

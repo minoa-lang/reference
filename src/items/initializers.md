@@ -10,10 +10,10 @@ An initializer has an implicit return type of `Self` by default, this may be ove
 
 An initializer has a set of deduced and regular parameters like a normal function.
 
-Multiple initializers are allowed, but they must be distinguishable by there required parameters, similar to [label-based overloading](../items/functions.md#label-based-overloading-).
+Multiple initializers are allowed, but they must be distinguishable by there required parameters, similar to [label-based overloading].
 
-Initializers act as if they are ran on a `&mut MaybeUninit(Self)`, and can therefore also be used with an [in-place operator](../operators/special-operators.md#in-place-operator-).
-Initializers are also allowed to assign any immutable value within the type they initialize, similar to [constructing expressions](../expressions/constructing-expressions.md).
+Initializers act as if they are ran on a `&mut MaybeUninit(Self)`, and can therefore also be used with an [in-place operator].
+Initializers are also allowed to assign any immutable value within the type they initialize, similar to [constructing expressions].
 
 ## Default initialization [↵](#initializers)
 
@@ -45,3 +45,9 @@ There are 2 possible variants of fallible initializers:
 - `init!type`: returns an `Err(...)` when failing to initialize. The `!` is followed by the type of the error returned when it fails.
 
 Calling these initializers is done as `T?` or `T!`, where `T` represents the type to initialize.
+
+
+
+[constructing expressions]: ../expressions/constructing-expressions.md
+[label-based overloading]:  ../items/functions.md#label-based-overloading-
+[in-place operator]:        ../operators/special-operators.md#in-place-operator-

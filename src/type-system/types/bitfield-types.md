@@ -19,7 +19,7 @@ This can be done by providing a compile time expression defining the size of the
 Like struct fields, each bitfield field is allowed to specify their own visibility and mutability.
 
 Each field within the tuple struct can have its visibility and mutability defined.
-Each field can be accessed using a [tuple index expression](../../expressions/tuple-index-expressions.md), in addition, they may also have an optional name, which may be used to access a field via a [field access expression](../../expressions/field-access-expressions.md).
+Each field can be accessed using a [tuple index expression], in addition, they may also have an optional name, which may be used to access a field via a [field access expression].
 
 For consistency, bits are laid out in the following way:
 - Bits go from MSB (most-significant bit) to LSB (least-significant bit)
@@ -36,3 +36,8 @@ These bitfields follow the rules defined [here](../nominal-vs-structural-types.m
 Some of the most notable ones for bitfields are:
 - all fields are public
 - all fields are mutable
+
+
+
+[field access expression]: ../../expressions/field-access-expressions.md
+[tuple index expression]:  ../../expressions/tuple-index-expressions.md

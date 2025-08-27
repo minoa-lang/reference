@@ -21,8 +21,13 @@ There are 3 ways of matching elements:
 A structure's field may be ignored by using a `..`, which is similar to a rest pattern, but is distinct in its meaning.
 If a `..` is not used, the struct patterns is required to refernce all fields.
 
-A struct pattern used to match a union must have exactly one field (see [pattern matching on unions](../type-system/types/union-types.md#pattern-matching-on-unions-)
+A struct pattern used to match a union must have exactly one field (see [pattern matching on unions])
 
-When a field is directly used, it acts like a [identifier pattern](./identifier-patterns.md).
+When a field is directly used, it acts like a [identifier pattern].
 
 A struct apttern is refutable if the pattern either refers to an variant or an enum with more than 1 variant, or if any of its subpatterns is refutable.
+
+
+
+[identifier pattern]:         ./identifier-patterns.md
+[pattern matching on unions]: ../type-system/types/union-types.md#pattern-matching-on-unions-

@@ -21,7 +21,7 @@ If a block ends in comma expression, then the block will return a tuple formed b
 
 There are 3 special types of block expressions:
 
-> _Note_: For more info on labelled blocks, see their [relavent section](./loop-expressions.md#labelled-block-expressions-)
+> _Note_: More info on labelled blocks can be found here [relavent section](./loop-expressions.md#labelled-block-expressions-)
 
 > _Todo_: Once `sync` is supported, add an async block
 
@@ -56,7 +56,7 @@ Async blocks produces a type which implements the `Future` trait.
 
 #### Capture modes [↵](#block-expressions)
 
-Async blocks need to capture surrounding variables, it uses this in the same manner as [closures](#capture-modes--1).
+Async blocks need to capture surrounding variables, it uses this in the same manner as [closures].
 In addition, an async move may explicitly be declares as `move`, mimicking the `move` capture mode of closures
 
 #### Async context [↵](#block-expressions)
@@ -70,3 +70,6 @@ Async blocks act like function boundaries, just like closures.
 As a result, any expressions that return from a function are applied on the async block, and not the surrounding function.
 
 The boundary also means that any expression like `break` and `continue` cannot affect branches outside of the async block.
+
+[const items]: ../items/consts.md
+[closures]:    ../type-system/types/closure-types.md#capture-modes-

@@ -21,7 +21,7 @@ On some platforms, a zero-sized types might still be required to follow a specif
 
 the majority of types will know their size and alignment at compile time, these are called 'sized types'.
 Sized types can have their size and alignment checked at compile time.
-Meanwhile types that are not known at compile time, as known as [dynamically sized types](../dynamically-sized-types.md).
+Meanwhile types that are not known at compile time, as known as [dynamically sized types].
 
 Since all values of a sized types share their size and alignment, we say that they have the type's size and alignment.
 
@@ -95,7 +95,7 @@ String slice | Slice
 
 ## Tuple layout
 
-Tuples are laid out as defined in the [Minoa representation]().
+Tuples are laid out as defined in the [`minoa` representation].
 
 ## Trait object layout
 
@@ -110,3 +110,8 @@ A closure has no layout guarantees.
 ## Bitfield layout
 
 A bitfield will have the size and alignment of the smallest primitive types that fits the contents of the bitfield.
+
+
+
+[`minoa` representation]:  ./type-layout/layout-representation.md
+[dynamically sized types]: ../dynamically-sized-types.md

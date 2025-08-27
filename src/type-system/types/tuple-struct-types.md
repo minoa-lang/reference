@@ -13,7 +13,7 @@ A tuple struct type is similar to a struct type, with some differences.
 Like both structs, the internal representation of a tuple struct is by default undefined, allowed for the same compiler optimizations.
 
 Each field within the tuple struct can have its visibility and mutability defined.
-Each field can be accessed using a [tuple index expression](../../expressions/tuple-index-expressions.md), in addition, they may also have an optional name, which may be used to access a field via a [field access expression](../../expressions/field-access-expressions.md).
+Each field can be accessed using a [tuple index expression], in addition, they may also have an optional name, which may be used to access a field via a [field access expression].
 
 Similar to a regular stuct type, the entire tuple struct type may be marked as `mut`, which will then propage the `mut` property to all fields.
 
@@ -60,3 +60,8 @@ These tuple struct follow the rules defined [here](../nominal-vs-structural-type
 Some of the most notable ones for tuple structs are:
 - All fields are public
 - All fields are mutable
+
+
+
+[field access expression]: ../../expressions/field-access-expressions.md
+[tuple index expression]:  ../../expressions/tuple-index-expressions.md

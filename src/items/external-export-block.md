@@ -14,11 +14,18 @@ Extern items will by default be marked as `unsafe`, but can be explicitly marked
 
 An `export` block on the other hand will mark an item for export.
 
-Either can have additional info that is supplied using their corresponding [attributes](../attributes.md#abi-link-symbol-and-ffi-attributes-).
+Either can have additional info that is supplied using their corresponding [attributes].
 If applied to a block, it will apply to all items within that block.
 
-The items also have their own respective properties as defined for [external functions](../items/functions.md#external--exported-functions-) and [external statics](../items/statics.md#external-statics-).
+The items also have their own respective properties as defined for [external functions] and [external statics].
 
 All items within an external block share the same source library, defined in the block's declaration.
 
-The external block may define the default calling convention using the [`@callconv` attribute](../attributes.md#callconv-).
+The external block may define the default calling convention using the [`@callconv` attribute].
+
+
+
+[attributes]:            ../attributes.md#abi-link-symbol-and-ffi-attributes-
+[`@callconv` attribute]: ../attributes.md#callconv-
+[external functions]:    ../items/functions.md#external--exported-functions-
+[external statics]:      ../items/statics.md#external-statics-

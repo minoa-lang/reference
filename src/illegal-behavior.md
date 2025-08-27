@@ -17,7 +17,7 @@ This granularity works in 2 ways:
 - on a safety check category level, and
 - on a code level, from the entire library to statements.
 
-This can be done using [safety-check attributes](#1717-safety-checks-)
+This can be done using [safety-check attributes]
 
 > _Todo_: Add support for IB from contracts
 
@@ -73,7 +73,7 @@ Illegal behavior of floating point operations can be caused by the below categor
 ### Illegal operations [↵](#floating-point-)
 
 Illegal floating point operations are operation that produce floating point exceptions.
-These are slightly different to other illegal behavior, as they are actually defined within the [IEEE 754 specification](https://en.wikipedia.org/wiki/IEEE_754).
+These are slightly different to other illegal behavior, as they are actually defined within the [IEEE 754 specification].
 
 They are caused by operation that result in on of the following things:
 - invalid operation: a mathematically undefined operation, e.g. `sqrt(-1)`
@@ -130,3 +130,8 @@ When an array, slice, or multi-element pointer has a sentinel value, they can be
 ## User-defined illegal behavior
 
 > _Todo_
+
+
+
+[safety-check attributes]: ./attributes.md#safety_check-
+[IEEE 754 specification]:  https://en.wikipedia.org/wiki/IEEE_754

@@ -56,16 +56,22 @@ A file may contain a shebang in the first line in a file, but will be ignored (a
 
 ## Normalization
 
-Source files are normalized using the Normalization Form C (NFC) as defined in [Unicode Standard Annex #15](https://www.unicode.org/reports/tr15/tr15-56.html).
+Source files are normalized using the Normalization Form C (NFC) as defined in [Unicode Standard Annex #15].
 It is generally expected that the source code is stored within a normalized form.
 As this cannot be guaranteed, the compiler will automatically try to convert unnormalized text into normalized text.
 In case a non-normalized character sequence is detected, a warning will be emitted.
 
 If the input is guaranteed to be normalized, this can be turned off.
 
-An exception to normalization is [string literals](#64-string-literals-), in which no normalization happens.
+An exception to normalization is [string literals], in which no normalization happens.
 
 > _Note_: Normalization Form D is more uniform, in that characters are always maximally decomposed into combining characters; in NFD, characters may or may not be decomposed depending on whether a composed form is available. NFD may be more suitable for certain uses such as type correction, homoglyps detection, or code completion. But NFC is also way more common and recomended in locations, it's also more commonly used for languages that support unicode.
 
-> _Todo_: We might be able to also add support for homoglyph and confusables detection and convert them to a single character, see ['Confusable Detection' section of Unicode Annex #39](https://www.unicode.org/reports/tr39/#Confusable_Detection)
-> _Todo_: A quick detection optimization is defined within the ['Quick Check for NFC' section in Unicode Annex #15](https://unicode.org/reports/tr15/#NFC_QC_Optimization)
+> _Todo_: We might be able to also add support for homoglyph and confusables detection and convert them to a single character, see ['Confusable Detection' section of Unicode Annex #39].
+> _Todo_: A quick detection optimization is defined within the ['Quick Check for NFC' section in Unicode Annex #15].
+
+
+[Unicode Standard Annex #15]:                          https://www.unicode.org/reports/tr15/tr15-56.html
+[string literals]:                                     #64-string-literals-
+['Confusable Detection' section of Unicode Annex #39]: https://www.unicode.org/reports/tr39/#Confusable_Detection
+['Quick Check for NFC' section in Unicode Annex #15]:  https://unicode.org/reports/tr15/#NFC_QC_Optimization

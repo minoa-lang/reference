@@ -10,13 +10,13 @@
 ```
 
 A structure type represents a collection of named fields, and associated items.
-The layout of a structure is undefined by default, allowing the compiler to do optimization like field reordering. The layout can be specified using the [`repr` attribute](../../attributes.md#repr-).
+The layout of a structure is undefined by default, allowing the compiler to do optimization like field reordering. The layout can be specified using the [`repr` attribute].
 
 The struct needs to define all fields before any item in the struct, if any field occurs after an item will result in an error.
 
 Each fields at minimum defines a name (or multiple), and the type of the field.
 Each field can then define its visibility, which controls in which locations the field may be accessed.
-In addition, a field may be made mutable, allow it to be modified after the structure is initially created, as by default each field may only be assigned when defining it in a [struct expression](../../expressions/return-expressions.md), and may not be modified later on.
+In addition, a field may be made mutable, allow it to be modified after the structure is initially created, as by default each field may only be assigned when defining it in a [struct expression], and may not be modified later on.
 
 > _Note_: struct fields may not have an anonymous generic struct type.
 
@@ -50,11 +50,11 @@ struct {
 ```
 
 A field may also be a placeholder field, by using `_` as its name, this means that the field will take up space within the structure, but will not be accessible.
-This can be used for example as padding in a [`packed`](../type-layout/layout-representation.md#packed) struct, or as a reserved value for future use.
+This can be used for example as padding in a [`packed`] struct, or as a reserved value for future use.
 
 After all fields are declared, a struct may also define associated items.
 
-> _Note_: A [struct item](../../items/structs.md) allows for an easy way of defining structures.
+> _Note_: A [struct item] allows for an easy way of defining structures.
 
 > _Todo_: A link to associated items
 
@@ -156,11 +156,11 @@ The visibility and mutablity of the fields depends on the visibility and mutabil
 These are applied to all fields within the included struct, and to the struct name (if provided).
 
 Visibility and mutability will be applied in the following way:
-- A field's visibility will be the [common denominator](#162-common-denominator-) of the field visibility and the provided visibility
+- A field's visibility will be the [common denominator] of the field visibility and the provided visibility
 - A field's mutability will be a combination of the provided mutability and the field's visibility within the included struct, meaning both must be `mut` for the included field to be `mut`
 
 In addition, the functionality of the included struct can be automatically implemented on the new struct, by using `extend`.
-The visibility of these items will be applied in the same way as that of field, using the [common denominator](#162-common-denominator-) of the visibilities.
+The visibility of these items will be applied in the same way as that of field, using the [common denominator] of the visibilities.
 
 Only items that would not override an already existing item will be implemented.
 If multiple `extend` use fields exists, and an item would conflict, an error will be produced.
@@ -232,3 +232,11 @@ A unit struct cannot be anonymous and must be associated with a type alias.
 Struct types may also contain generic arguments, how this is handled depends on whether it is assigned to a type alias.
 If it is assigned to a type alias, the arguments can be directly provided at the usage location of the struct.
 When it is directly used as a type of a variable, it must be inferred from the values passed to the value on initialization.
+
+
+
+[`packed`]:           ../type-layout/layout-representation.md#packed
+[`repr` attribute]:   ../../attributes.md#repr-
+[struct expression]:  ../../expressions/return-expressions.md'
+[struct item]:        ../../items/structs.md
+[common denominator]: ../../visibility.md#common-denominator-

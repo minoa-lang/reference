@@ -8,7 +8,7 @@
 <full-closure-param>      := { <attribute> }* <pattern-no-top-alt> [ ':' <type> ]
 
 <closure-list>            := '[' <closure-capture> { ',' <closure-capture> }* [ ',' ] ']'
-<clusure-capture>         := <closure-common-capture> | <closure-var-capture>
+<closure-capture>         := <closure-common-capture> | <closure-var-capture>
 <closure-common-capture>  := 'move' | ( '&' [ 'mut' ] )
 <closure-var-capture>     := [  ( '&' [ 'unique' | 'mut' ] ) ] <name> [ '=' <path> ]
 
@@ -27,7 +27,7 @@ Each closure expression has a unique, anonymous type.
 The main difference between functions and closures, is that closures may capture variables from the environment around it.
 
 How variables are captures depends on which style of parameters is used, meaning that if a full list of parameters is names, a capture list may also be provided.
-If no explicit captures are provided, or a captured variable is not included within the capture list, the captures variable follows the default capture behavior as defined in the [closure type capture modes](#capture-modes-).
+If no explicit captures are provided, or a captured variable is not included within the capture list, the captures variable follows the default capture behavior as defined in the [closure type capture modes].
 
 Captures can be expressed per variable, or as a common capture mode.
 Common capture modes override the default capture behavior and makes it so that all non-explicitly captured variables follow the mode defined by it.
@@ -40,7 +40,7 @@ If all variables are captured by move, this means that the closure is independen
 Closures may also be marked as `unsafe`, this means that their body is an unsafe context, but does not make the closure itself `unsafe` to do operation on.
 This is equivalent to `fn { unsafe { ... } }`
 
-Closures can also be marked as `async`, this is similar to [`async` blocks](./block-expressions.md#async-blocks-), but allowing arguments to be passed.
+Closures can also be marked as `async`, this is similar to [`async` blocks], but allowing arguments to be passed.
 
 ## Shorthand arguments [↵](#closure-expressions)
 
@@ -70,7 +70,7 @@ Autoclosures allow regular expressions to be passed to any parameter accepting a
 They will automatically be converted into a closure.
 This is only allowed when the expression does not have any parameters.
 
-> _Note_: This is essentially how [lazy parameters](../items/functions.md#lazy-parameters) are passed to a function
+> _Note_: This is essentially how [lazy parameters] are passed to a function
 
 ## Closure argument expressions [↵](#closure-expressions)
 ```
@@ -78,3 +78,10 @@ This is only allowed when the expression does not have any parameters.
 ```
 
 A closure argument expression is used to access unnamed closure arguments.
+
+
+
+
+[`async` blocks]:             ./block-expressions.md#async-blocks-
+[lazy parameters]:            ../items/functions.md#lazy-parameters-
+[closure type capture modes]: ../type-system/types/closure-types.md#capture-modes-

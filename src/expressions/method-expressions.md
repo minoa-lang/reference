@@ -27,7 +27,7 @@ This requires a more complex lookup process than for other functions, since ther
    3. All remaining methods scopes are looked up.
 3. Pick the methods matching the arguments.
 
-> _Note_: more detailed info about argument resolution and conflicts, check the [function definition item](../items/functions.md)
+> _Note_: more detailed info about argument resolution and conflicts, check the [function definition item]
 
 If this results in multiple possible candidates, it is an error, and the receiver must be converted to an appropriate receiver type to make the method call.
 
@@ -36,3 +36,7 @@ Once a method is looked up, if it can't be called for one (or more) of those rea
 
 If a step is reached where there is more than one possible methods such as where generic methods or interfaces are considered the same, then it is a compiler error.
 These cases require a disambiguating as the methods identifier.
+
+
+
+[function definition item]: ../items/functions.md

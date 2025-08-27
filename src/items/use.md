@@ -31,7 +31,7 @@ These declarations may appear in modules and blocks.
 ## Use visibility [↵](#use-declarations-)
 
 Like other items, `use` declarations are private to the containing module by default.
-But it can also have its visibility declared, while for most items, this is explained in the [visibility sectoin](../visibility.md), visibility attributes work slightly differently on `use` declarations.
+But it can also have its visibility declared, while for most items, this is explained in the [visibility section], visibility attributes work slightly differently on `use` declarations.
 `use` declaration can be used to re-export symbols to a different target definition with a different visibility and/or name.
 For example, a symbol with a more restricted visibility like 'private' in one module, can be changed to a `pub` symbol in another module.
 If the resulting sequence of re-exports form a cycle or cannot be resolved, a compiler error will be emitted.
@@ -92,8 +92,8 @@ Use root | Package | Library
 The package name may contain 2 parts: an optional group name, and the actual name of the package.
 For more info can be found [here](../package-structure.md).
 
-For example, the Minoa std packages' experimental library is accessed as `Minoa.std:experimental`, where:
-- `Minoa` is the group that the library belongs to
+For example, the Minoa std packages' experimental library is accessed as `minoa.std:experimental`, where:
+- `minoa` is the group that the library belongs to
 - `std` is the package under which the library is distributed
 - `experimental` is the actual library.
 
@@ -101,29 +101,29 @@ The `use` root can be omitted for any value relative to the current module, incl
 
 ## Use path [↵](#use-declarations-)
 
-A use path is the main path to a symbol which appears after after a root, or as the first element for a sub-path within a [use grouping](#use-grouping-).
+A use path is the main path to a symbol which appears after after a root, or as the first element for a sub-path within a [use groupings].
 A use path exists out of a list of names, which can each refer to a entity within the previous segments namespace.
 
 Items each segments may refer to can be one of the following:
-- Nameable [items](../items.md)
-- [Enum variants](../type-system/types/enum-types.md)
-- Builtin types ([primitive types](../type-system/types/primitive-types.md) & [string slices](../type-system/types/string-slice-type.md))
-- [Attributes](../attributes.md)
-- [Metaprogramming items](../metaprogramming.md)
+- Nameable [items]
+- [Enum variants]
+- Builtin types ([primitive types] & [string slices])
+- [Attributes]
+- [Metaprogramming items]
 
 The cannot refer to any of the following:
 - associated items
 - generic parameters
 - local variables
 - tool attributes
-- items declared inside of [functions](../items/functions.md)
+- items declared inside of [functions]
 
-If no path tail is added, the path will create a binding to the imported entities, with the exception of [`self`](#self-imports-).
+If no path tail is added, the path will create a binding to the imported entities, with the exception of [`self`].
 
 A use-path may end in a tail, which is one of the following:
-- [glob imports](#glob-imports-)
-- [use groupings](#use-groupings-)
-- [use aliases](#use-aliases-)
+- [glob imports]
+- [use groupings]
+- [use aliases]
 
 ## Glob imports [↵](#use-declarations-)
 ```
@@ -192,3 +192,16 @@ fn main() {
     foo(); // This is now `lib1.foo`
 }
 ```
+
+[glob imports]:          #glob-imports-
+[`self`]:                #self-imports-
+[use groupings]:         #use-groupings-
+[use aliases]:           #use-aliases-
+[Attributes]:            ../attributes.md
+[items]:                 ../items.md
+[functions]:             ../items/functions.md
+[Metaprogramming items]: ../metaprogramming.md
+[Enum variants]:         ../type-system/types/enum-types.md
+[primitive types]:       ../type-system/types/primitive-types.md
+[string slices]:         ../type-system/types/string-slice-type.md
+[visibility section]:    ../visibility.md

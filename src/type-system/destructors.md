@@ -95,7 +95,7 @@ _TODO: Example_
 ## Constant promotion [↵](#destructors)
 
 Promotion of a value expression to a `static` slot occurs when the expression could be written in a constant and borowed, and that borrow could be dereferenced where the exprssion was originally written, without changing the runtime behavior.
-That is, the promoted expression can be evaluated at compile-time and the resulting value does not contain [interior mutability](#115-interior-mutability-) or [destructors](#destructors) (these properties are determined based on the value when possible).
+That is, the promoted expression can be evaluated at compile-time and the resulting value does not contain [interior mutability] or [destructors] (these properties are determined based on the value when possible).
 
 ## Temporary lifetime extension [↵](#destructors)
 
@@ -135,3 +135,8 @@ The operand of any extending expression has its temporary scope extended.
 
 > _Note_: Preventing a destructor from being run via `forget` or other means is safe even if the type isn't static.
 > Besides the place where destructors are guaranteed to run as defined by this document, types may not safely rely on a destructor being run for soundness.
+
+
+
+[destructors]:          ./destructors.md
+[interior mutability]: ./interior-mutability.md

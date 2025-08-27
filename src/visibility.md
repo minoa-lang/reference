@@ -36,7 +36,7 @@ The following specifiers are available:
 ## Common denominator [↵](#visibility)
 
 The common denominator in mainly used for:
-- [struct use fields](./type-system/types/struct-types.md#use-fields-)
+- [struct use fields]
 
 The common denominator of 2  visibilities is decided by choosing the narrowest visibility.
 Meaning the visibilities will be decided by the first visibility in the followin order
@@ -50,3 +50,7 @@ When the visibilities are both either `pub(in path)` or `pub(super)`, the follow
 - convert the `super` specifier to an `in path` specifier
 - pick the common root of the path
 - If no common path is available, the visibility will be 'private'
+
+
+
+[struct use fields]: ./type-system/types/struct-types.md#use-fields-

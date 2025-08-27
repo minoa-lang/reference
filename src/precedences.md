@@ -56,7 +56,7 @@ Assingment expression          | right to left |
 
 A precedence item can be used to define a custom precedence of user-defined operators.
 
-### Precendence order [↵](#152-user-defined-precedence-)
+### Precendence order [↵](#user-defined-precedence-)
 
 The item can decide which precedences must come before and after the new precedence, this can be defined by the `higher_than` and `lower_than` fields and refer to the name of other precendences.
 The value given to `higher_than` must have a lower precedence than the item given to `lower_than`, and may not be the same.
@@ -75,7 +75,7 @@ C   |
 ```
 operators of precendence `B` or `C` may not be used together with those of `D` without explicit parentheses, meaning that `v0 B v1 C v2` and `v0 B (v1 D v2)` are allowed, but not `v0 B v1 D v2` (where `B`, `C`, and `D` represent operators with those precendeces).
 
-### Associativity [↵](#152-user-defined-precedence-)
+### Associativity [↵](#user-defined-precedence-)
 
 The associativity can also be defined, and can be set to `left`, `right`, or `none`.
 This defines the resulting order of the expressions using these.
@@ -94,7 +94,7 @@ For example, if `+` would have had `none` associativity, the expressions `(a + b
 
 Unary expression ignore associativity and go solely based on their precedence order.
 
-## Precedence scoping and use [↵](#15-precedence-)
+## Precedence scoping and use [↵](#precedences)
 
 ```
 <precedence-use> := 'precedence' 'use' <use-root> [ '.' '{' <name> { ',' <name> }* [ <name> ] '}' ] ';'

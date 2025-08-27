@@ -6,7 +6,7 @@
 
 A function consists of a named block of code, together with a set of parameters (implicit and explicit), and a return type, representing a unit of reusable code.
 
-When refered to, a function yields the corresponding zero-sized [function type](../type-system/types/function-types.md), when when called evaluates to a direct function call.
+When refered to, a function yields the corresponding zero-sized [function type], when when called evaluates to a direct function call.
 
 A function may be declared `unsafe`, making it's entire body an unsafe context, but requires the function itself to be called from an unsafe context.
 
@@ -50,7 +50,7 @@ Each parameter can be specified by either
 - a pattern
 
 If multiple names are provided, the parameter will be split into multiple invidual paramters.
-Otherwise, if a  pattern is used within a parameter, it must be an [irrifutable pattern](../patterns.md), for example:
+Otherwise, if a  pattern is used within a parameter, it must be an [irrifutable pattern], for example:
 ```
 fn name((value, _): (i32, i32)) -> i32 { value }
 ```
@@ -150,7 +150,7 @@ Lazy parameters allow for late execution of a parameters, or even avoid executio
 But unlike closure arguments, lazy parameters allow the compiler to lift additional code in the surrounding context into the closure for the lazy variable.
 This is limited to any code which only the lazy argument is relying on.
 
-> _Note_: These are essentially syntactic sugar for closures taking in [autoclosure](#9165-autoclosures-) arguments
+> _Note_: These are essentially syntactic sugar for closures taking in [autoclosure] arguments
 
 > _Note_: Lazy parameters do introduce a deduced parameter into the function for the closure.
 
@@ -167,7 +167,7 @@ A special case is when the return type is a named tuple with all fields named. I
 
 If a named return exists and no explicit return is used, the named return or the named tuple fields must be assigned a value.
 
-When no return is explicitly stated, an implicit [unit type](../type-system/types/unit-type.md) will be the return type.
+When no return is explicitly stated, an implicit [unit type] will be the return type.
 
 ## Function body [↵](#functions)
 
@@ -176,13 +176,13 @@ Within a function body, the programmer has access to all parameters and named re
 
 When a parameter uses a pattern, the body has access the the bindings within the pattern.
 
-These act like a [block expression](../expressions/block-expressions.md), allowing both explicit returns, and returns using the last expression within the block.
+These act like a [block expression], allowing both explicit returns, and returns using the last expression within the block.
 
 ## Const functions [↵](#functions)
 
 A const function is a version of a function which may be called either at compile time or at runtime.
 
-Functions returning a [`type` type](../type-system/types/type-type.md) are restricted to a compile time context.
+Functions returning a [`type` type] are restricted to a compile time context.
 
 ## Methods [↵](#functions)
 ```
@@ -254,15 +254,15 @@ The prefix and extension will depend on the OS being compiled for.
 Individual function may be explicitly marked as safe, if the safety can be guaranteed by the implementer
 
 Both `extern` and `export` function will default to a `.C` calling convention.
-The blocks may define the default calling convention using the [`@callconv` attribute](#callconv).
+The blocks may define the default calling convention using the [`@callconv` attribute].
 
 > _Note_: For more information, check the [external & export blocks](./external-export-block.md) section.
 
-> _Note_: To set a non-external function to use the `contextless` ABI, use the [`contextless`](../attributes.md#contextless-) attribute.
+> _Note_: To set a non-external function to use the `contextless` ABI, use the [`contextless`] attribute.
 
 ## Generator functions
 
-A generator function is a function that contains one or more [`yield`](../expressions/yield-expressions.md)s.
+A generator function is a function that contains one or more [`yield`]s.
 It is allows for writing iterators as if they were normal functions, but can return multiple values.
 
 A generator function must return an `impl Iterator` type.
@@ -410,3 +410,16 @@ A string-template function is a special function which can be used by a [templat
 
 It takes in an interpolated string, and optionally a set of variadic arguments, which can be used to pass values without interpolating them within the string itself.
 A common usecase of this is to map them to a `{N}` occurance within the string, and insert them there.
+
+
+[`@callconv` attribute]:      #callconv
+[external & export blocks]:   ./external-export-block.md
+[`contextless`]:              ../attributes.md#contextless-
+[block expression]:           ../expressions/block-expressions.md
+[autoclosure]:                ../expressions/closure-expressions.md#autoclosures-
+[template string expression]: ../expressions/template-string-expressions.md
+[`yield`]:                    ../expressions/yield-expressions.md
+[function type]:              ../type-system/types/function-types.md
+[`type` type]:                ../type-system/types/type-type.md
+[unit type]:                  ../type-system/types/unit-type.md
+[irrifutable pattern]:        ../patterns.md

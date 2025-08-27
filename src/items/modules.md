@@ -61,7 +61,7 @@ If no explicit path is defined for the module, the path to the file will mirror 
 All ancestor module path elements are represented by a path of nested directories within the artifact's source module.
 
 The default naming of a sub-module is done in the following way:
-- When the current file is a [module root](#432-module-roots-), the module file is located within the same directory as the module root's file.
+- When the current file is a [module root], the module file is located within the same directory as the module root's file.
 - As a `mod.mn` file within a sub-directory with the module's name.
 
 This is also the same order in which the compiler will scan for the module's file when no `path` attribute is provided
@@ -95,7 +95,7 @@ Module path    | `c`'s file location | `c`'s module path
 `src/a/mod.mn` | `src/a/foo.mn`      | `:.a.c`
 
 For a `path` attribute inside an inline module, the relative location of the file path depends on the kind of source file the `path` attribute is located in.
-If in a [module root](#432-module-roots-), the path is relative to the directory the module root is located in.
+If in a [module root], the path is relative to the directory the module root is located in.
 If it were to only use file modules, meaning that it will interpret all inline module modules as a directories.
 Otherwise, it is almost the same, with the exception that the path starts with the name of the current module.
 
@@ -124,3 +124,6 @@ mod inline {
 `inner` would now be located within `foo/bar.rs`.
 
 When a path is applied to an inline module, the path does not require an extension.
+
+
+[module root]: ../package-structure.md#module-roots-

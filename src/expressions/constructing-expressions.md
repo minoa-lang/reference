@@ -6,7 +6,7 @@
 ```
 
 A constructing expression constructs a new instance of a type.
-This consists of a group of multiple expressions and can also be used in [in-place operators](../operators/special-operators.md#in-place-operator-).
+This consists of a group of multiple expressions and can also be used in [in-place operators].
 
 ## Tuple expression [↵](#constructing-expressions)
 
@@ -19,7 +19,7 @@ This consists of a group of multiple expressions and can also be used in [in-pla
 A tuple expression constructs a tuple value.
 
 The construction exists out of a comma separated list of values that need to be placed within the tuple.
-Since 1-ary tuples are not supported, if the expression only contains 1 operand, it will be interpreted as a [parenthesized expression](./paren-expressions.md).
+Since 1-ary tuples are not supported, if the expression only contains 1 operand, it will be interpreted as a [parenthesized expression].
 Similarly if the expressions contains 0 operands, a unit type will be created.
 
 The number of operands within the tuple initializer defines the arity of the tuple.
@@ -187,3 +187,8 @@ If the value of the count operand is larger than 1, the repeat operand must be c
 
 The count must be less or equal to a supported size by the vector.
 If less elements are provided than the vector's size, the remaining values will be filled by `T.default()`.
+
+
+
+[parenthesized expression]: ./paren-expressions.md)
+[in-place operators]:       ../operators/special-operators.md#in-place-operator-

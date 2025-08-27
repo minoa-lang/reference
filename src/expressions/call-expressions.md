@@ -102,4 +102,8 @@ or as
 ```
 foo { $0 > $1 }
 ```
-> _Note_: This feature is also used by [initializers](../items/initializers.md)
+> _Note_: This feature is also used by [initializers]
+
+
+
+[initializers]: ../items/initializers.md

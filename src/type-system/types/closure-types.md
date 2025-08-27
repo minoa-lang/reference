@@ -3,8 +3,8 @@
 A closure type is an anonymous compiler-generated type, which cannot be manually defined.
 Similar to function types, it refers to a closure using a unique anymous type.
 
-When closures don't capture any values, they will be able to coerce into [function pointer types](#11116-function-pointer-type-) that have a matching signature.
-Coercion allows these closures' parameter types to be infered based on their use, and they follow the same rule as [function types](#11115-function-types-) as to which sites can cause coercion.
+When closures don't capture any values, they will be able to coerce into [function pointer types] that have a matching signature.
+Coercion allows these closures' parameter types to be infered based on their use, and they follow the same rule as [function types] as to which sites can cause coercion.
 
 > _Todo_: Capture rules are currently heavily based on rust, this might not be the best solution, as we also want manual control for capturing
 
@@ -14,14 +14,16 @@ Coercion allows these closures' parameter types to be infered based on their use
 
 Closures can be passed to a function is 2 ways:
 - As a deduces function parameter that implements one of the relavent function traits.
-- As a parameter with a so-called [closure param type](#11123-function-pointer-type-)
+- As a parameter with a so-called [closure param type].
+
+> _Todo_: Closure param type
 
 #### Capture modes [↵](#closure-types)
 
 Capture modes define how a place expression from the surrounding environment will be borrowed or moved into the closure. The following modes are supported:
-1) immutable borrow: the place expression is captured as a [shared referece](#shared-reference-)
+1) immutable borrow: the place expression is captured as a [shared referece]
 2) unique immutable borrow: similar to immutable borrow, but must be unique as defined [here](#unique-immutable-borrows-in-captures)
-3) mutable borrow: the place expression is captured as a [mutable reference](#mutable-reference-)
+3) mutable borrow: the place expression is captured as a [mutable reference]
 4) move: also known as 'by value'. The place expression is captured by moving it into the closure
 
 The order that is used to decide which method to use, is the same order in order as the modes described above.
@@ -37,10 +39,10 @@ Values implementint the `Copy` trait that are moved into the closure, will be ca
 
 A capture path is a sequence starting with a variable from the surrounding environment, followed by zero or more place projectecion taht were applied to the variable.
 A place projection is any of the following:
-- [field access](../../expressions/field-access-expressions.md)
-- [tuple index](../../expressions/tuple-index-expressions.md)
-- [dereference](../../operators/special-operators.md#derefence-operator-)
-- [array or slice index](../../expressions/index-expressions.md)
+- [field access]
+- [tuple index]
+- [dereference]
+- [array or slice index]
 
 The capture will then use this path to do a partial borrow of the deepest element within the path.
 For example:
@@ -106,7 +108,7 @@ Where as capturing `m^.a^` as an immutable reference, will allow the closure to 
 
 ##### Wildcard pattern bindings [↵](#capture-precision-)
 
-Closures only capture data that needs to be read. Binding a value with a [wildcard pattern](../../patterns/wildcard-patterns.md) does not count as a read, and thus won't be captured.
+Closures only capture data that needs to be read. Binding a value with a [wildcard pattern] does not count as a read, and thus won't be captured.
 For example, the follwoing closers will not capture `x`:
 ```
 x := "hello":s;
@@ -122,7 +124,7 @@ c();
 ```
 
 This also includes destructuring tuples, structs, and enums. 
-Fields matched with the [rest pattern](#104-rest-pattern-) are also not considered as read, and thus those fields will not be captured.
+Fields matched with the [rest pattern] are also not considered as read, and thus those fields will not be captured.
 The following illustrates some of these:
 ```
 x := ("a":s, "b":s);
@@ -211,7 +213,7 @@ c();
 
 ##### References to unaligned structures [↵](#capture-precision-)
 
-Because it is [illegal behavior](../../illegal-behavior.md#incorrect-pointer-alignment-) to create a reference to  unaligned fields in a structure, closures will only capture the prefix of the capture path that runs up to, but not inscluding, the first field access into a `packed` structure or a bitfield.
+Because it is [illegal behavior] to create a reference to  unaligned fields in a structure, closures will only capture the prefix of the capture path that runs up to, but not inscluding, the first field access into a `packed` structure or a bitfield.
 This inclused all fields, even those that are aligned, to protect against compatibility concerns should any of the fields in the structure of bitfield change in the future.
 
 ```
@@ -318,3 +320,18 @@ As a result, it is possible for disjoint fields of a composite types to be dropp
 ```
 
 > _Todo_: types below here
+
+
+
+[shared referece]:        #shared-reference-
+[mutable reference]:      #mutable-reference-
+[function pointer types]: ./function-pointer-types.md
+[function types]:         ./function-types.md
+[closure param type]:     
+[field access]:           ../../expressions/field-access-expressions.md
+[tuple index]:            ../../expressions/tuple-index-expressions.md
+[array or slice index]:   ../../expressions/index-expressions.md
+[illegal behavior]:       ../../illegal-behavior.md#incorrect-pointer-alignment-
+[dereference]:            ../../operators/special-operators.md#derefence-operator-
+[wildcard pattern]:       ../../patterns/wildcard-patterns.md
+[rest pattern]:           ../../patterns/rest-patterns.md

@@ -4,10 +4,10 @@
 ```
 
 A trait represents an abstract interface that type can implement, containing zero or more trait items, like:
-- [functions & methods](./functions.md#trait-functions--methods-)
-- [type aliases](./type-aliases.md#trait-type-aliases-)
-- [constants](./consts.md#trait-constant-)
-- [properties](./properties.md#trait-properties-)
+- [functions & methods]
+- [type aliases]
+- [constants]
+- [properties]
 
 All traits define an implicit `Self` type, and refers to "the type that is implementing this trait".
 Any generic parameters applied to the trait, are also passed along to the `Self` type
@@ -70,3 +70,9 @@ The following items are supported inside a trait:
 - properties
 
 Any item that does not have a default value or implementation is required to be implemented in any trait implementation.
+
+
+[functions & methods]: ./functions.md#trait-functions--methods-
+[constants]:           ./consts.md#trait-constant-
+[type aliases]:        ./type-aliases.md#trait-type-aliases-
+[properties]:          ./properties.md#trait-properties-

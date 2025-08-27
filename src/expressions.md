@@ -63,7 +63,7 @@ field accesses                                                  | left-to-right
 functions calls, indexing                                       | left-to-right
 `try`, `catch`                                                  |
 comma expression arguments to operators                         | left-to-right
-operators (see the [precedence section](./precedences.md))       |
+operators (see the [precedence section])                        |
 other comma expression                                          | left-to-right
 `return`, `break`, `continue`, `fallthrough`, `throw`, closures |
 
@@ -111,7 +111,7 @@ They refer to the following expressions:
 
 #### Value expressions [↵](#place-value--assign-expressions-)
 
-Any expression that does not fit [place](#place-expressions-) or [assign](#assign-expressions-) expressions are value expressions
+Any expression that does not fit [place] or [assign] expressions are value expressions
 
 ### Moved & copied types [↵](#expression-details-)
 
@@ -158,3 +158,9 @@ Implicit borrowing takes place in the following expressions:
 - Operand of a derefence operator
 - Operands of a comparison
 - Left operand of a compound assignment
+
+
+
+[assign]:             #assign-expressions-
+[place]:              #place-expressions-
+[precedence section]: ./precedences.md

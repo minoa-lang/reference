@@ -18,7 +18,7 @@ Parentheses are required to chain comparisons, e.g. `a == b == c` is invalid, bu
 Unlike most infix operators, the traits to overload these operators are used more generally to indicate when a type may be compared and will likely be assumed to define actual comparisons by functions that use these are trait bounds.
 Code can then use these assupmptions when using the operators.
 
-Comparison operator are [`by_ref`](../operators.md#by_ref-)
+Comparison operator are [`by_ref`]
 Unlike most binary operators, these operators implicitly take a shared borrow of their operands, evaluating them as place expressions.
 
 The following operators and their respective trait functions are
@@ -269,3 +269,7 @@ Operator | type                  | Trait          | precedence  | meaning       
 ** Uses floored division, maning `remainder = dividend % divisor` will return a value with the same sign as the divisor.
 
 > _Note_ When reading the above table in plain text, any occurance of `\|` is actually just `|`, but requires the `\` as it is otherwise interpreted as a the next value in the table
+
+
+
+[`by_ref`]: ../operators.md#by_ref-

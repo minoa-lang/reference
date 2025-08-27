@@ -10,7 +10,7 @@ An index expression may also indicate that it uses reverse indexing, meaning tha
 In addition to direct indexing, there is also a variant allowing for the index expression to return an optional value that will be `.None` when no value is found at the given index.
 This is done by using the `[?expr]` version of the indexing expression.
 
-Similar to a [field access expression](./field-access-expressions.md), tuple index expressions also support `?.` (null-propagating) accesses.
+Similar to a [field access expression], tuple index expressions also support `?.` (null-propagating) accesses.
 The indexing will only happen if the value it is called on is a non 'err' value, otherwise it will propagate this value.
 The `?.` access is supported on any type that implements the `OptAccess` trait.
 
@@ -45,3 +45,7 @@ The interfaces associated with the index expressions are:
 - `RevOptIndexMut`
 
 > _Todo_: Can we unify this a bit more?
+
+
+
+[field access expression]: ./field-access-expressions.md

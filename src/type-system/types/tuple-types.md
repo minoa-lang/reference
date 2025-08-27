@@ -50,14 +50,14 @@ fn foo() -> (i32, i64) { ... }
 // bar does not need to be changed, as the access to tup.0 is still valid.
 ```
 
-> _Note_: Internally, tuple types are represented as [record tuple structs](./tuple-struct-types.md#record-tuple-structs-), for example:
+> _Note_: Internally, tuple types are represented as [record tuple structs], for example:
 > ```
 > (i32, i64, bool)
 > // is represented at
 > record struct __generated_name(i32, i64, bool)
 > ```
 
-> _Note_: For a nominal version of a tuple, see [tuple structs](./tuple-struct-types.md)
+> _Note_: For a nominal version of a tuple, see [tuple structs]
 
 #### Named tuples [↵](#tuple-types)
 
@@ -71,16 +71,21 @@ In addition to accessing a field by its name, a named tuple's fields can also be
 
 A named and regular tuple may be assigned to each other when their types match, but 2 names tuples can only be assigned to each other when both their names and types match.
 
-Internally, tuple types are represented as [record tuple structs](./tuple-struct-types.md#record-tuple-structs-), for example:
+Internally, tuple types are represented as [record tuple structs], for example:
 ```
 (i32, i64, bool)
 // is represented at
 record struct __generated_name(i32, i64, bool)
 ```
 
-> _Note_: Internally, tuple types are represented as [record tuple structs](./tuple-struct-types.md#record-tuple-structs-), for example:
+> _Note_: Internally, tuple types are represented as [record tuple structs], for example:
 > ```
 > (a: i32, field: i64, name: bool)
 > // is represented at
 > record struct __generated_name(a: i32, field: i64, name: bool)
 > ```
+
+
+
+[tuple structs]:        ./tuple-struct-types.md
+[record tuple structs]: ./tuple-struct-types.md#record-tuple-structs-

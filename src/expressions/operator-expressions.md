@@ -15,6 +15,10 @@ Otherwise, if a post or prefix expression must be used, it must not be directly 
 
 Prefix and postfix operators can only chained when the by using parenthesized expression, meaning that chaining 2 `-`s requires the following to be written: `-(-val)`.
 
-For additional info on operators, check the [Operator section](../operators.md).
+For additional info on operators, check the [Operator section].
 
 > _Note_: Is it generally preferred to have spaces around infix operators regardless of when a prefix of postfix expression is on either side.
+
+
+
+[Operator section]: ../operators.md
