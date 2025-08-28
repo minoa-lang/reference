@@ -2,6 +2,8 @@
 
 [Introduction](./introduction.md)
 
+[Notation](./notation.md)
+
 - [Source representation](./source-representation.md)
 - [Lexical structure](./lexical-structure.md)
    - [Whitespace](./lexical-structure/whitespace.md)
