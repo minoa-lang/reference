@@ -22,6 +22,8 @@ Below are lists of all unicode characters recognized as either horizontal or ver
   - U+2028: LINE SEPARATOR
   - U+2029: PARAGRAPH SEPARATOR
 
+These are essential the whitespace characters as are defined as `Pattern_White_Space` by Unicode.
+
 A program has identical meaning if each whitespace element is replaces with any other legal whitespace character, such as a single space.
 This does not include newline sequences which are mentioned below.
 

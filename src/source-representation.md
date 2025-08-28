@@ -16,6 +16,8 @@ Source input is generally represented as a sequence of bytes in a file, but can 
 
 Minoa source files use the extension `.mn`
 
+> _Implementation note_: Implementations may support additional encoding schemes, such as UTF-16, UTF-32, or non-unicode character mappings.
+
 ## Byte order marker
 ```
 <byte-order-marker> := "\xEF\xBB\xBF"
@@ -45,7 +47,9 @@ scsu        | 0E FE FF
 bocu-1      | FB EE 28
 gb18030     | 84 31 95 33
 
-If any of the above markers is found, a error will be generated and notify which invalid bytecode marker is used
+If any of the above markers is found, a error will be generated and notify which invalid bytecode marker is used.
+
+> _Implementation note_: If the implementation support additional encoding schemes, it must support the respective byte order markers and **not** generate an error.
 
 ## Shebang
 ```
@@ -65,10 +69,31 @@ If the input is guaranteed to be normalized, this can be turned off.
 
 An exception to normalization is [string literals], in which no normalization happens.
 
-> _Note_: Normalization Form D is more uniform, in that characters are always maximally decomposed into combining characters; in NFD, characters may or may not be decomposed depending on whether a composed form is available. NFD may be more suitable for certain uses such as type correction, homoglyps detection, or code completion. But NFC is also way more common and recomended in locations, it's also more commonly used for languages that support unicode.
+> _Note_: Normalization Form D is more uniform, in that characters are always maximally decomposed into combining characters; in NFD, characters may or may not be decomposed depending on whether a composed form is available. NFD may be more suitable for certain uses such as type correction, homoglyps detection, or code completion. But NFC is also more common and recomended in locations, it's also more commonly used for languages that support unicode.
 
-> _Todo_: We might be able to also add support for homoglyph and confusables detection and convert them to a single character, see ['Confusable Detection' section of Unicode Annex #39].
-> _Todo_: A quick detection optimization is defined within the ['Quick Check for NFC' section in Unicode Annex #15].
+> _Implementation note_: Implementations may support NFD, but this must be done using an explicit compiler flag, and must in addition also be able to reconstruct the file in NFC mode.
+>                        Any symbol output by the compiler, must adhere to NFC.
+
+> _Implementation note_: It is recommended, but not required, for the compiler to detect homoglyphs and confusables, as defined in the ['Confusable Detection' section of Unicode Annex #39].
+>                        The compiler is allowed to convert these to a single character, but this must only be enabled when an explicit flag is provided.
+
+> _Implementation note_: A quick detection optimization is defined within the ['Quick Check for NFC' section in Unicode Annex #15].
+
+# Disallowed characters
+
+Minoe forbids a certain set of characters from being used within any input.
+These are the following (ranges are inclusive):
+- U+0000 to U+0008
+- U+000E to U+001F
+- U+007F
+
+Any occurance of these characters will result in an error.
+
+## Reconstruction
+
+Since the compiler keeps all elements, with the exception of normalization, it can output the identical file that was passed to it from only the tokens and their respective _trivia_.
+
+> _Implementation note_: This is an optional feature and is not required for a conforming compiler implementation
 
 
 [Unicode Standard Annex #15]:                          https://www.unicode.org/reports/tr15/tr15-56.html

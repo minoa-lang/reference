@@ -1,19 +1,17 @@
 # Summary
 
-> _Todo_: Fix up links
-
 [Introduction](./introduction.md)
 
 - [Source representation](./source-representation.md)
 - [Lexical structure](./lexical-structure.md)
    - [Whitespace](./lexical-structure/whitespace.md)
    - [Newline sequences](./lexical-structure/newline-sequences.md)
+   - [Comments](./lexical-structure/comments.md)
+      - [Doc comment format](./lexical-structure/comments/doc-comment-format.md)
    - [Keywords](./lexical-structure/keywords.md)
    - [Names](./lexical-structure/names.md)
    - [Puntuation](./lexical-structure/punctuation.md)
    - [Delimiters](./lexical-structure/delimiters.md)
-   - [Comments](./lexical-structure/comments.md)
-      - [Doc comment format](./lexical-structure/comments/doc-comment-format.md)
 - [Package structure](./package-structure.md)
 - [Identifers & paths](./identifiers-paths.md)
 - [Literals](./literals.md)

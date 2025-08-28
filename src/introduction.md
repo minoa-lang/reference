@@ -43,5 +43,8 @@ To keep the reference consistent, it like many other techincal books, has a cert
 // Example code block
 ```
 
+- Implementation notes are used to define features a compiler implementation may support, or how it may deviate from the reference.
+> _Implementation note_: This is an example of an implementation note
+
 - Todos are used to indicate that part of the reference is not finished, and defines what changes still need to be made to them.
 > _Todo_: This is an example of a todo

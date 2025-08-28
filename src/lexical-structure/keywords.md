@@ -2,10 +2,11 @@
 
 Keywords represent names within the code that have a special meaning in the language, such as declaring a function.
 
-There are 3 types of keywords:
+There are 4 types of keywords:
 - strong
 - reserved
 - weak
+- pattern
 
 ## Strong keywords [↵](#keywords-)
 
@@ -18,11 +19,6 @@ A list of strong keywords can be found below (in alphabetic order):
 - `assert`
 - `async`
 - `await`
-- `b8`
-- `b16`
-- `b32`
-- `b64`
-- `bitfield`
 - `bool`
 - `break`
 - `catch`
@@ -49,11 +45,6 @@ A list of strong keywords can be found below (in alphabetic order):
 - `fallthrough`
 - `fn`
 - `for`
-- `i8`
-- `i16`
-- `i32`
-- `i64`
-- `i128`
 - `if`
 - `in`
 - `!in`
@@ -84,13 +75,6 @@ A list of strong keywords can be found below (in alphabetic order):
 - `try`
 - `try!`
 - `type`
-- `opaque`
-- `u8`
-- `u16`
-- `u32`
-- `u64`
-- `u128`
-- `union`
 - `unsafe`
 - `use`
 - `usize`
@@ -104,58 +88,112 @@ A list of strong keywords can be found below (in alphabetic order):
 A reserved keyword is keyword that is not currently used, but has been set aside as not being possible to be used by the langauge for future use.
 
 A list of reserved keywords can be found below (in alphabetic order):
+- `override`
+- `priv`
 
 ## Weak keywords [↵](#keywords-)
 
-A weak keyword is a keyword that is dependent on the surrounding context and can be used anywhere outside
+A weak keyword is a keyword that is dependent on the surrounding context and can be used anywhere outside.
+In addition, each keyword has additional info in which use-case it is counted as an actual keyword.
 
 A list of weak keywords can be found below (in alphabetic order):
-- `accessor`
-- `adapt`
-- `alias`
-- `align`
-- `allowzero`
-- `assign`
-- `associativity`
-- `attr`
-- `chain`
-- `consume`
-- `derive`
-- `did_set`
-- `distinct`
-- `extend`
-- `flag`
-- `full`
-- `get`
-- `higher_than`
-- `infix`
-- `init`
-- `invar`
-- `lazy`
-- `lib`
-- `literal`
-- `lower_than`
-- `member`
-- `member_attr`
-- `meta`
-- `opaque`
-- `override`
-- `package`
-- `peer`
-- `post`
-- `postfix`
-- `pre`
-- `precedence`
-- `prefix`
-- `property`
-- `raw`
-- `record`
-- `sealed`
-- `set`
-- `sparse`
-- `super`
-- `template`
-- `tls`
-- `unique`
-- `volatile`
-- `will_set`
+- `accessor`: within a [meta attribute] declaration
+- `adapt`: to declare an [adapt type alias]
+- `alias`: to declare an [constraint disambiguation alias]
+- `align`: to declare the alignment of a [pointer type]
+- `allowzero`: to declare an [`allowzero` pointer type]
+- `assign`: as part of an [operator] declaration
+- `associativity`: as part of a [precedence] declaration
+- `attr`: to declare a [meta attribute]
+- `bitfield`: to declare a [bitfield]
+- `chain`: as part of an [operator] declaration
+- `consume`: as part of an [operator] declaration
+- `derive`: within a [meta attribute] declaration
+- `did_set`: to declare a [property observer]
+- `distinct`: to declare a [distinct type alias]
+- `extend`: as part of a [trait implementation]
+- `flag`: to declare a [flag enum]
+- `full`: within a [meta attribute] declaration
+- `get`: to declare a [property getter]
+- `higher_than`: as part of a [precedence] declaration
+- `infix`: as part of an [operator] declaration
+- `init`: to declare an [initializer]
+- `invar`: as part of a [function contract]
+- `lazy`: to declare a [lazy parameter], or as part of an [operator] declaration
+- `lib`: as part of a [visibility specifier]
+- `literal`: as part of a [literal operator] or [meta pattern]
+- `lower_than`: as part of a [precedence] declaration
+- `member`: within a [meta attribute] declaration
+- `member_attr`: within a [meta attribute] declaration
+- `meta`: to declare a [meta function]
+- `opaque`: to declare an [opaque type]
+- `package`: as part of a [visibility specifier]
+- `peer`: within a [meta attribute] declaration
+- `post`: as part of a [function contract]
+- `postfix`: as part of an [operator] declaration
+- `pre`: as part of a [function contract]
+- `precedence`: to declare a [precedence]
+- `prefix`: as part of an [operator] declaration
+- `property`: to declare a [property]
+- `raw`: to get a [raw pointer value]
+- `record`: to declare a [record struct], [record tuple struct], [record enum], or [record bitfield]
+- `sealed`: to declare a [sealed trait]
+- `set`: to declare a [property setter]
+- `sparse`: to declare a [sparse array type]
+- `super`: as part of a [visibility specifier], or as a [simple path start]
+- `template`: to declare a [template string function]
+- `tls`: to declare a [thread-local static]
+- `union`: to declare a [union]
+- `unique`: as part of a [closure capture list]
+- `volatile`: to declare a [volatile pointer]
+- `will_set`: to declare a [property observer]
+
+## Pattern keywords
+
+A pattern keyword is a special keyword, that instead of following a specific value, is parsed using a pattern.
+They can be both _strong_ and _weak_ keyword, depending on the exact value for them.
+The pattern is defined by having `{}`, surrouonding a pattern definition, which is specified after the keyword
+
+A list of weak keywords can be found below (in alphabetic order):
+- `b{N}`: where `N` is any whole integer <= 128. If `N` is 8, 16, 32, or 64, it is a _strong_ keyword, otherwise it is a _weak_ keyword
+- `i{N}`: where `N` is any whole integer <= 128. If `N` is 8, 16, 32, 64, or 128, it is a _strong_ keyword, otherwise it is a _weak_ keyword
+- `u{N}`: where `N` is any whole integer <= 128. If `N` is 8, 16, 32, 64, or 128, it is a _strong_ keyword, otherwise it is a _weak_ keyword
+
+
+
+[function contract]:               ../constracts.md#function-contracts-
+[closure capture list]:            ../expressions/closure-expressions.md
+[simple path start]:               ../identifiers-paths.md#simple-paths-
+[flag enum]:                       ../items/enums.md#flag-enum-
+[lazy parameter]:                  ../items/functions.md#lazy-parameters-
+[template string function]:        ../items/functions.md#template-string-functions-
+[initializer]:                     ../items/initializers.md
+[trait implementation]:            ../items/implementations.md#trait-implementation-
+[property]:                        ../items/properties.md
+[property observer]:               ../items/properties.md#observers-
+[property getter]:                 ../items/properties.md#getters-
+[property setter]:                 ../items/properties.md#setters-
+[thread-local static]:             ../items/statics.md#thread-local-storage-
+[sealed trait]:                    ../items/traits.md
+[adapt type alias]:                ../items/type-aliases.md#adapt-type-aliases-
+[distinct type alias]:             ../items/type-aliases.md#distinct-type-aliases-
+[constraint disambiguation alias]: ../generics.md#constraint-disambiguation-aliases-
+[meta attribute]:                  ../metaprogramming.md#meta-attributes-
+[meta function]:                   ../metaprogramming.md#regular-meta-functions-
+[meta pattern]:                    ../metaprogramming.md#meta-patterns-
+[operator]:                        ../operators.md#operator-items-
+[literal operator]:                ../operators/literal-operators.md
+[raw pointer value]:               ../operators/special-operators.md#raw-borrow-operators-
+[precedence]:                      ../precedences.md#user-defined-precedence-
+[sparse array type]:               ../type-system/types/array-types.md
+[bitfield]:                        ../type-system/types/bitfield-types.md
+[opaque type]:                     ../type-system/types/opaque-types.md
+[record bitfield]:                 ../type-system/types/bitfield-types.md#record-bitfield-types-
+[record enum]:                     ../type-system/types/enum-types.md#record-enum-types-
+[pointer type]:                    ../type-system/types/pointer-types.md#alignment-
+[`allowzero` pointer type]:        ../type-system/types/pointer-types.md#allowzero-
+[volatile pointer]:                ../type-system/types/pointer-types.md#volatile-pointers-
+[record struct]:                   ../type-system/types/struct-types.md#record-structs-
+[record tuple struct]:             ../type-system/types/tuple-struct-types.md#record-tuple-structs-
+[union]:                           ../type-system/types/union-types.m
+[visibility specifier]:            ../visibility.md#specifiers-
