@@ -12,6 +12,8 @@ A literal is a compile time constant representing a given value as defined below
 
 > _Todo_: Specify how the literal values will be encoded, e.g. decimal values keeping all info so a literal operator can also know that a non-latin decimal character was used
 
+> _Todo_: When there is documentation to the literal types, link them
+
 ## Numeric literals [↵](#literals-)
 
 ```
@@ -64,7 +66,7 @@ Decimal literals may be prefixed with `0`s without affecting the value, unlike s
 
 Whenever a decimal value is followed by a positive exponent, it is also interpreted as a integer literal.
 
-The integral decimal literals is of the type `core:.DecLiteral`.
+The integral decimal literals is of the type [`core:.DecLiteral`].
 
 > Examples
 > ```
@@ -93,7 +95,7 @@ As tuple indexing on a decimal literal is not possible, this causes no confusion
 
 The exponent indicator `e` needs to be lower case to be consistent with the other indicators within literal values.
 
-The  floating point decimal literals are of the type  `core:.DecFloatLiteral`.
+The  floating point decimal literals are of the type [`core:.DecFloatLiteral`].
 
 > _Note_: Floating point values must have a digit before and after the decimal dot to be valid, other representations will be interpreted as different syntactic element.
 >         i.e. `1.2` is a valid floating point literal, but neither `1.` nor `.2` are valid.
@@ -114,7 +116,7 @@ The  floating point decimal literals are of the type  `core:.DecFloatLiteral`.
 ### Binary literals [↵](#numeric-literals-)
 
 ```
-<bin-digit> := '0' | '1'
+<bin-digit>   := '0' | '1'
 <bin-literal> := '0b' <bin-digit> { [ <digit-serp> ] <bin-digit> }*
 ```
 
@@ -122,7 +124,7 @@ A binary literal represents an integer value written as sequence of 0s or 1s, di
 
 The binary literal indicator uses a lower case `b` for readability, as as uppercase `B` could be confused with `8`.
 
-A binary literal is of type `core:.BinLiteral`.
+A binary literal is of type [`core:.BinLiteral`].
 
 > _Examples_:
 > ```
@@ -135,7 +137,7 @@ A binary literal is of type `core:.BinLiteral`.
 ### Octal literals [↵](#numeric-literals-)
 
 ```
-<oct-digit> := '0'-'7'
+<oct-digit>   := '0'-'7'
 <oct-literal> := '0o' <oct-digit> { [ <digit-serp> ] <oct-digit> }*
 ```
 
@@ -143,7 +145,7 @@ An octal literal represents an integer value written as a sequence of octal valu
 
 The binary literal indicator uses a lower case `o` for readability, as an uppercase `O` could be confused with `0`.
 
-An octal literal is of type `core:.OctLiteral`
+An octal literal is of type [`core:.OctLiteral`].
 
 > _Examples_:
 > ```
@@ -157,8 +159,9 @@ An octal literal is of type `core:.OctLiteral`
 ### Hexadecimal integer literals [↵](#numeric-literals-)
 
 ```
-<hex-digit> := '0'-'9' | 'a'-'z' | 'A'-'Z'
-<int-hex-literal> := '0x' <hex-digit> { [ <digit-serp> ] <hex-digit> }*
+<hex-digit>       := '0'-'9' | 'a'-'z' | 'A'-'Z'
+<hex-value>       := <hex-digit> { [ <digit-serp> ] <hex-digit> }*
+<int-hex-literal> := '0x' <hex-value>
 ```
 
 A hexadecimal literal represents an integer value written as a sequence of nibbles, values ranging from 0 to 9, and then from A/a to F/f.
@@ -167,7 +170,7 @@ Currently a hexadecimal literal is limited to 32 digits, so not to overflow the 
 
 The binary indicator uses a lower case `x`, although no confusing with an uppercase `X` could occur, this is done to be consistent with both binary an octal indicators.
 
-A hexadecimal literal is of type `core:.HexLiteral`
+A hexadecimal literal is of type [`core:.HexLiteral`].
 
 > _Examples_:
 > ```
@@ -181,26 +184,23 @@ A hexadecimal literal is of type `core:.HexLiteral`
 ### Hexadecimal floating point literals [↵](#numeric-literals-)
 
 ```
-<float-hex-literal> := '0x' ( '1.' | '0.' ) <hex-digit> { [ <digit-serp> ] <hex-digit> } <float-hex-exponent>
-<float-hex-exponent> := 'p' [ '-' | '+' ] '0'-'9' { [ <digit-serp> ] '0'-'9' }*
-                      | 'px' [ '-' | '+' ] <hex-digit> { [ <digit-serp> ] <hex-digit> }*
+<float-hex-literal>  := '0x' <hex-value> [ '.' <hex-value> ] <float-hex-exponent>
+<float-hex-exponent> := 'p' [ '-' | '+' ] <dec-value>
+                      | 'px' [ '-' | '+' ] <hex-value> 
 ```
 
 In addition to integer hexadecimal literals, there is also support to represent floating points as decimal literals.
 These are composed out of a sign, a mantissa and an exponent.
 
 The literal is written with a hexadecimal indicator `0x`. 
-This can then be followed by either a `0.` or a `1.`.
+This consists of a hexadecimal literal, optionally followed by a `.` and a hexadecimal value (without `0x`).
 After which the exponent indicator `p` appears, followed by an either `-` or `+`, and at the exponent in decimal digits.
 Alternatively, if the exponent indicator `px` appears, the exponent is written with hexadecimal digits
-
-When the literal starts with `0x0.`, both the mantissa and exponent are limited to 0.
-The special values of 'SNAN', 'QNAN', '-INFINITY' or '+INFINITY' should not be encoded this way, for these values, the associated constant of the type should be used.
 
 The binary indicator uses a lower case `x`, although no confusing with an uppercase `X` could occur, this is done to be consistent with both binary an octal indicators.
 The exponent indicator `p` or `px` also needs to be lower case for the same reason.
 
-A hexadecimal floating point literal is of type `core:.HexFloatLiteral`
+A hexadecimal floating point literal is of type [`core:.HexFloatLiteral`].
 
 > _Examples_:
 > ```
@@ -209,8 +209,11 @@ A hexadecimal floating point literal is of type `core:.HexFloatLiteral`
 > -0x0.0000000000000p+0000 // value of -0
 > 0x1.5555555555555p-2 // value of 1/3
 > 0x1.5555_5555_5555_5p-2 // value of 1/3
-> 0x1.0pxF // value of 1e15
+> 0x4.0pxF // value of 4 * 2 ^ 15
+> 0x4pxF // Same as the one above
 > ```
+
+> _Note_: The special values of 'SNAN', 'QNAN', '-INFINITY' or '+INFINITY' should not be encoded this way, for these values, the associated constant of the type should be used.
 
 ## Boolean literals [↵](#literals-)
 ```
@@ -219,30 +222,30 @@ A hexadecimal floating point literal is of type `core:.HexFloatLiteral`
 
 A boolean literal represents either a `true` of a `false` value.
 
-A boolean literal is of type `core:.BoolLiteral`
+Unlike other literals, a boolean literal is not defined by a special constant type, but is rather directly defined as a [`bool`].
 
 ## Character literals [↵](#literals-)
 ```
-<character-literal> := "'" ( ? any unicode codepoint, except for \ or ' or in file representation of \n \r \t  ? | <escape-code> ) "'"
+<character-literal> := "'" ( ? any unicode codepoint, except for \ or ' or in file representation of \n \r \t ? | <escape-code> ) "'"
 ```
 
 A character literal defines a character, represented by its unicode codepoints.
 
-A character literal is of type `core:.CharLiteral`
+A character literal is of type [`core:.CharLiteral`].
 
 ### Escaped characters [↵](#63-character-literals-)
 
 ```
-<escape-code> := '\0'
-               | '\t'
-               | '\n'
-               | '\r'
-               | '\"'
-               | "\'"
-               | '\\'
-               | '\p'
-               | '\x' <hex-digit> <hex-digit>
-               | '\u{' { <hex-digit> }[1,6] '}'
+<escape-code>        := '\0'
+                      | '\t'
+                      | '\n'
+                      | '\r'
+                      | '\"'
+                      | "\'"
+                      | '\\'
+                      | '\p'
+                      | '\x' <hex-digit> <hex-digit>
+                      | '\u{' { <hex-digit> }[1,6] '}'
 <string-escape-code> := <excape-code>
                       | '\p'
 ```
@@ -298,7 +301,7 @@ A string literal is a sequence of any unicode characters, enclosed by two `"` (d
 A string literal may also include include escaped characters.
 They are also limited to being on a single line.
 
-A string literal is of type `core:.StringLiteral`
+A string literal is of type [`core:.StringLiteral`].
 
 > _Note_: String literals do not get impacted by normalization, unlike any other text in the source data, as defined in [Normalization]
 
@@ -354,7 +357,7 @@ A line continuation indicator is written as a `\`, followed by a new line sequen
 
 ### Raw string literals [↵](#string-literals-)
 ```
-<raw-string-literal> := { '#' }[N] '`' { ? any valid unicode codepoint other than \r ? }* '`' { '#' }[N]
+<raw-string-literal>            := { '#' }[N] '`' { ? any valid unicode codepoint other than \r ? }* '`' { '#' }[N]
 <raw-multi-line-string-literal> := { <raw-multi-line-string-literal> }* { <raw-string-literal> }
 <raw-multi-line-string-literal> := { '#' }[N] '`' { ? any valid unicode codepoint, expect <new-line> ? }* <new-line>
 ```
@@ -426,5 +429,17 @@ In cases where a string with an interpolation does not need special interpolatio
 
 The format specifier may be any sequence of tokens, and its representation is interpreted by one or more formatters.
 
+Including any string interpolation will result in the string being of type [`core:.InterpStringLiteral`].
 
-[Normalization]: ./source-representation.md#normalization
+
+[`core:.DecLiteral`]:          #decimal-literal-                     "Temporary link"
+[`core:.DecFloatLiteral`]:     #floating-point-literals-             "Temporary link"
+[`core:.BinLiteral`]:          #binary-literals-                     "Temporary link"
+[`core:.OctLiteral`]:          #octal-literals-                      "Temporary link"
+[`core:.HexLiteral`]:          #hexadecimal-integer-literals-        "Temporary link"
+[`core:.HexFloatLiteral`]:     #hexadecimal-floating-point-literals- "Temporary link"
+[`core:.CharLiteral`]:         #character-literals-                  "Temporary link"
+[`core:.StringLiteral`]:       #string-literals-                     "Temporary link"
+[`core:.InterpStringLiteral`]: #string-interpolation-                "Temporary link"
+[Normalization]:               ./source-representation.md#normalization
+[`bool`]:                      ./type-system/types/primitive-types.md#boolean-types
