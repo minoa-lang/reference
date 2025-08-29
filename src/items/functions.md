@@ -401,7 +401,7 @@ fn foo(a: i32,             c: i32...) // foo(a:...)
 fn foo(a: i32, b: i32 = 1, c: i32...) // foo(a:?b:...)
 ```
 
-## String-template functions [↵](#functions)
+## Template string functions [↵](#functions)
 ```
 <string-template-fn> := <fn-qualifiers> 'template' 'fn' <name> [ <deduced-params> ] '(' <name> ':' ? Interpolated stringtype ? [ ',' <variadic-params> ] ')' [ '->` <type> ]  [ <where-clause> ] { <contract> }* <block>
 ```

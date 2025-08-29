@@ -11,4 +11,4 @@ Although this practice may differ between different functions.
 
 A special template string exists which is prefixed by `$`, this calls the format string template as defined in the implicit context, allowing for a convenient shortcut to format a string.
 
-The functions that are used for template string functions are defined [here](../items/functions.md#string-template-functions-)
+The functions that are used for template string functions are defined [here](../items/functions.md#template-string-functions-)

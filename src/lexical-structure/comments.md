@@ -55,7 +55,7 @@ Regular doc comments are only allowed before items, and module-level doc comment
 
 It's format is defined [here](./doc-comment-format.md)
 
-### Suffix description
+### Suffix description [↵](#doc-comments-)
 ```
 <suffix-desc-comment> := '//<' {? any unicode character ?}* <new-line>
 ```

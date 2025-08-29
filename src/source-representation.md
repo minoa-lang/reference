@@ -2,7 +2,7 @@
 
 This section contains info about the source code representation in the file, and by extension about the data on disk.
 
-## Input format
+## Input format [↵](#source-code-representation)
 
 Each source input is interpreted as a sequence of Unicode codepoints encoded within the utf-8 format.
 If an input does not contain a valid utf-8 sequence, this will result in an error.
@@ -18,7 +18,7 @@ Minoa source files use the extension `.mn`
 
 > _Implementation note_: Implementations may support additional encoding schemes, such as UTF-16, UTF-32, or non-unicode character mappings.
 
-## Byte order marker
+## Byte order marker [↵](#source-code-representation)
 ```
 <byte-order-marker> := "\xEF\xBB\xBF"
 ```
@@ -51,14 +51,14 @@ If any of the above markers is found, a error will be generated and notify which
 
 > _Implementation note_: If the implementation support additional encoding schemes, it must support the respective byte order markers and **not** generate an error.
 
-## Shebang
+## Shebang [↵](#source-code-representation)
 ```
 <shebang> := '#!' ? any valid character ? <newline>
 ```
 
 A file may contain a shebang in the first line in a file, but will be ignored (and preserved) by the compiler.
 
-## Normalization
+## Normalization [↵](#source-code-representation)
 
 Source files are normalized using the Normalization Form C (NFC) as defined in [Unicode Standard Annex #15].
 It is generally expected that the source code is stored within a normalized form.
@@ -79,7 +79,7 @@ An exception to normalization is [string literals], in which no normalization ha
 
 > _Implementation note_: A quick detection optimization is defined within the ['Quick Check for NFC' section in Unicode Annex #15].
 
-# Disallowed characters
+# Disallowed characters [↵](#source-code-representation)
 
 Minoe forbids a certain set of characters from being used within any input.
 These are the following (ranges are inclusive):
@@ -89,7 +89,7 @@ These are the following (ranges are inclusive):
 
 Any occurance of these characters will result in an error.
 
-## Reconstruction
+## Reconstruction [↵](#source-code-representation)
 
 Since the compiler keeps all elements, with the exception of normalization, it can output the identical file that was passed to it from only the tokens and their respective _trivia_.
 

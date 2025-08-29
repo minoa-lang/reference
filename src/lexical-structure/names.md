@@ -13,26 +13,38 @@ Unicode support allows for the following names:
 - `Москва`
 - `東京`
 
-Unlike most langauges, names are allowed to start with a number, as we do not support direct postfixes on numbers ('e'/'E' are special cases though).
-The main rule is, that as long as a name does not also match either a keyword or a literal, it is a name.
-
-Allowing names to start with a digit, can allow uses like:
-```
-enum Dimension {
-    2D,
-    3D,
-}
-```
-
 > _Warning_: Zero width non-joiner(ZWNJ U+200C) and zero width joiner(ZWJ U+200D) are not allowed in names.
 
 > _Note_: A single `_` (underscore) is not a valid name
 
 > _Note_: Names starting a double underscore '__' are reserved for the compiler or a runtime, user should not use any of these names, as this may cause issues when interal names have the same value.
 
-> _Todo_: Add ASCII only restrictions when needed.
+## Extended names [↵](#names)
+```
+<ext-start-letter> := <start-letter> | ? unicode category Nd ?
+<ext-name>         := <ext-start-letter> <letter>*
+```
 
-# Special names
+Unlike most languages, Minoa support what are so-called _extended names_, these are special locations where names are allowed to start with a digit.
+Extended names are allowed in the following cases:
+- fields
+- names in [field access expressions]
+
+> _Example_:
+> A usecase of this would be the following
+> ```
+> enum Dimension {
+>     2D,
+>     3D,
+> }
+> ```
+> Either value can now be used like `.2D`, without requiring either an underscore to be added like `._2D` or longer names like `.Dimension2D` to be used.
+
+> _Implementation node_: When an extended name start with a number, it will be parsed as a [decimal integer literal], followed by a regular [name]
+
+> _Todo_: Link 'fields'
+
+## Special names [↵](#names)
 ```
 <implicit-parameter-name> := '$' <int-literal>
 <meta-var-names>          := '$' <name>
@@ -44,7 +56,10 @@ These will either be:
 
 > _Note_: `$` is also used to indicate the default format [template string], and to allow for pre/post-fix [operator methods] to be passed to closures
 
-[closure expressions]: ../expressions/closure-expressions.md#shorthand-arguments-
-[operator methods]:    ../expressions/closure-expressions.md#operator-methods-
-[template string]:     ../expressions/template-string-expressions.md
-[properties]:          ../items/properties.md
+[name]:                     #names
+[closure expressions]:      ../expressions/closure-expressions.md#shorthand-arguments-
+[operator methods]:         ../expressions/closure-expressions.md#operator-methods-
+[field access expressions]: ../expressions/field-access-expressions.md
+[template string]:          ../expressions/template-string-expressions.md
+[properties]:               ../items/properties.md
+[decimal integer literal]:  ../literals.md#decimal-literal-
