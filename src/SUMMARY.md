@@ -153,7 +153,6 @@
 - [ABI](./abi.md)
 - [Configuration options](./configuration-options.md)
 - [Langauge items](./langauge-items.md)
-- [Main function](./main-function.md)
 - [Preludes](./preludes.md)
 - [Panic](./panic.md)
 - [Unsafety](./unsafety.md)
