@@ -15,6 +15,7 @@
    - [Puntuation](./lexical-structure/punctuation.md)
    - [Delimiters](./lexical-structure/delimiters.md)
 - [Package structure](./package-structure.md)
+- [Namespaces & Scopes](./namespaces-scopes.md)
 - [Identifers & paths](./identifiers-paths.md)
 - [Literals](./literals.md)
 - [Items](./items.md)
