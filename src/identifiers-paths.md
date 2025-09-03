@@ -268,7 +268,7 @@ A trait path may end in a special function end, the usecase for is limited to th
 
 > _Todo_: are the function-style endings really needed (as they just seem like special cases for a couple of types), and can we change it into something else?
 
-## Canonical paths
+## Canonical paths [↵](#identifiers--paths)
 
 A canonical path represents the entire path to an entity, indicating where it is defined.
 The path and each sub-path either start relative to the library, or with a [type start].
