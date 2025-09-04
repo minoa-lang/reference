@@ -10,6 +10,8 @@ However, packages do define how code is imported, as it is the base on which all
 A package can contain any number of artifacts, allowing related code to be shared as a single unit,
 meaning that if a project is split up in modularized components, they can still be easily distributed, without having to result to sub-naming.
 
+A package may have a name starting with a digit.
+
 ### Groups [↵](#package-structure)
 
 Packages may also be part of a group, this is a logical grouping of packages, but unlike packages, they are an optional part of code distribution.
@@ -53,6 +55,8 @@ This combines a libraries library and a binary that use the same underlying sour
 > _Note_: Static and dynamic libraries use the same main module, but are compiled differently
 
 Artifact themselves are made up from modules.
+
+An artifact may have a name starting with a digit.
 
 ### Binaries [↵](#artifacts-)
 
@@ -99,14 +103,7 @@ Each artifact has its own main module, which by default uses the following files
 
 These module do not have a namespace from the point of view from the library, as they are essentially code that is located at the root of the library.
 
-### Module roots [↵](#modules-)
-
-A module root is a specially named file which indicates that its sub-modules are located within the same directory as it, instead of in a sub-directory.
-
-A module root is one of the following:
-- A binary main module, i.e. `main.mn` when in the binary's root source folder
-- A library main module, i.e. `lib.mn` when in a library's root source folder
-- `mod.mn` when in a module's sub-folder
+In addition, any sub-modules defined within a main module, will be located alongside of it, within the artifact's source directory.
 
 ### Module organization [↵](#modules-)
 
@@ -120,10 +117,10 @@ Modules are organized with a tree as part of a given library, where the [main mo
 >   - lib.mn
 >   - a.mn
 >   - b.mn
+>   - c.mn
 >   - b/
 >     - d.mn
 >   - c/
->     - mod.mn
 >     - e.mn
 > ```
 > 

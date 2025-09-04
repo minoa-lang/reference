@@ -54,7 +54,6 @@ x.y.z;
 <path-super-start>        := 'super' '.' { 'super' . }*
 <path-mod-rel-start>      := 'mod' '.'
 <path-meta-lib-start>     := '$' 'lib'
-<path-meta-package-start> := '$' 'package'
 
 <path-start>              := <simple-path-start> | <path-type-start> | <path-self-type-start> | <path-infer-start> | <path-lib-ref-start>
 <path-type-start>         := '(:' <type> ':)' '.'
@@ -70,7 +69,6 @@ Both path types have some common path starts:
 - `super.`
 - `mod.`
 - `$lib.`
-- `$package`
 
 In addition, regular paths have additional path starts:
 - `<type>.`
@@ -137,16 +135,7 @@ It can only be used inside of the any supportred meta function.
 }
 ```
 
-#### `$package` [↵](#path-start-)
-
-`$package` is a special meta-variable that can be used within [meta blocks] (or any metafunction it maps to), that maps to the package that defines the current metafunction.
-It can only be used inside of the any supportred meta function, and is limited to the package name of a [use item].
-
-```
-#{
-    use $package:foo;
-}
-```
+When used in a [use item], it is equivalent to: `$package:$lib`.
 
 #### `<...>.` [↵](#path-start-)
 
@@ -235,7 +224,8 @@ mod a {
 ### Simple paths [↵](#paths-)
 
 ```
-<simple-path>             := [<simple-path-start>] <simple-path-segment> { '.' <ext-simple-path-segment> }*
+<simple-path>             := [<simple-path-start>] <simple-path-no-start>
+<simple-path-no-start>    := <simple-path-segment> { '.' <ext-simple-path-segment> }*
 <simple-path-segment>     := <name>
 <ext-simple-path-segment> := <name> | <ext-name>
 ```

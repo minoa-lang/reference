@@ -27,6 +27,7 @@ Unicode support allows for the following names:
 
 Unlike most languages, Minoa support what are so-called _extended names_, these are special locations where names are allowed to start with a digit.
 Extended names are allowed in the following cases:
+- [package], [library] names
 - a [path] segments, as long as it is not the first segment
 - fields
 - names in [field access expressions]
@@ -65,3 +66,5 @@ These will either be:
 [path]:                     ../identifiers-paths.md
 [properties]:               ../items/properties.md
 [decimal integer literal]:  ../literals.md#decimal-literal-
+[package]:                  ../package-structure.md
+[library]:                  ../package-structure.md#libraries-

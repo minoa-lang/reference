@@ -61,6 +61,7 @@ A list of strong keywords can be found below (in alphabetic order):
 - `pub`
 - `ref`
 - `return`
+- `safe`
 - `self`
 - `static`
 - `str`

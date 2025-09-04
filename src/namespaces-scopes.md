@@ -13,7 +13,7 @@ The following shows the kinds of namespaces that exists, and their associated en
   - [modules]
   - [structs]
   - [unions]
-  - [enums] and their variants
+  - [enums]
   - [bitfields]
   - [traits]
   - [type aliases], including [opaque types]
@@ -25,9 +25,6 @@ The following shows the kinds of namespaces that exists, and their associated en
   - [meta functions]
   - unnamed types
 - value namespaces: a namespace that is not user accessible from outside of the namespace
-  - [function declarations]
-  - [constant item declarations]
-  - [static item declarations]
   - [constructing expressions]
   - local bindings, i.e.
     - [variable declarations]
@@ -39,9 +36,16 @@ The following shows the kinds of namespaces that exists, and their associated en
     - [function parameters]
     - [closure] parameters
   - captured [closure] variables
+- value-type namespaces: a namespace that is both a type and a value namespace
+  - [function declarations]
+  - [constant item declarations]
+  - [static item declarations]
 - label namespaces: a namespace that maps to labels
   - [function parameter labels]
   - [loop & block labels]
+
+> _Note_: Duplicate names may exists across multiple namespace kinds.
+>         For example, both a module and a function named `foo` may coexists within the same scope.
 
 ### Named entities without a namespace
 
