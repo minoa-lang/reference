@@ -59,18 +59,23 @@ Artifact themselves are made up from modules.
 Binaries are the resulting runnable executables, these are not meant to be 'imported', as they miss all the data required for it.
 These can be delivered together with binaries, not only to jjjbe used as the final application, but also tools used for additional functionality.
 
-### Static ibraries [↵](#artifacts-)
+### Libraries [↵](#artifacts-)
 
-A static library is a library that is meant to be linked into any code using it.
+A library is a collection of reusable code, which is meant to be linked to any code using it.
 It contains all info needed to 'import' and use it in other code, including the bytecode for all the relavent issues.
 
-If possible, the compiler can inline any code within the static library.
+Libraries come in 2 'flavors': static and dynamic.
 
-### Dynamic ibraries [↵](#artifacts-)
+Static libraries are directly linked into a final binary, meaning that there code will be included inside of the produced binary.
+This allows static libraries to be inlined directly into code + have additional optimizations applied to it.
 
-A dynamic library is a library that is meant to be referenced by code linking to it, unlike a static binary, this is not linked directly into the code, but live as their own file right next to it.
-Dynamic libraries actually generates 2 resulting file: a Minoa library and a OS-specific dynamic library.
-The Minoa library is similar to those produced for static libraries, but does not contain all data that the static library has, i.e. they only include what is needed to successfully build and to reference the dynamic library in the code using it.
+This however does require that when compiling with multiple static library that use a common underlying library, that these needs to be compiled with the same version of the common library.
+
+Dynamic libraries on the other hand are only referenced by the code, and will be linked at runtime to the binary, either by the OS, or by loading it manually.
+The actual code lives inside of an external file, which is an OS-specific dynamic library.
+The Minoa library on the other hand only contains the info needed to compile code to later load the dynamic library.
+
+Minoa also allows for so-called 'hybrid' libraries, these are libraries that can be linked both statically and dynamically.
 
 ## Modules [↵](#package-structure)
 
