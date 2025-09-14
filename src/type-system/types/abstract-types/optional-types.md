@@ -16,5 +16,4 @@ This is synctactic suger of `Option(T)`, which comes with some additinal feature
 - control flow expression have additional syntax to make using them more ergonomic
 
 
-
 [`allowzero` pointers]: ./pointer-types.md#allowzero-

@@ -58,6 +58,8 @@ After all fields are declared, a struct may also define associated items.
 
 > _Todo_: A link to associated items
 
+> _Todo_: Allow slice in last field, making the value within the field of a variable type, also making the type `?Sized`
+
 #### Default struct fields [↵](#struct-types)
 
 When a field has only a single name defined for it, the field may be provided with a default value, this means that when a field is not explicitly initialized, i.e. when left out, the field will gain this value.
