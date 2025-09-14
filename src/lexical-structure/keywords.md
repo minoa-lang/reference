@@ -37,10 +37,6 @@ A list of strong keywords can be found below (in alphabetic order):
 - `else`
 - `enum`
 - `errdefer`
-- `f16`
-- `f32`
-- `f64`
-- `f128`
 - `false`
 - `fallthrough`
 - `fn`
@@ -49,6 +45,7 @@ A list of strong keywords can be found below (in alphabetic order):
 - `in`
 - `!in`
 - `impl`
+- `iptr`
 - `is`
 - `!is`
 - `isize`
@@ -77,6 +74,7 @@ A list of strong keywords can be found below (in alphabetic order):
 - `try!`
 - `type`
 - `unsafe`
+- `uptr`
 - `use`
 - `usize`
 - `while`
@@ -152,13 +150,15 @@ A list of weak keywords can be found below (in alphabetic order):
 ## Pattern keywords
 
 A pattern keyword is a special keyword, that instead of following a specific value, is parsed using a pattern.
-They can be both _strong_ and _weak_ keyword, depending on the exact value for them.
-The pattern is defined by having `{}`, surrouonding a pattern definition, which is specified after the keyword
+These are all strong keywords.
+The pattern is defined by having `{}`, surrouonding a pattern definition, which is specified after the keyword.
+It also defines optional characters between `[]`, separated by `|`.
 
 A list of weak keywords can be found below (in alphabetic order):
-- `b{N}`: where `N` is any whole integer <= 128. If `N` is 8, 16, 32, or 64, it is a _strong_ keyword, otherwise it is a _weak_ keyword
-- `i{N}`: where `N` is any whole integer <= 128. If `N` is 8, 16, 32, 64, or 128, it is a _strong_ keyword, otherwise it is a _weak_ keyword
-- `u{N}`: where `N` is any whole integer <= 128. If `N` is 8, 16, 32, 64, or 128, it is a _strong_ keyword, otherwise it is a _weak_ keyword
+- `b{N}`: where `N` is any whole integer <= 65536.
+- `u{N}[le|be]`: where `N` is any whole integer <= 65536.
+- `i{N}[le|be]`: where `N` is any whole integer <= 65536.
+- `f(16|32|64|128)[le|be]`
 
 
 
