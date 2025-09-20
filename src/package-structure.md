@@ -44,15 +44,9 @@ This also allows muliple organizations that each have their own group, to have s
 
 Artifacts, unlike packages, are the direct result of a compilation process or stage, as well as the main unit of versioning and runtime loading.
 
-An artifact consts out of the following distinct types:
+An artifact consists out of either/both:
 - binaries
-- static libraries
-- dynamic libraries
-
-In addition, a so-called 'mixed-artifact' also exists.
-This combines a libraries library and a binary that use the same underlying source, but with a different main modules.
-
-> _Note_: Static and dynamic libraries use the same main module, but are compiled differently
+- libraries
 
 Artifact themselves are made up from modules.
 
@@ -142,20 +136,20 @@ It must be visible from the [main module] of the binary.
 The main function takes no arguments, and must return a type implementing the `Termination` trait.
 This is meant to allow the main function to return any type that implements the trait.
 
-Some examples of possible main functions are
-```
-fn main() {}
-```
-```
-fn main() -> ! {
-
-}
-```
-```
-fn main() -> impl Termination {
-
-}
-```
+> _Examples_: Some possible main functions are
+> ```
+> fn main() {}
+> ```
+> ```
+> fn main() -> ! {
+> 
+> }
+> ```
+> ```
+> fn main() -> impl Termination {
+> 
+> }
+> ```
 
 > _Todo_: Make sure examples are valid, i.e. fix implementation
 
