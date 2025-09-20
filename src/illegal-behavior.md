@@ -124,8 +124,40 @@ This also applies to references.
 
 When an array, slice, or multi-element pointer has a sentinel value, they can be written to and read from past the sentinel value.
 
+### Invalid bit representations [↵](#memory-)
 
+Certain types have guarantees on how they are represented within memory, any deviation from this is illegal behavior.
+This also means that when transmuting a value to one of these types, the compiler may insert safety checks to see if the resulting bit representation is valid.
 
+> _Note_: Certain optimization may seemingly invalidate these rules, whenever they are part of a type which can guarantee that these fields can only be accessed as a valid representation, e.g. [optional types].
+
+> _Todo_: This illegal behavior does not have matching configuration options yet
+
+#### Boolean types [↵](#invalid-bit-representations-)
+
+Any [boolean type] may only have a value that is equal to `0x0` or `0x1`, meaning that only the lowest bit may be set and all others need to be 0.
+
+#### Integer types [↵](#invalid-bit-representations-)
+
+Any [integer types], when represented by a greater number of bits than is defined within its specified bitwitdh, must only have any bit within this range set.
+All other bits must have a value of 0.
+
+#### CHaracter types [↵](#invalid-bit-representations-)
+
+Any [character type] must contain a valid code-point as defined by each character type.
+
+### Invalid string data [↵](#memory-)
+
+Any [string type] which contains invalid data, as defined by the string, is illegal behavior.
+
+### String slicing [↵](#memory-)
+
+Slicing a string, where the begin or end is not on a character boundary is illegal behavior.
+
+### Pointer transmute [↵](#memory-)
+
+Even though pointers and references are similar to a [`uptr`], as they have the same size and can have similar generated machine code.
+It is therefore illegal to either convert a pointer to or from any other same-sized type.
 
 ## User-defined illegal behavior
 
@@ -134,4 +166,8 @@ When an array, slice, or multi-element pointer has a sentinel value, they can be
 
 
 [safety-check attributes]: ./attributes.md#safety_check-
+[boolean type]:            ./type-system/types/builtin-types/boolean-types.md
+[character type]:          ./type-system/types/builtin-types/character-types.md
+[integer types]:           ./type-system/types/builtin-types/integer-types.md
+[optional types]:          ./type-system/types/optional-types.md
 [IEEE 754 specification]:  https://en.wikipedia.org/wiki/IEEE_754
