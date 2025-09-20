@@ -46,5 +46,11 @@ To keep the reference consistent, it like many other techincal books, has a cert
 - Implementation notes are used to define features a compiler implementation may support, or how it may deviate from the reference.
 > _Implementation note_: This is an example of an implementation note
 
+- Tooling notes are used to indicates useful features that tooling may provide
+> _Tooling_: THis is an example of a tooling note
+
+- Reasoning notes allow for additional info to be provided why a certain decision in the reference was chosen.
+> _Reasoning_: This is an example of a reasoning note
+
 - Todos are used to indicate that part of the reference is not finished, and defines what changes still need to be made to them.
 > _Todo_: This is an example of a todo

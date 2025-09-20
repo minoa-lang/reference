@@ -18,6 +18,7 @@ notation           | meaning                                                | ex
 `{ ... }[N]`       | `N` repetitions (relative to other elements)           | `{ 'a' }[N]`
 `{ ... }[N,M]`     | `N` to `M` repetitions (where `N` and `M` are numbers) | `{ 'a' }[1,6]`
 `? ... ?`          | Special values defined within the `?`s                 | `? Value explenation here ?`
+`\ ... \`          | Pattern, single token (follows notation rules)         | `\f(32|64)\`
 `... - ...`        | Range                                                  | `'a'-'z'`
 
 ## Implicit groups
