@@ -34,8 +34,40 @@ A pointer type's parameters may be provided by a name, this name is ignored when
 > _Todo_: Would it make sense to support variadic parameters?
 
 
+## Raw function representing trait types
+```
+<raw-closure-type> := [ 'mut' | 'move' ] [ 'async' ] 'fn' '(' <fn-type-params> ')' [ '->' <type-no-bounds> ]
+```
+
+In addition, a raw function type can also represent a trait type.
+These can be used in location where both functions or closures could be used, but at limited to certain usecases.
+
+The below table defines the desugared, where `Fn` can stand for any function-like trait.
+
+Location                     | Desugared
+-----------------------------|-----------
+[function closure parameter] | `impl Fn`
+[generic argument]           | `dyn Fn`
+
+This table also defines in which locations the type may be used.
+
+The specifiers applied to the type define which trait they will represent
+
+Specifier    | Trait
+-------------|----------
+n/a          | `Fn`
+`mut`        | `FnMut`
+`move`       | `FnOnce`
+`async`      | TBD
+`mut async`  | TBD
+`move async` | TBD
+
+
+
 
 [pointer-like type]:          ../pointer-like-types.md
+[trait types]:                ../trait-types.md
 [ABI]:                        ../../../abi.md
 [default `minoa` ABI]:        ../../../abi.md "Todo: fix section"
 [function closure parameter]: ../../../items/functions.md "Todo: fix section"
+[generic argument]:           ../../../generics.md#generic-arguments-

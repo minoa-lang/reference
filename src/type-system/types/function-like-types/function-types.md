@@ -1,32 +1,71 @@
 # Function types
 
-A function type is an anonymous compiler-generated type, which cannot be manually defined.
-The type references a specific function, including its name and its signature (including parameter labels), and it's compile-time parameter values.
+A function type is an anonymous 0-sized type, that is unique to every function.
+It is compiler generated and cannot be manually defined.
 
-Since each function type is specific to each function, a value of this type does not need to use any indirection to be called, as it does not contain an actual function pointer.
-This allows this to be a 0-sized type.
-Separating each function in its own type additionally allows for better optimization.
+A function type takes into account the name and the full signature (including parameter labels, and compile-time parameters) of the function.
 
-When an error message is generated using this type, it will generally show up as something like `fn(param_name:i32) -> i32 { name }`
+Since each type exclusivly represents 1 function, there is no need for any indirection to be used to call it, nor does it need to store a function pointer.
 
-Since each type is unique to a function, they cannot be mixed or they will result in a type error:
+When an error message is generated, the pseudo-type `fn name(param_label:type) -> type` will be used.
+
+
+Since each function type is unique, mixing function type without casting it to something like a pointer to a raw function type, will cause an error:
 ```
-fn foo(T: type);
-x := &mut foo(i32);
-*x = foo(u32); // error: type mismatch
+fn foo(val:i32);
+fn bar(val:i32);
+x := &foo;
+x = &bar; // error: type mismatch
 ```
 
-Function types are however able to coerce into [function pointer types] that have a matching signature.
-This can happen at the following sites:
-- when a function is passed to place where a matching function type is expected
-- when a function is returned in different arms of a control flow expression.
+This also happens when generic types or values differ:
+```
+fn foo(const T: type);
+x := &foo(i32);
+x = &foo(u32); // error: type mismatch
 
-During coercion, all constant parameters will be collapsed before coercing, for more info can be found [here]()
+fn bar(const V: i32);
+x := &bar(0);
+x = &bar(1); // error: type mismatch
+```
+this happends because all generic parameters are [curried] into the function definition.
 
-> _Todo_: is 'collapsing' correct terminology? + add an actual description for it
+All function implement the following interfaces:
+> _Todo_
 
-> _Todo_: We somehow need to bake lifetimes propagation into this type
+## Implicit coercion [↵](#function-types)
+
+Function tyes can however implcitly coerce to a pointer to a [raw function type] in the following locations:
+- when a function is passed to a place where the matching the above type with signature is expected
+  ```
+  fn foo(u32) -> bool;
+  fn bar(f: ^fn(u32) -> bool);
+  
+  // Implicit conversion
+  bar(&foo);
+  ```
+- when a function is returned in different arms of a control-flow expression.
+  ```
+  fn foo(u32) -> bool;
+  fn bar(u32) -> bool;
+  
+  // `f` is of type `^fn(u32) -> bool`
+  let f = if a == b {
+      &foo
+  } else {
+      &bar
+  }
+  ```
+- when being assigned to a variable with a matching signature
+  ```
+  fn foo(u32) -> bool;
+  
+  // Implicit conversion
+  let x: ^fn(u32) -> bool = &foo;
+  ```
 
 
 
-[function pointer types]: ./function-pointer-types.md
+
+[raw function type]: ./raw-function-types.md
+[curried]:           #function-types "Todo: Link to function currying"
