@@ -266,7 +266,7 @@ Any entity which has a canonical path can (possibly) be refered to from outside 
 
 Both [implementations] and [use items] do not have a canonical path, but the _entities_ or _type_ they refer to have canonical paths.
 In addition, some entities do not have a canonical path themselves, these are:
-- field in [aggregate types]
+- field in [composite types]
 - items defined inside of:
   - [functions]
   - [block expressions]
@@ -333,9 +333,8 @@ mod no { // :.no
 [metafunctions]:      ./metaprogramming.md
 [meta function]:      ./metaprogramming.md
 [meta block]:         ./metaprogramming/meta-utilities.md#meta-blocks-
+[composite types]:    ./type-system/types/composite-types.md
 [type inferred]:      ./type-system/types/inferred-types.md
 [`Self` type]:        ./type-system/types/self-type.md
 [visibility]:         ./visibility.md
 [main module]:        ./package-structure.md#main-module-
-
-[aggregate types]:    #identifiers--paths "Placeholder"

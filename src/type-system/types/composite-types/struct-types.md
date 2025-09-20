@@ -206,6 +206,9 @@ struct B {
 
 Struct field tags allow arbitrary meta-information to be added to individual fields, which can be accessed using reflection.
 
+
+> _Todo_: Support tags with code, i.e. ``i: u32 { if false { `tag` } else `tag2` }``
+
 #### Record structs [↵](#struct-types)
 ```
 <record-struct-type>   := 'record' 'struct' '{' <record-struct-fields> { <assoc-item> }* '}'

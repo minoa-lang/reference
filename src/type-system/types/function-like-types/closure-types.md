@@ -409,8 +409,8 @@ When closures capture references, some additional rules apply:
 
 #### Drop order[↵](#closure-types)
 
-If a closure captures a field of an aggregate type like a struct, tuple, or enum by value, the field's lifetime would not be tied to the closure.
-As a result, it is possible for disjoint fields of an aggregate type to be dropped at different times.
+If a closure captures a field of an composite type like a struct, tuple, or enum by value, the field's lifetime would not be tied to the closure.
+As a result, it is possible for disjoint fields of an composite type to be dropped at different times.
 ``` 
 {
     tup := ("foo":s, "bar":s); // ------------------+
@@ -429,7 +429,7 @@ As a result, it is possible for disjoint fields of an aggregate type to be dropp
 
 [capture modes]:          #capture-modes-
 [raw function type]:      ./raw-function-types.md
-[bitfield]:               ../aggregate-types/bitfield-types.md
+[bitfield]:               ../composite-types/bitfield-types.md
 [locations]:              ./function-types.md#implicit-coercion-
 [raw function type]:      ./raw-function-types.md
 [shared referece]:        ../pointer-like-types/reference-types.md#shared-reference-

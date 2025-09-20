@@ -32,7 +32,9 @@ The type defines how a value is interpreted in memory and what operations can be
 
 Some types support unique functionality that cannot be replicated using user defined types.
 
-While types are generally split up in 2 categories: _builtin_ and _compound_ types, the latter is subdivided within multiple groups.
+Types are split into groups based on commonalities between them.
+A big distinction exists between _builtin_ and other types, as unlike most types, _builtin_ types may exists by themselves, as others are dependent on another type as their subtypes.
+
 These are the following:
 - [builtin types]
   - [boolean types]
@@ -43,22 +45,21 @@ These are the following:
   - [never types]
   - [`type` types]
   - [opaque types]
-- [compound types]
-  - [sequence types]
-    - [array types]
-    - [slice types]
+- [sequence types]
+  - [array types]
+  - [slice types]
     - [strings slice types]
   - [pointer-like types]
     - [pointer types]
     - [reference types]
     - [function pointer types]
-  - [function-like types]
-    - [function types]
-    - [closure types]
-  - [aggregate types]
-    - [tuple types]
-    - [struct types]
-    - [tuple struct types]
+- [function-like types]
+  - [function types]
+  - [closure types]
+- [composite types]
+  - [tuple types]
+  - [struct types]
+  - [tuple struct types]
     - [enum types]
     - [union types]
     - [bitfield types]
@@ -71,14 +72,9 @@ These are the following:
     - [result types]
     - [`Self` types]
     - [vector types]
-    - [infered types]
+  - [infered types]
 
 > _Note_: types are designed to be able to be easily read from left to right
-
-## Compound types [↵](#types)
-
-A compound type is a type that requires one or more sub-types to have a meaning.
-This mean it is used to build a type upon any other type.
 
 ## Type expressions [↵](#types)
 ```
@@ -122,7 +118,6 @@ They are on of the following:
 In addition, any [type alias] may not depend on itself within it definition, either directly, or indirectly via another type alias, even when done via a _terminal_ type.
 
 
-[compound types]:         #compound-types-
 [abstract types]:         ./types/abstract-types.md
 [infered types]:          ./types/abstract-types/inferred-types.md
 [optional types]:         ./types/abstract-types/optional-types.md
@@ -130,13 +125,13 @@ In addition, any [type alias] may not depend on itself within it definition, eit
 [result types]:           ./types/abstract-types/result-types.md
 [`Self` types]:           ./types/abstract-types/self-type.md
 [vector types]:           ./types/abstract-types/vector-types.md
-[aggregate types]:        ./types/aggregate-types.md
-[bitfield types]:         ./types/aggregate-types/bitfield-types.md
-[enum types]:             ./types/aggregate-types/enum-types.md
-[struct types]:           ./types/aggregate-types/struct-types.md
-[tuple struct types]:     ./types/aggregate-types/tuple-struct-types.md
-[tuple types]:            ./types/aggregate-types/tuple-types.md
-[union types]:            ./types/aggregate-types/union-types.md
+[composite types]:        ./types/composite-types.md
+[bitfield types]:         ./types/composite-types/bitfield-types.md
+[enum types]:             ./types/composite-types/enum-types.md
+[struct types]:           ./types/composite-types/struct-types.md
+[tuple struct types]:     ./types/composite-types/tuple-struct-types.md
+[tuple types]:            ./types/composite-types/tuple-types.md
+[union types]:            ./types/composite-types/union-types.md
 [builtin types]:          ./types/builtin-types.md
 [boolean types]:          ./types/builtin-types/boolean-types.md
 [character types]:        ./types/builtin-types/character-types.md

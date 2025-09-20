@@ -11,7 +11,7 @@ This also means that a smaller slice cannot be extended to a larger slice.
 A slice can be empty, meaning that is has a size of 0 and does not point to any values.
 
 Since a slice is a view, it is always associated with a range of values that is owned by another item or local value, slices cannot exists on their own.
-To prevent issues, they themselves are treated like unsized types, and with the exception of one at the end of an aggregate type, they are generally used through reference or pointer-like types, for example:
+To prevent issues, they themselves are treated like unsized types, and with the exception of one at the end of some [composite types], they are generally used through reference or pointer-like types, for example:
 - `&[]T`: a shared slice, often just called a slice. It borrows the data it point to.
 - `&mut []T`: a mutable slice. It mutably borrows the data it point to.
 
@@ -59,6 +59,7 @@ Each element within a `[N](K:V)` is stored as a [`KeyValue(K,V)`]
 
 
 [enumerated array]:  ./array-types.md#enumerated-arrays-
+[composite types]:   ../composite-types.md
 [sentinel indexing]: ../../../expressions/index-expressions.md#sentinel-indexing-
 [multi-value index]: ../../../expressions/index-expressions.md#multi-value-indices-
 [`KeyValue(K,V)`]:   ../../../langauge-items.md#keyvalue- "Todo: In the future, make this refer to the correct documentation of this type"
