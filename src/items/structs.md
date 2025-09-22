@@ -21,26 +21,26 @@ In addition, struct items may also define a default visibility for all fields an
 A struct generates a named [struct type].
 Its contents are declared in the same way as defined in the struct type.
 
-_Example_:
-```
-struct Foo {
-    a: i32,
-    b: i32,
-
-    fn foo() {}
-}
-```
+> _Example_:
+> ```
+> struct Foo {
+>     a: i32,
+>     b: i32,
+> 
+>     fn foo() {}
+> }
+> ```
 
 In addition, generic parameters and a where clause can be added to generate a generic structure.
 
-_Example_
-```
-struct Foo[T] where T: Copy {
-    t: T,
-
-    fn foo(val: T) {}
-}
-```
+> _Example_
+> ```
+> struct Foo[T] where T: Copy {
+>     t: T,
+> 
+>     fn foo(val: T) {}
+> }
+> ```
 
 ## Tuple structs [↵](#structs)
 ```
@@ -52,21 +52,21 @@ struct Foo[T] where T: Copy {
 A tuple struct generates a named [tuple struct type].
 Its contents are declared in the same way as defined in the tuple struct type.
 
-_Example_:
-```
-struct Foo (i32, i32) {
-    fn foo() {}
-}
-```
+> _Example_:
+> ```
+> struct Foo (i32, i32) {
+>     fn foo() {}
+> }
+> ```
 
 In addition, generic parameters and a where clause can be added to generate a generic structure.
 
-_Example_
-```
-struct Foo[T](T) where T: Copy {
-    fn foo(val: T) {}
-}
-```
+> _Example_
+> ```
+> struct Foo[T](T) where T: Copy {
+>     fn foo(val: T) {}
+> }
+> ```
 
 ## Unit structs [↵](#structs)
 ```
@@ -80,15 +80,15 @@ The following restrictions are applied to a unit struct:
 - they may not contain any initializer items
 - any associated items must be defined within a separate [implementation item]
 
-_Example_:
-```
-struct Unit;
-
-// We can only implement items on it externally
-impl Unit {
-    fn foo() {}
-}
-```
+> _Example_:
+> ```
+> struct Unit;
+> 
+> // We can only implement items on it externally
+> impl Unit {
+>     fn foo() {}
+> }
+> ```
 
 
 

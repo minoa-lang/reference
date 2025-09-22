@@ -37,36 +37,36 @@ This means that if a field should have a default value that is calculated at com
 > _Note_: Default values for fields should not be confused with the value of field within a `Default` implementation.
 >         Unlike default field values , `Default` may provide runtime calculated values and is meant to default the entirety of the structure, not just certain fields.
 
-_Example_: The blow structure has a compile-time known default value for the 3rd field
-```
-struct Foo(i32, i32, i32 = 0)
-```
-this means that it can be left out during initialization
-```
-foo := Foo(
-    1,
-    runtime_calc(),
-    // 2 <- implied by the default value of foo.2
-); 
-```
+> _Example_: The blow structure has a compile-time known default value for the 3rd field
+> ```
+> struct Foo(i32, i32, i32 = 0)
+> ```
+> this means that it can be left out during initialization
+> ```
+> foo := Foo(
+>     1,
+>     runtime_calc(),
+>     // 2 <- implied by the default value of foo.2
+> ); 
+> ```
 
 ## Coercion from tuple expression
 
 Since tuple struct type have their data aranged like a tuple, it is possible to initialize a tuple struct using a [tuple expression] or from another tuple.
 If a named tuple is assigned, the named fields must correspond to those in the struct
 
-_Example_:
-```
-struct Foo(bar: i32, baz: i32, i32);
-
-let f: Foo = (0, 1, 2);
-
-let t = (0, 1, 2);
-let f: Foo = t;
-
-let t = (bar: 0, 1, 2);
-let f: Foo = t;
-```
+> _Example_:
+> ```
+> struct Foo(bar: i32, baz: i32, i32);
+> 
+> let f: Foo = (0, 1, 2);
+> 
+> let t = (0, 1, 2);
+> let f: Foo = t;
+> 
+> let t = (bar: 0, 1, 2);
+> let f: Foo = t;
+> ```
 
 ## Record tuple structs [↵](#tuple-struct-types)
 ```

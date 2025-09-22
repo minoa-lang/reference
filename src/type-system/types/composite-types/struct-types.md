@@ -15,9 +15,9 @@ Support for generics can only be added to a struct type via a [struct item].
 ## Anonymous structs [↵](#struct-types)
 
 An anonymous struct is what is produced when an explicit struct type is used.
-There structs cannot be manually referenced, and therefore have a limited use.
+These structs cannot be manually referenced, and therefore have a limited use.
 
-Some usecases of an anonymous structs:
+Some usecases of an anonymous struct:
 - to be assigned to type alias
 - to be returned from a [meta function] that returns a type
 - as a field of another type, allowing struct-like field access, but not have the type field explicitly usable
@@ -30,7 +30,7 @@ Some usecases of an anonymous structs:
 > 1. Fist a name is chosen based on the location of the struct:
 >    - if used as the type of a variable, the name will be based on the name of the variable
 >    - if used as a return type, the name will be based on the function it is returned by
->    - if produced by a meta function, the name will be based on thte meta function
+>    - if produced by a meta function, the name will be based on the meta function
 >    - if used inside of another composite type, the name will be based on the name of the composite type
 >    - Otherwise, the name will be a generic name: `__anon_struct`
 > 2. After this information about its span will be appended, which at minimum will contain the line and column of where the struct is defined.
@@ -61,24 +61,24 @@ A field may be explicitly declared as mutable, allowing it value to be changed i
 A struct type may also be defined as `mut`, this indicates that all fields within the struct will be mutable by default.
 This has no effect on associated items.
 
-_Example_:
-```
-mut struct {
-    a: i32,
-    b: u32,
-
-    fn foo() {}
-}
-```
-is equivalent to
-```
-struct {
-    mut a: i32,
-    mut b: u32,
-
-    fn foo() {}
-}
-```
+> _Example_:
+> ```
+> mut struct {
+>     a: i32,
+>     b: u32,
+> 
+>     fn foo() {}
+> }
+> ```
+> is equivalent to
+> ```
+> struct {
+>     mut a: i32,
+>     mut b: u32,
+> 
+>     fn foo() {}
+> }
+> ```
 
 ### Field visibility [↵](#fields-)
 
@@ -93,19 +93,19 @@ This visibility defines the fields visibility relative to the location of the st
 A field's definition may contain multiple names, indicatin that this contains multiple fields with the same type.
 Any specifier applied to this combined field will be propagated to each individual field generated from this
 
-_Example_
-```
-struct {
-    mut a, b: i32
-}
-```
-is equivalent to
-```
-struct {
-    mut a: i32,
-    mut b: i32,
-}
-```
+> _Example_
+> ```
+> struct {
+>     mut a, b: i32
+> }
+> ```
+> is equivalent to
+> ```
+> struct {
+>     mut a: i32,
+>     mut b: i32,
+> }
+> ```
 
 ### Placeholder fields [↵](#fields-)
 
@@ -164,22 +164,22 @@ This means that if a field should have a default value that is calculated at com
 > _Note_: Default values for fields should not be confused with the value of field within a `Default` implementation.
 >         Unlike default field values , `Default` may provide runtime calculated values and is meant to default the entirety of the structure, not just certain fields.
 
-_Example_: The below structue has a compile-time known default value for `z`
-```
-struct Foo {
-    x: i32,
-    y: i32,
-    z: i32 = 0,
-}
-```
-this means that it can be left out during initialization:
-```
-f := Foo {
-    x: 1,
-    y: runtime_calc(),
-    // z: 0 <- implied by the default value of `z`
-};
-```
+> _Example_: The below structue has a compile-time known default value for `z`
+> ```
+> struct Foo {
+>     x: i32,
+>     y: i32,
+>     z: i32 = 0,
+> }
+> ```
+> this means that it can be left out during initialization:
+> ```
+> f := Foo {
+>     x: 1,
+>     y: runtime_calc(),
+>     // z: 0 <- implied by the default value of `z`
+> };
+> ```
 
 > _Warning_: When a certain relation between fields is expected, and at least one of them has a default value, this might introduce an error when one is assigned explicitly and the other is not.
 >            Programmers should be aware of this possiblity and ensure such an error will never happen, or to give a warning, by for example having a contract check a relation between these values.
