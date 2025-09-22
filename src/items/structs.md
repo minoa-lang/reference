@@ -3,89 +3,96 @@
 <struct-item> := { <attribute> }* [ <vis> ] ( <struct> | <tuple-struct> | <unit-struct> )
 ```
 
-A structure item is syntactic sugar to be able to more easily define a structure type.
-This can either be a structure or tuple structure type, depending on the syntax.
+A structure item defines a named structure type, unlike a plain [struct type], they cannot be anonymous.
+This is similar of creating a distinct type alias to an anonymous struct, with some additional syntax features.
 
-A structure's visibility defines only the visibility of the structure, and not any of its fields.
+Struct items may declare either regular structures, tuple structures, or unit structures.
+These are distinguished between by the syntax used.
 
-Meanwhile, a structure's mutability will be propagated as the mutability of the structure.
+Similarly to a struct type, a `mut` specifier may be added to a struct type, indicating that all fields in the struct will be mutable.
+
+In addition, struct items may also define a default visibility for all fields and associated items in the struct before the struct item itself.
 
 ## Regular structs [↵](#structs)
 ```
 <struct> := [ 'mut' | 'record' ] 'struct' [ <generic-params> ] [ <where-clause> ] '{' { <struct-elements> } '}'
 ```
 
-A struct item generates a named [struct type].
-Its contents are declared in the same way as a struct type.
+A struct generates a named [struct type].
+Its contents are declared in the same way as defined in the struct type.
 
-The following struct declaration:
+_Example_:
 ```
 struct Foo {
-    // ...
+    a: i32,
+    b: i32,
+
+    fn foo() {}
 }
+```
 
-struct Bar(T: type, N: usize) {
-    // ...
+In addition, generic parameters and a where clause can be added to generate a generic structure.
+
+_Example_
+```
+struct Foo[T] where T: Copy {
+    t: T,
+
+    fn foo(val: T) {}
 }
 ```
-Is equal to the following:
-```
-type Foo = struct {
-    // ...
-};
 
-type Bar = struct[T: type, N: usize] {
-    // ...
-};
-```
-
-## Tuple structure [↵](#structs)
+## Tuple structs [↵](#structs)
 ```
 <tuple-struct>      := [ 'mut' | 'record' ] 'struct' [ <generic-params> ] [ <where-clause> ] '(' <tuple-struct-fields> ')' <tuple-struct-body>
 <tuple-struct-body> := ';'
                      | '{' { <assoc-item> }* '}'
 ```
 
-A tuple struct item generates a named [tuple struct type].
-Its content are declared the same way as a tuple struct type.
+A tuple struct generates a named [tuple struct type].
+Its contents are declared in the same way as defined in the tuple struct type.
 
-A tuple struct declaration without any generic arguments, like:
+_Example_:
 ```
-struct name(...);
-
-struct name2(...) { ... }
-```
-Is equal to the following:
-```
-type name = struct (...);
-type name2 = struct ( ... ) { ... };
+struct Foo (i32, i32) {
+    fn foo() {}
+}
 ```
 
-> _Todo_: Generics
+In addition, generic parameters and a where clause can be added to generate a generic structure.
+
+_Example_
+```
+struct Foo[T](T) where T: Copy {
+    fn foo(val: T) {}
+}
+```
 
 ## Unit structs [↵](#structs)
-
 ```
-<unit-struct>           := { <attribute> }* [ <vis> ] 'struct' <name> <unit-struct-decl-body>
-<unit-struct-decl-body> := ';'
-                         | '{' { <struct-element> }* '}'
+<unit-struct> := 'struct' <name> ';'
 ```
 
-A unit struct item declares a named [unit struct type].
-Its declaration, like its related type, is identical to a regular struct, except that is contains no fields.
+A unit struct is a special struct that has no fields and may be constructed by just the struct's name.
+This is the only way of defining a unit struct.
 
-A unit struct declaration:
+The following restrictions are applied to a unit struct:
+- they may not contain any initializer items
+- any associated items must be defined within a separate [implementation item]
+
+_Example_:
 ```
 struct Unit;
-struct Unit2 { ... }
-```
-Is equal to the following
-```
-type Unit = struct;
-type Unit2 = struct { ... };
+
+// We can only implement items on it externally
+impl Unit {
+    fn foo() {}
+}
 ```
 
 
-[struct type]:       ../type-system/types/struct-types.md
-[unit struct type]:  ../type-system/types/struct-types.md#unit-structs-
-[tuple struct type]: ../type-system/types/tuple-struct-types.md
+
+[implementation item]: ./implementations.md
+[struct type]:         ../type-system/types/struct-types.md
+[unit struct type]:    ../type-system/types/struct-types.md#unit-structs-
+[tuple struct type]:   ../type-system/types/tuple-struct-types.md

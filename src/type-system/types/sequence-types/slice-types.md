@@ -56,10 +56,18 @@ While this might look similar to an slice of tuples, the `:` is used to indicate
 
 Each element within a `[N](K:V)` is stored as a [`KeyValue(K,V)`]
 
+## Naked slice [↵](#slice-types)
+
+A naked slice is a special version of a slice which is not stored behind any indirection such as a reference of pointer.
+This type of slice does not contain a pointer to data or a lenght, but indicates an unknown-sized, inline chunck of data.
+
+It is only allowed as a [final slice field].
+
 
 
 [enumerated array]:  ./array-types.md#enumerated-arrays-
 [composite types]:   ../composite-types.md
+[final slice field]: ../composite-types/struct-types.md#final-slice-fields-
 [sentinel indexing]: ../../../expressions/index-expressions.md#sentinel-indexing-
 [multi-value index]: ../../../expressions/index-expressions.md#multi-value-indices-
 [`KeyValue(K,V)`]:   ../../../langauge-items.md#keyvalue- "Todo: In the future, make this refer to the correct documentation of this type"
