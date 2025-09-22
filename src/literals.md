@@ -358,8 +358,8 @@ A line continuation indicator is written as a `\`, followed by a new line sequen
 ### Raw string literals [↵](#string-literals-)
 ```
 <raw-string-literal>            := { '#' }[N] '`' { ? any valid unicode codepoint other than \r ? }* '`' { '#' }[N]
-<raw-multi-line-string-literal> := { <raw-multi-line-string-literal> }* { <raw-string-literal> }
-<raw-multi-line-string-literal> := { '#' }[N] '`' { ? any valid unicode codepoint, expect <new-line> ? }* <new-line>
+<raw-multi-line-string-literal> := { <raw-multi-line-string-segment> }* { <raw-string-literal> }
+<raw-multi-line-string-segment> := { '#' }[N] '`' { ? any valid unicode codepoint, expect <new-line> ? }* <new-line>
 ```
 
 Raw string literals are variants of a string literal which does not interpret escaped character specially, instead it interprets them as regular characters in text.
@@ -415,7 +415,11 @@ The multiline literal ends whenever a matching closing sequence is encountered.
 
 ### String interpolation [↵](#string-literals-)
 ```
-<string-interpolation> := '\' '{' <expr> [ ':' [ 'default' '=' <expr> ',' ] ? format specifiers ? ] '}'
+<string-interpolation>   := '\' '{' <expr> [ ':' [ <string-interp-def> ',' ] ? format specifiers ? ] '}'
+                          | '\' '{' <expr> [ ':' <string-interp-def> ] '}'
+                          | <multi-line-string-interp-section>
+<string-interp-def>      := [ 'default' '=' <expr> { <mult-line-string-interp-segment> }* ]
+<string-interp-format>   := ? format specifiers?
 ```
 
 A string interpolation allows expressions to be included within a string, allowing it to use the computed value, in addition to a set of format specifiers.
@@ -430,6 +434,47 @@ In cases where a string with an interpolation does not need special interpolatio
 The format specifier may be any sequence of tokens, and its representation is interpreted by one or more formatters.
 
 Including any string interpolation will result in the string being of type [`core:.InterpStringLiteral`].
+
+#### Multi-line string interpolation
+```
+<mutli-line-string-interp-section>  := <multi-line-string-interp-start> { <multi-line-string-interp-segment> }* { <multi-line-string-interp-end> }
+<multi-line-string-interp-start>    := `\` `{` <expr>
+<multi-line-string-interp-segments> := '"' `\` `{` <expr> <new-line>
+<multi-line-string-interp-end>      := [ ':' <string-interp-format> ] '}'
+                                     | []
+```
+
+It is also possible to let a have an interpolated value defined across a multiple line.
+Since string literals are designed to be able to independently parse each source line, a special version of multi-line string is used.
+
+> _Example_
+> ```
+> a := "Interpolate this value: \{ 1
+> "\{ +
+> "\{ 2 }, we hit the end";
+> ```
+> this is equlivalent to
+> ```
+> a := "Interplate this value \{ 1 + 2 }, we hit the end";
+> ```
+
+
+This can also be applied to the default value
+
+_Example_
+```
+let val: ?i32 = .None;
+a := "multi-line default: \{val:default=
+"\{ 1 +
+"\{ 2 }
+```
+this is equivalent to
+```
+let val: ?i32 = .None;
+a := "multi-line default: \{val:default= 1 + 2 }"
+```
+
+> _Note_: It is not possible to split the format onto multiple lines
 
 
 [`core:.DecLiteral`]:          #decimal-literal-                     "Temporary link"
