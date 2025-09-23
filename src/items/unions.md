@@ -2,31 +2,33 @@
 ```
 <union-item> := { <attribute> }* [ <vis> ] [ 'mut' ] 'union' <name>  [ <generic-params> ] [ <where-clause> ] '{' <union-members> '}'
 ```
-A union item is syntactic sugar to more easily define a named [union type].
 
-A union's visibility defines only the visibility of the union, and not any of its fields.
+A union item defines a named union type.
+Unlike a plain [union type], the cannot be anonymous.
+This is similar to creating a distinct type alias to an anonymous union, with some additional syntax features.
 
-Meanwhile, an enum's mutability will be propagated as the mutability of the union.
+Similarly to a unin type, a `mut` specifier may be added to a union type ,indicateing that all fields in the union will be mutable.
 
-The following struct declaration:
+In additon, union items may also define the default visibility for all fields and associated items in the union before the union itself.
+
+> _Example_
+> ```
+> union Foo {
+>     i: i32,
+>     f: f32,
+> 
+>     fn foo() {}
+> }
+> ```
+
+In addition, generic parameters and a where clause can be added to the generated union
+
+_Example_
 ```
-union Foo {
-    // ...
+union Foo[T] where T: Copy {
+    t: T,
+    i: i32,
 }
-
-union Bar(T: type, N: usize) {
-    // ...
-}
-```
-Is equal to the following:
-```
-type Foo = union {
-    // ...
-};
-
-type Bar = union[T: type, N: usize] {
-    // ...
-};
 ```
 
-[union type]: ../type-system/types/union-types.md
+[union type]: ../type-system/types/composite-types/union-types.md
