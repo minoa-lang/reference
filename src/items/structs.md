@@ -3,7 +3,8 @@
 <struct-item> := { <attribute> }* [ <vis> ] ( <struct> | <tuple-struct> | <unit-struct> )
 ```
 
-A structure item defines a named structure type, unlike a plain [struct type], they cannot be anonymous.
+A structure item defines a named structure type.
+Unlike a plain [struct type], they cannot be anonymous.
 This is similar of creating a distinct type alias to an anonymous struct, with some additional syntax features.
 
 Struct items may declare either regular structures, tuple structures, or unit structures.

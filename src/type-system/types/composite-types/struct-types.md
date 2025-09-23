@@ -84,14 +84,14 @@ This has no effect on associated items.
 
 Each field may individually define its visibility.
 
-This visibility defines the fields visibility relative to the location of the structure
+This visibility defines the fields visibility relative to the location of the structure.
 
-> _Note_: Anonymous struct do not support visibility on any field
+> _Note_: An anonymous struct do not support visibility on any field
 
 ### Multiple named fields [↵](#fields-)
 
 A field's definition may contain multiple names, indicatin that this contains multiple fields with the same type.
-Any specifier applied to this combined field will be propagated to each individual field generated from this
+Any specifier applied to this combined field will be propagated to each individual field generated from this..
 
 > _Example_
 > ```
@@ -129,28 +129,6 @@ It allows for a type to contain inline data within the type, e.g. like a structu
 It is however expected to be a sequence of a known type, as this will act as if it is any other kind of [slice].
 
 Since this field has an unknown size, any access to it is `unsafe`.
-
-### Annonymous union fields [↵](#fields-)
-
-Anonymous union fields allow a union to be directly defined within a struct, and allows its fields to be directly accessed from the struct.
-
-> _Example_
-> ```
-> struct Foo {
->     is_float: bool,
->     union {
->         i: i32,
->         f: f32,
->     }
-> }
-> 
-> f := Foo { ... };
-> 
-> // We can not directly access `Foo`'s `i` and `f` fields
-> i := unsafe { f.i }
-> ```
-
-> _Note_: Since these fields are stored inside a [union], accessing these particular fields need to happen in an `unsafe` context.
 
 ### Default struct fields [↵](#fields-)
 
@@ -272,8 +250,6 @@ foo := Foo {
 assert(foo.z == foo.bar.z);
 assert(#addr_of(foo.z) == #addr_of(foo.bar.z));
 ```
-
-
 
 > _Note_: Named `use` fields add some restriction to the resulting layout of the struct as defined [here](../../type-layout.md "Todo: Fix link to correct section")
 
@@ -429,7 +405,29 @@ For this reason, some limitiations on the code that can be included exists:
 > }
 > ```
 
-## Associated items
+## Annonymous struct fields [↵](#struct-types)
+
+Anonymous struct fields allow a struct to be directly defined within a different composite type, and allows its fields to be directly accessed from that type.
+
+> _Example_: In a union, this can ensure that a set of data does not overlap each other, and allows multiple fields to be located sequentially.
+> ```
+> safe union Foo {
+>     value: i64le
+>     struct {
+>         low:  u32le
+>         high: i32le
+>     }
+> }
+> 
+> f := Foo { value: 0x0123456789ABCDEF };
+> 
+> // We can now directly access `Foo's` `low` and `high` fields
+> low := unsafe { f.low };
+> ```
+
+When a [`repr` attribute] is applied to the type containing an anonymous struct field, this attribute will also be applied to the struct field.
+
+## Associated items [↵](#struct-types)
 
 A struct may also directly contain associated items.
 These must appear after all fields have been declared, not doing so will result in an error.
