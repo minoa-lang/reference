@@ -117,6 +117,9 @@ It is also possible to manually implement `Drop` on a union, as by default, unio
 
 With the default [`minoa` type layout], there is no guarantee that fields are laid out starting at offset 0.
 
+Types may be marked as `@no_union`, in this case, these types may not be used within a union, even when wrapped in another type.
+This attribute is auto-propagating, meaning that if a `@no_union` type is used as a field in another type, it itself becomes `@no_union`.
+
 ## Anonymous union fields [↵](#union-types)
 
 Anonymous union fields allow a structure to be directly defined within a different composite type, and allows its field to be directly accessed from the union.
@@ -150,14 +153,17 @@ In addition, it also ensures that all fields in the union will have a memory off
 These 2 additional rules losen the restriction of the `active` field.
 To be more precise, it gets rid of the notion of an active field, since it is guaranteed that each field will always have a valid value.
 
-`safe` union also allow all their field to be accessed from outside of an `unsafe` context.
+`safe` unions also allow all their field to be accessed from outside of an `unsafe` context.
+
+If types are marked as `@no_transmute`, in this case, these types may not be used within a `safe` union.
 
 ## Pattern matching on unions [↵](#union-types)
 
-Unions can also be accesed inside when pattern matching, with the restiction that exactly one field is allowed to be matched at any time.
-Since reading from a pattern field is unsafe, the corresponding match must be done in an unsafe context.
+Unions can also be accesed inside when pattern matching, with the restiction that exactly one field (or all fields in an anonymous field) is allowed to be matched at any time.
 
-Pattern matching directly on a union is not allowed, it is only allowed when it is part of a larger structure when there is a separate disambiguation in addition to the union, like a value coming from an FFI context.
+If reading from a pattern field is unsafe (i.e. not from a `safe` union), the corresponding match must be done in an unsafe context.
+
+Pattern matching directly on a non-`safe` union is not allowed, it is only allowed when it is part of a larger structure when there is a separate disambiguation in addition to the union, like a value coming from an FFI context.
 
 > _Example_: Trying to match on a union field only will result in an error
 > ```
@@ -169,6 +175,24 @@ Pattern matching directly on a union is not allowed, it is only allowed when it 
 > u := U{ i: 1 };
 > 
 > // error: cannot match on a union
+> unsafe {
+>     match u {
+>         .{ i: 1 } => (),
+>         .{ f } => (),
+>     }
+> }
+> ```
+> But this is allowed for a safe union
+> ```
+> // Note that this is an example, and converting between an i32, and f32 should be done via an explicit transmute
+> safe union U {
+>     i: i32,
+>     f: f32
+> }
+> 
+> u := U{ i: 1 };
+> 
+> // this is fine, the union is expliclty defined as safe
 > unsafe {
 >     match u {
 >         .{ i: 1 } => (),
@@ -196,7 +220,7 @@ Pattern matching directly on a union is not allowed, it is only allowed when it 
 > }
 > 
 > ```
-> But the following will cause an error
+> But the following (on a non-`safe` union) will cause an error
 > ```
 > // error: cannot match on a union field only
 > unsafe {
