@@ -1,51 +1,66 @@
 # Enums
 ```
-<enum-item>   := { <attribute> }* [ <vis> ] ( <adt-enum> | <record-enum> | <flag-enum> )
-<adt-enum>    := [ 'mut' ] 'enum' <name> [ <generic-params> ] [ <where-clause> ] '{' <enum-members> '}'
-<record-enum> := 'record' 'enum' <name> [ <generic-params> ] [ <where-clause> ] '{' <record-enum-members> '}'
+<enum-item> := { <attribute> }* [ <vis> ] ( <adt-enum> | <flag-enum> )
 ```
 
-An enum items is syntactic sugar to more easily define a named [enum type](#11119-enum-types-).
+An enum item defines a named enum type.
+Unlike a plain [enum type], the cannot be anonymous.
+This is imilar to creating a distinct type alias to an anonymous enum, with some additional syntax features.
 
-An enum's visibility defines only the visibility of the enum, and not any of its fields.
+Enum items can declare the visibility for an enum type, which applies to all underlying variants and fields.
 
-Meanwhile, an enum's mutability will be propagated as the mutability of the enum.
+Enum items may declare either regular/ADT enums or flag enums.
 
-An enum declaration without any generic arguments, like:
+## ADT enum
 ```
-enum name {
-    // ...
-}
-```
-Is equal to the following:
-```
-type name = enum {
-    // ...
-};
+<adt-enum> := [ 'mut' | 'record' ] 'enum' <name> [ <generic-params> ] [ <discriminant> ] [ <where-clause> ] '{' <enum-members> '}'
 ```
 
-> _Todo_: Generics
+An ADT enum generates a named [enum type].
+Its contents are declared in the same way as defined in the enum type.
+
+The `mut` specifier may be added to a enum type, indicating that all fields in the struct will be mutable.
+Similarly, the `record` specifier may be added to make the enum into a record enum type.
+
+> _Example_
+> ```
+> enum Foo : u8 {
+>     A,
+>     B(i32, i32),
+>     C {
+>         x: i32,
+>         y: f32
+>     }
+> }
+> ```
+
+In addition, generic parameters and a where clause can be added to generate a generic enum.
+
+> _Example_
+> ```
+> enum Foo<T> : u8 where T: Copy {
+>     A,
+>     B(T)
+> }
+> ```
+
+## Flag enum
+```
+<flag-enum> := 'flag' 'enum' <name> [ <discriminant> ] '{' <flag-enum-members> '}'
+```
+
+A flag enum generates a name [flag enum type].
+It's contents are declared in the same way as defined in the flag enum type.
+
+> _Example_
+> ```
+> flag enum Foo : u8 {
+>     A,
+>     B,
+> }
+> ```
 
 
-## Flag enum [↵](#77-enum)
-```
-<flag-enum-item> := 'flag' 'enum' <name> '{' <flag-enum-members> '}'
-```
 
-A flag enum item is similar to the one above, and declares a [flag enum type].
-
-A flag enum meanwhile cannot be declared with generics
-```
-flag enum {
-    // ...
-}
-```
-Is equal to the following
-```
-type name = flag enum {
-    // ...
-}
-```
-
-[enum type]:      ../type-system/types/enum-types.md
-[flag enum type]: ../type-system/types/enum-types.md#flag-enum-types-
+[enum type]:      ../type-system/types/composite-types/enum-types.md
+[flag enum type]: ../type-system/types/composite-types/enum-types.md#flag-enum-types-
