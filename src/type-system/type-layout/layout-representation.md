@@ -108,13 +108,13 @@ In addition to the primitive representation, a second (non-primitive) representa
 
 ## Transparent representation [↵](#layout-representation)
 
-The transparent representation is only supported for structures and enum with only 1 variant, which have the following:
+The transparent representation is only supported for structures and enums with only 1 variant, which have the following:
 - a single field with a non-zero size
 - any number of field with a 0-sized type and alignment 1
 
 Type using this representation have the same lyout and ABI as the single non-zero field.
 
-Unlike other representations, a type with this represetnation takes on that of the underlying non-zero sized type.
+Unlike other representations, a type with this representation takes on that of the underlying non-zero sized type.
 
 ## SAO (structure of array) representation [↵](#layout-representation)
 

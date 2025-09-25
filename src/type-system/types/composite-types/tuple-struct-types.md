@@ -3,10 +3,6 @@
 <tuple-struct>        := [ 'mut' ] 'struct' '(' [ <tuple-struct-fields> ] ')' [ <tuple-stuct-body> ] ';'
 <tuple-struct-fields> := <tuple-struct-fields> [ ',' <def-tuple-fields> ] [ ',' ]
                        | <def-tuple-fields> [ ',' ]
-<tuple-struct-fields> := <tuple-struct-field> { ',' <tuple-struct-field> }*
-<tuple-struct-field>  := [ <vis> ] [ 'mut' ] [ <ext-name> ':' ] <type>
-<def-tuple-fields>    := <def-tuple-field> { ',' <def-tuple-field> }*
-<def-tuple-field>     := <tuple-struct-field> '=' <expr>
 <tuple-struct-body>   := '{' { <struct-member> } '}'
 ```
 
@@ -17,6 +13,10 @@ Tuple struct may also define any associated item directly, this is done in an ad
 
 
 ## Fields [↵](#tuple-struct-types)
+```
+<tuple-struct-fields> := <tuple-struct-field> { ',' <tuple-struct-field> }*
+<tuple-struct-field>  := [ <vis> ] [ 'mut' ] [ <ext-name> ':' ] <type>
+```
 
 Each field in a tuple struct is similar to that of a named tuple, meaning each field may optionally have a name.
 
@@ -27,6 +27,10 @@ These fields, like [tuple] fields, may be accessed either using a [tuple index e
 Unlike a struct, it is *not* possible to declare multiple names within a single field.
 
 ### Default tuple struct fields [↵](#fields-)
+```
+<def-tuple-fields>    := <def-tuple-field> { ',' <def-tuple-field> }*
+<def-tuple-field>     := <tuple-struct-field> '=' <expr>
+```
 
 Fields may be provided with a default value, but these must be placed at the end of the tuple, after any field that does not have a default value.
 This allows these fields to be left out in a tuple struct initializer, and will instead have this defaul value assigned to it.

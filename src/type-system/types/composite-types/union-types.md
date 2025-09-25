@@ -50,7 +50,7 @@ In addition, a field may be made mutable, allow it to be modified after the stru
 ### Field mutability [↵](#fields-) 
 
 Each field in a union is by default immutable, meaning it can only be set when the union is initialized.
-A field may be explicitly declared as mutable, allowing it value to be changed in other locations.
+A field may be explicitly declared as mutable, allowing its value to be changed in other locations.
 
 A union type may also be defined as `mut`, this indicates that all fields within the struct will be mutable by default.
 This has no effect on associated items.
