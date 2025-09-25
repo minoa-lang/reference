@@ -122,9 +122,11 @@ A list of weak keywords can be found below (in alphabetic order):
 - `lib`: as part of a [visibility specifier]
 - `literal`: as part of a [literal operator] or [meta pattern]
 - `lower_than`: as part of a [precedence] declaration
+- `lsb`: as part of the bit order for a [bitfield]
 - `member`: within a [meta attribute] declaration
 - `member_attr`: within a [meta attribute] declaration
 - `meta`: to declare a [meta function]
+- `msb`: as part of the bit order for a [bitfield]
 - `opaque`: to declare an [opaque type]
 - `package`: as part of a [visibility specifier]
 - `peer`: within a [meta attribute] declaration

@@ -1,27 +1,34 @@
 # Bitfields
 ```
-<bitfield-item> := { <attribute> }*  [ <vis> ] [ 'record' | 'mut' ] 'bitfield' <name> [ <generic-params> ] [ ':' <expr> ] [ <where-clause> ] '{' <bitfield-members> '}'
+<bitfield-item> := { <attribute> }* [ <vis> ] [ 'mut' | 'record' ] 'bitfield' <name> [ <generic-params> ] [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] [ <where-clause> ] '{' <bitfield-members> '}'
 ```
 
-A bitfield item is syntactic sugar to more easily define a named [bitfield type].
+A bitfield item defines a named bitfield type.
+Ulike a plain [bitfield type], the cannot be anonymous.
+This is similar of creating a distinct type alias to an anonymous bitfield, with some additional syntax features.
 
-A bitfield's visibility defines only the visibility of the bitfield, and not any of its fields.
+Similarly to a bitfield type, a `mut` specifier may be added to a bitfield type ,indicateing that all fields in the bitfield will be mutable.
 
-Meanwhile, a bitfield's mutability will be propagated as the mutability of the bitfield.
+In additon, bitfield items may also define the default visibility for all fields and associated items in the bitfield before the bitfield itself.
 
-An enum declaration without any generic arguments, like:
-```
-bitfield name {
-    // ...
-}
-```
-Is equal to the following:
-```
-type name = bitfield {
-    // ...
-};
-```
+> _Example_
+> ```
+> bitfield Foo : u32le in msb {
+>     a: u20,
+>     b: u12,
+> }
+> ```
 
-> _Todo_: Generics
+In addition, generic parameters and a where caluse can be added to the generated bitfield.
 
-[bitfield type]: ../type-system/types/bitfield-types.md
+> _Example_
+> ```
+> bitfield Foo<T> : u32le in msb where T is Copy {
+>     a: flag,
+>     b: T,
+> }
+> ```
+
+
+
+[bitfield type]: ../type-system/types/composite-types/bitfield-types.md
