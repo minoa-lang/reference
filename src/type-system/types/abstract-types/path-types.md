@@ -3,24 +3,24 @@
 <path-type> := <type-path>
 ```
 
-A path type isn't a type by itself, but it refers to another type, either directly to:
+A path type isn't a type by itself, but it refers to another type, either directly or indirectly to:
 - [opaque types]
 - [struct types]
 - [union types]
 - [enum types]
 - [bitfield types]
-
-Or indirectly though:
 - [type aliases]
-- [distinct types
+- [distinct types]
+- [adapt types]
 
 
 
 
-[bitfield types]: ./bitfield-types.md
-[enum types]:     ./enum-types.md
-[opaque types]:   ./opaque-types.md
-[struct types]:   ./struct-types.md
-[union types]:    ./union-types.md
-[type aliases]:   ../../items/type-aliases.md
-[distinct types]: ../../items/type-aliases.md#distinct-type-aliases-
+[opaque types]:   ../builtin-types/opaque-types.md
+[bitfield types]: ../composite-types/bitfield-types.md
+[enum types]:     ../composite-types/enum-types.md
+[struct types]:   ../composite-types/struct-types.md
+[union types]:    ../composite-types/union-types.md
+[type aliases]:   ../../../items/type-aliases.md
+[distinct types]: ../../../items/type-aliases.md#distinct-type-aliases-
+[adapt types]:    ../../../items/type-aliases.md#adapt-type-aliases-

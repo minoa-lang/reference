@@ -13,6 +13,7 @@ The `Self` type is a special type which exists in multiple locations and evaluat
 The `Self` type acts similar to a generic type parameter, as defined in the [`Self` scope] section.
 
 
+
 [composite type]: ../composite-types.md
 [trait]:          ../../items/traits.md
 [implementation]: ../../items/implementations.md
