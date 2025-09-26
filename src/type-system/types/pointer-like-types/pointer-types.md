@@ -109,9 +109,6 @@ The `allowzero` specifier allows a pointer to be assigned a 'null' value.
 > _Warning_: This should only be used in cases where a value of `0` is a valid and mappable address, such as in an OS.
 >            Otherwise, an optional pointer, meaning a pointer wrapped in an optional type, should be used.
 
-
-
-
 `allowzero` is a special specifier that allows zero to be a valid pointer value.
 This should not be confused with optional pointers, but is meant for cases, like an RTOS where the address is mappable.
 
@@ -120,7 +117,7 @@ Optional pointer with `allowzero` have a different size then those without `allo
 ## Optional pointers [↵](#pointer-types)
 
 An optional pointer is a pointer wrapped inside of an [optional type], i.e. `?^T` or `?[^]T`.
-These pointers are allowed to have a 'null' value, represented as `.None`.
+These pointers are allowed to have a `null` value, which represents the optional `.None` value.
 
 The are guaranteed to have the same size as a pointer, thanks to optional type optimizations.
 
