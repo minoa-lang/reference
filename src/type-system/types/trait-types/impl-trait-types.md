@@ -3,88 +3,150 @@
 <impl-trait-type> := 'impl' <trait-bound>
 ```
 
-An impl trait type introduces an unnamed generic parameter that implements the given intrefaces to the item it is used in.
-It can appear in only 2 locations: function paramters (where it acts as an anonymous type of the parameter to the function) and function return types (where it acts as an abstract return type).
+An impl trait type is used to introduce any type that implemenets the given set of traits to be used in its place.
 
-#### Anonymous type parameter [↵](#impl-trait-types)
+= It can appear in only 2 locations: as a function parameter (where it acts as an inferred type parameter) and function return types (where it acts as an abstract return type).
 
-A function can use an impl trait type as the type of its parameter, where it declares the parameter to be of an anonymous type.
-The caller must provide a type that statisfies the bounds declared in the anonymous type paramter, and the function can only use the functionality available through the trait bounds of the anonymous type paramter.
+## Anonymous type parameter [↵](#impl-trait-types)
 
-An example of this would be:
-```
-trait Trait {}
+A function can use an `impl` trait type as the type of its parameters, where it declares the parameter to be of an anonymous type.
+The caller must provide a type that satisfies the bounds declared in the anonymous type parameter, and the function can only use the functionality available through the trait bound of the anonymous type parameter.
 
-// Generic type parameter
-fn with_generic_type<T is Trait>(param: T) {}
+> _Example_
+> ```
+> trait Trait {}
+> 
+> // Inferred type parameter
+> fn with_generic_param[T is Trait](param: T) {}
+> 
+> // impl trait type parameter
+> fn with_impl_type(param: impl Trait) {}
+> ```
 
-// impl trait typed paramter
-fn with_impl_type(param: impl Trait) {}
-```
+This can be seen as syntactic sugar for a inferred type parameter like `[T is Trait]`, except that the type is anonymous and can not be used within the function, as it does not explicitly appear as either an inferred or regular type parameter.
 
-This can be seens as synctactic sugar for a generic type paramter like `<T is Trait>`, except that the type is anonymous and does not appear within the generic argument list.
-
-> _Note_: For function arguments, generic type parameters and `impl Trait` are not completely equivalent
-> With a generic type paramter `<T is Trait>`, the caller is able to explicitly specify the type of the generic type parameter `T` when calling the function.
-> If an `impl Trait` is used, the caller cannot ever specify the type of the parameter when calling the function.
->
-> Therefore, changing between these types within a function signature should be considered a breaking change.
-
-#### Abstract return types [↵](#impl-trait-types)
+## Abstract return types [↵](#impl-trait-types)
 
 A function can use an impl trait type as the type in its return type.
-These types stand in for another concrete type wher the caller may only used the functinality declared by the specified traits.
-Each possible return type of the function must resolve to the same concrete type.
+These types stand in for another concrete type where the caller may only use the functionality declared by the specified traits.
 
-An `impl Trait` in the return allows to return a abstract type that does not have to be stored within dynamic memory.
-This can be particularly usefull when writing a function returning a closure or iterator, as for example, a closure has an un-writable type.
+It allows a function to return an abstract type that does not have to be stored with dynamic memory.
+This can be particulary useful when writing a function returning for example an iterator, as these names can become very long when nested iterators are produced.
 
-Without this functionality, it would only be possible to return a 'boxed' type:
-```
-fn returns_closure() -> Box<todo> {
-    Box::new(|x| x + 1)
-}
-```
+> _Example_
+> Without this functionality, it would only be possible to return a that is stored somewhere in memory
+> ```
+> fn returns_iter() -> Heap<dyn Iterator> {
+>     ...
+> }
+> ```
+> This could incur performance penalties for the heap allocation and dynamic dispatch.
+> However, using this type, it is possible to write it as
+> ```
+> fn returns_iter() -> impl Iterator {
+>     ...
+> }
+> ```
 
-This could incur performance panalties from heap allocation and dynamic dispatching.
-However, using this type, it is possible to write it as:
+Since this return type only guarantees that a return type will adhere to the given traits, and provides no info about the actual type,
+it is possible to return different types that match this requirement.
 
-```
-fn returns-closure -> impl todo {
-    |x| x + 1
-}
-```
+If only a single type is returned, the return type will just be a stand-in for that type.
 
-Which avoids the drawbacks of the 'boxed' type.
+If multiple different types are returned, the return type can be interpreted to be an [adhoc enum], which will dispatch the relavent functions.
+This does require that any associated types between these multiple return types match, as a mismatch can cause issues in later calls.
+This can be seen as having a similar overhead to dynamic dispatching from a [trait object type].
 
-_TODO: add note on (memory) effect implications_
+Since there is not guarantee whether this would return a single type or a generated [adhoc enum], abstract return types are limited to only calling function which would be allowed on an [object safe] trait implementation.
 
-#### Abstract return types in trait declarations [↵](#impl-trait-types)
+> _Implementation note_: For the pupose of type inference, this provides enough info to be able to type check.
+> However, when it comes to lowering to MIR, it first needs to be converted depending on the use-case, as mentioned above.
 
-Functions in traits may also return an abstract return types, this will create an anonymous associated type within the trait.
+### Abstract return type and `Self` returns [↵](#abstract-return-types-)
 
-Evety `impl Trait` in the return type of an associated function in an trait is desugared to an anonymous associated type.
-The return type that appears in teh implementation's funciton signature is used to determine the value of hte associated type.
+When calling function on an abstract return type, which depends on a `Self` type, it is only possible to call a function returning one of the following:
+- A non-`Self` type which wraps `Self`, which can guarantee a fixed set of capabilities, but only those guaranteed by the type contraint provided by the trait type in the abstract return type.
+- A `Self` type, which will then instead of being a concrete type, will the same as the abstract return type
 
-##### Differences between generics and `impl Trait` in a return [↵](#abstract-return-types-in-trait-declarations-)
+> _Example_: `Self` return type
+> 
+> Assuming the following code
+> ```
+> trait Foo {
+>     fn foo() -> Self;
+> }
+> 
+> fn bar() -> impl Foo {
+>     ...
+> }
+> ```
+> If we were to call `bar().foo()`, we get a call which would normally return a concrete type.
+> Abstract return types break that, since there is no guarantee what is return by `bar()`, there is also no way of knowing what the type of calling `foo()` will be.
+> 
+> For this reasons, whenever this situation happens, the second call gets inferred as returning a `impl Foo` instead of the type implementing `Foo`.
 
-When used as a type argument, `impl trait` work similar to the semantics of generic type parameters.
-But when used in the return, there are significant changes, as unlike with a generic parameter where the caller can choose the return type, the implementation chooses the function's return type.
+> _Example_: Wrapped `Self` return type
+> 
+> Assuming the following code
+> ```
+> trait Foo {
+>     fn foo() -> Wrapper(Self);
+> }
+> 
+> trait Bar {}
+> 
+> struct Wrapper<T> {
+>     val: T,
+> 
+>     fn bar() -> i32 { 42 }
+>     fn baz() -> impl Foo where T: Foo { &val }
+>     fn quux() -> i32 where T: Bar { 2 }
+>     fn quuz(const type: T) -> i32 { 3 }
+> }
+> 
+> struct A {
+>     impl Foo() {
+>         fn foo -> Wrapper(A) { ... }
+>     }
+> }
+> struct B {
+>     impl Foo() {
+>         fn foo -> Wrapper(B) { ... }
+>     }
+>     impl Bar {}
+> }
+> 
+> fn return_impl(toggle: bool) -> impl Foo {
+>     if toggle {
+>         A{}
+>     } else {
+>         B{}
+>     }
+> }
+> ```
+> This would allow us to call following:
+> - `bar()`, which is always available and would also break the dependency on an abstract return type
+> - `baz()`, which is available, as `impl Foo` fulfills the `Foo` bound, but this return type is still dependent on `Foo`
+> 
+> But we cannot call:
+> - `quux()`, as `impl Foo` can never implement `Bar`, even if `B` fulfills to it, since we don't have this info at the point of calling `quux()`
+> - `quuz()`, as it does not adhere to a function that can be called by an object safe trait
 
-For example, the function
-```
-fn foo<T is Trait>() -> T { ... }
-```
-Allows the caller to determine the return type.
+### Abstract return type in trait declarations
 
-In contrast, the function
-```
-fn foo() -> impl Trait { ... }
-```
-doesn't allow the caller to explicitly determine the return type.
-Instead the function chooses the return type, with the only guarantee that it implements the required traits.
+Functions in traits may also return an abstract return type.
+These will be bound to a special anonymous associated type which will be used when checking for compatibility in any return type, as menioned [above](#abstract-return-types-).
 
-#### Impl trait limitations [↵](#impl-trait-types)
+## Impl trait limitations
 
-An impl trait type may only occur for non-`extern` functions.
-It can also not be the type of a variable declaration, a field, or appear inside a type alias.
+An impl trait type may only occur for a non-`extern` and non-`export` functions.
+
+Values with a impl trait type may also not be used in the following locations:
+- field types
+- properties
+
+
+
+[trait object type]: ./trait-object-types.md
+[adhoc enum]:        ../composite-types/enum-types.md#adhoc-adt-enums-
+[object safe]:       ../../../items/traits.md#object-safety-
