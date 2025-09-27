@@ -3,20 +3,35 @@
 <trait-object-type> := 'dyn' <trait-bound>
 ```
 
-A trait object type is an opaque type that implements a set of traits, any set of traits is allowed, except of an opt-in trait like `?Sized`.
-The objects are guaranteed to not only implement the given traits, but also their parent traits.
+A trait object type is an opaque type that implements a set of traits, meaning that they are `?Sized` by default.
+A trait object exists out of a combination of [object safe traits] and [marker traits].
 
-Different trait objects may alias each other if the traits match, but are in different orders, meaning that `dyn A & B & C` is the same as `dyn C & A & B`
+In addition, a trait object will also implement all [supertraits], as these are by definition required to implement the traits.
 
-A trait object can be assigned to any less specific trait objects, meaning that it can be assgined to a type that has less trait bounds.
-This *may* incur some additional overhead, as a new vtable needs to be retrieved and assigned, if this cannot be determined at compile time.
+Different trait objects may alias each other if the traits match, but are in different orders, meanign that `dyn A & B & C` is the same as `dyn C & A & B`.
 
-Due to the opaqueness of trait objects, this type is dynamically sized, meaning that it must be stored behind a reference, a pointer, or a type accepting DTSs.
+A trait object can be assigned to any less specific trait object, meanig that the assigned value is of a type that has less of the trait bounds and supertraits supplied to the triat object.
+Converting between traits however comes with some additional overhead to possibly build up the vtable, if this cannot be resolved at compile time.
 
-Trait objects are stored in so-called "fat pointers' which consists out of 2 components:
-- A pointer to the an object of a type `T` that implements the trait bounds
-- A virtual table, also known as a vtable, which contains both RTTI info and a list of function pointers to the methods of the traits and their parent types, of `T`'s implementation.
+Since a trait object cannot know what type is stored in it, a trait object type is a [dynamically sized type], meaning it needs to be stored behind an indirection.
 
-Trait object types allowe for "late binding" in cases where the types being used cannot be known at compile time, but the programmer knowns the functionality they posses.
-Calling a method will use a virtual dispatch of the method: that is, teh function pointer is loaded from the vtable, and is then invoked indirectly, incurring a pointer indirection.
-The actual implementation of each vtable may vary on an object-by-object basis.
+Trait object types allow for "late bindings" in cases where the type being used cannot be known at compile time, but it knows the functionality the type is supposed to posses.
+Calling a method will use virutal dispatch of a method: that is, the function pointer is loaded from the vtable, and is then invoked indirectly, incurring an additional pointer indirections by requiring the function to be looked up in the vtable.
+
+## Internal representation [↵](#trait-object-types)
+
+Trait objects are stored as 'fat pointers', which consist out of 2 components:
+- a pointer to an object of type `T` which implements the given traits.
+- a pointer to a vtable, which contains a pointer to type info, and a list of pointers to the methods of the traits and their supertraits, of `T`'s implementation
+
+The actual implementation of each vtable may vvary on an object-by-object basis.
+
+> _Implementation note_: Behind the scenes, these types are hidden behind a compiler generated [auto-traits] which has all these traits as supertraits.
+
+
+
+[dynamically sized type]: ../../dynamically-sized-types.md
+[object safe traits]:     ../../../items/traits.md#object-safety-
+[marker traits]:          ../../../items/traits.md#marker-traits- "Todo: Section does not exists yet in traits.md"
+[supertraits]:            ../../../items/traits.md#supertraits-
+[auto-traits]:            ../../../items/traits.md#auto-traits- "Todo: Section does not exists yet in traits.md"
