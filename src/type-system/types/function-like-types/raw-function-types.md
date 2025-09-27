@@ -29,7 +29,7 @@ A pointer type's parameters may be provided by a name, this name is ignored when
 
 > _Note_: A raw function type cannot be directly used by any code, it must **always** be behind a pointer.
 
-> _Note_: The syntax for a 'raw function type' is similar to that of a [function closure parameter].
+> _Note_: The syntax for a 'raw function type' is similar to that of a [function closure parameter] or [function closure return].
 
 > _Todo_: Would it make sense to support variadic parameters?
 
@@ -70,4 +70,5 @@ n/a          | `Fn`
 [ABI]:                        ../../../abi.md
 [default `minoa` ABI]:        ../../../abi.md "Todo: fix section"
 [function closure parameter]: ../../../items/functions.md "Todo: fix section"
+[function closure return]:    ../../../items/functions.md "Todo: fix section"
 [generic argument]:           ../../../generics.md#generic-arguments-

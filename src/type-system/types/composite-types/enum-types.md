@@ -560,6 +560,8 @@ These are the following:
 
 > _Todo_: Add traits, methods, and operators here
 
+> _Todo_: Could add support to be able to access individual flags by name as a boolean value, i.e. `value.FlagName` or `value.FlagName = true`
+
 
 
 [`discriminant(enum_type)`]:    #accessing-discriminant-values- "Todo: link to docs"

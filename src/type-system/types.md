@@ -3,28 +3,14 @@
 ```
 <type>           := <type-no-bound>
                   | <trait-type>
-<type-no-bound>  := <builtin-type>
+<type-no-bound>  := <parenthesized-type>
+                  | <builtin-type>
                   | <sequence-type>
                   | <pointer-like-type>
                   | <function-like-type>
-                  | <aggregate-type>
+                  | <composite-type>
                   | <abstract-type>
-
-                  | <parenthesized-type>
-                  | <path-type>
-                  | <tuple-type>
-                  | <array-type>
-                  | <slice-type>
-                  | <string-slice-type>
-                  | <pointer-type>
-                  | <reference-type>
-                  | <optional-type>
-                  | <function-type>
-                  | <function-pointer-type>
-                  | <closure-type>
-                  | <record-type>
-                  | <enum-record-type>
-                  | <inferred-type>
+                  | <trait-types>
 ```
 
 Types are an essential part of any program, each variable, value, and item has a type.
@@ -48,11 +34,11 @@ These are the following:
 - [sequence types]
   - [array types]
   - [slice types]
-    - [strings slice types]
-  - [pointer-like types]
-    - [pointer types]
-    - [reference types]
-    - [function pointer types]
+  - [strings slice types]
+- [pointer-like types]
+  - [pointer types]
+  - [reference types]
+  - [function pointer types]
 - [function-like types]
   - [function types]
   - [closure types]
@@ -60,18 +46,18 @@ These are the following:
   - [tuple types]
   - [struct types]
   - [tuple struct types]
-    - [enum types]
-    - [union types]
-    - [bitfield types]
-  - [trait types]
-    - [impl trait types]
-    - [trait object types]
-  - [abstract types]
-    - [path types]
-    - [optional types]
-    - [result types]
-    - [`Self` types]
-    - [vector types]
+  - [enum types]
+  - [union types]
+  - [bitfield types]
+- [trait types]
+  - [impl trait types]
+  - [trait object types]
+- [abstract types]
+  - [path types]
+  - [optional types]
+  - [result types]
+  - [`Self` types]
+  - [vector types]
   - [infered types]
 
 > _Note_: types are designed to be able to be easily read from left to right
@@ -95,15 +81,15 @@ In some locations it may be possible that a type would be ambiguous, this can be
 For example, a reference to an trait object type with multiple bounds can be unclear, as we cannot cleanly determine if one of the bounds is a reference,
 or the whole set of bounds constitute a single type without requiring to rely heavily on context.
 
-Example:
-```
-&dyn Foo & Sized
-```
-may either be interpreted as a trait object with 2 bounds, or a reference located within a binary AND expression.
-Because of this, it requires the following 'clarification':
-```
-&dyn (Foo & Sized)
-```
+> _Example_
+> ```
+> &dyn Foo & Sized
+> ```
+> may either be interpreted as a trait object with 2 bounds, or a reference located within a binary AND expression.
+> Because of this, it requires the following 'clarification':
+> ```
+> &dyn (Foo & Sized)
+> ```
 
 ## Recursive types [↵](#types)
 
