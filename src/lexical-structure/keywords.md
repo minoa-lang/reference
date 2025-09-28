@@ -51,6 +51,7 @@ A list of strong keywords can be found below (in alphabetic order):
 - `isize`
 - `let`
 - `loop`
+- `null`
 - `match`
 - `mod`
 - `move`
