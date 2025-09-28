@@ -296,14 +296,10 @@ More info about the exact effect on the layout can be found in the [bit order se
 
 ## Record bitfield
 ```
-<record-bitfield-type> := 'record' 'bitfield' [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] '{' <bitfield-members> '}'
+<record-bitfield-type> := [ 'mut' ] 'record' 'bitfield' [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] '{' <bitfield-members> '}'
 ```
-A record bitfield is a variant of a bitfield which is _structural_ instead of _nominal_.
-These structs follow the rules defined [here](../nominal-vs-structural-types.md).
-
-Some of the most notable ones for bitfields are:
-- all fields are public
-- all fields are mutable
+A record bitfield is a variant of a bitfield which is a _record_ instead of _nominal_ type.
+These structs follow the rules defined [here](../nominal-vs-record-types.md).
 
 
 

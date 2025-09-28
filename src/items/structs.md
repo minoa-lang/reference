@@ -16,7 +16,7 @@ In addition, struct items may also define a default visibility for all fields an
 
 ## Regular structs [↵](#structs)
 ```
-<struct> := [ 'mut' | 'record' ] 'struct' [ <generic-params> ] [ <where-clause> ] '{' { <struct-elements> } '}'
+<struct> := [ 'mut' ] [ 'record' ] 'struct' [ <generic-params> ] [ <where-clause> ] '{' { <struct-elements> } '}'
 ```
 
 A struct generates a named [struct type].
@@ -45,7 +45,7 @@ In addition, generic parameters and a where clause can be added to generate a ge
 
 ## Tuple structs [↵](#structs)
 ```
-<tuple-struct>      := [ 'mut' | 'record' ] 'struct' [ <generic-params> ] [ <where-clause> ] '(' <tuple-struct-fields> ')' <tuple-struct-body>
+<tuple-struct>      := [ 'mut' ] [ 'record' ] 'struct' [ <generic-params> ] [ <where-clause> ] '(' <tuple-struct-fields> ')' <tuple-struct-body>
 <tuple-struct-body> := ';'
                      | '{' { <assoc-item> }* '}'
 ```

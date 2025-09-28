@@ -13,7 +13,7 @@ Enum items may declare either regular/ADT enums or flag enums.
 
 ## ADT enum
 ```
-<adt-enum> := [ 'mut' | 'record' ] 'enum' <name> [ <generic-params> ] [ <discriminant> ] [ <where-clause> ] '{' <enum-members> '}'
+<adt-enum> := [ 'mut' ] [ 'record' ] 'enum' <name> [ <generic-params> ] [ <discriminant> ] [ <where-clause> ] '{' <enum-members> '}'
 ```
 
 An ADT enum generates a named [enum type].

@@ -434,18 +434,14 @@ These must appear after all fields have been declared, not doing so will result 
 
 ## Record structs [↵](#struct-types)
 ```
-<record-struct-type>   := 'record' [ 'struct' ] '{' <record-struct-fields> { <assoc-item> }* '}'
+<record-struct-type>   := [ 'mut' ] 'record' [ 'struct' ] '{' <record-struct-fields> { <assoc-item> }* '}'
 <record-struct-fields> := <record-struct-field> { ',' <record-struct-field> } [ ',' ]
 <record-struct-field>  := <field-names> ':' <type> [ <struct-field-tag> ]
 ```
-A record structure, also known as a POD (Plain Old Data) struct, is a variant of a struct which is _structural_ instead of _nominal_.
-These structs follow the rules defined [here](../nominal-vs-structural-types.md).
+A record structure, also known as a POD (Plain Old Data) struct, is a variant of a struct which is a _record_ instead of _nominal_ type.
+These structs follow the rules defined [here](../nominal-vs-record-types.md).
 
 For a record struct, it is allowed to leave out the `struct` keyword.
-
-Some of the most notable ones for structs are:
-- all fields are public
-- all fields are mutable
 
 ## Unit structs [↵](#struct-types)
 

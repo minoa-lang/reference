@@ -455,15 +455,11 @@ assert(f == Foo.A);
 
 ## Record enums [↵](#enum-types)
 ```
-<record-enum-type> := 'record' 'enum' '{' <enum-members> '}'
+<record-enum-type> := [ 'mut' ] 'record' 'enum' '{' <enum-members> '}'
 ```
 
-A record enum is a variant of an enum which is _structural_ instead of _nominal_.
-These structs follow the rules defined [here](../nominal-vs-structural-types.md).
-
-Some of the most notable ones for structs are:
-- all fields are public
-- all fields are mutable
+A record enum is a variant of an enum which is a _record_ instead of _nominal_ type.
+These structs follow the rules defined [here](../nominal-vs-record-types.md).
 
 ## Adhoc ADT enums [↵](#enum-types)
 ```

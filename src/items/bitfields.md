@@ -1,6 +1,6 @@
 # Bitfields
 ```
-<bitfield-item> := { <attribute> }* [ <vis> ] [ 'mut' | 'record' ] 'bitfield' <name> [ <generic-params> ] [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] [ <where-clause> ] '{' <bitfield-members> '}'
+<bitfield-item> := { <attribute> }* [ <vis> ] [ 'mut' ] [ 'record' ] 'bitfield' <name> [ <generic-params> ] [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] [ <where-clause> ] '{' <bitfield-members> '}'
 ```
 
 A bitfield item defines a named bitfield type.
