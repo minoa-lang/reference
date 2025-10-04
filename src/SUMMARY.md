@@ -137,6 +137,7 @@
   - [Nominal vs record types](./type-system/nominal-vs-record-types.md)
   - [Type layout](./type-system/type-layout.md)
     - [Layout representation](./type-system/type-layout/layout-representation.md)
+    - [Bitfield layout](./type-system/type-layout/bitfield-layout.md)
   - [Interior mutability](./type-system/interior-mutability.md)
   - [Type coercions](./type-system/type-coercions.md)
   - [Destructors](./type-system/destructors.md)

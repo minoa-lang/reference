@@ -74,7 +74,7 @@ If a named tuple is assigned, the named fields must correspond to those in the s
 
 ## Record tuple structs [↵](#tuple-struct-types)
 ```
-<record-tuple-struct>        := 'record' [ 'struct' ] '(' [ <record-tuple-struct-fields> ] ')' [ <tuple-struct-body> ]
+<record-tuple-struct>        := [ 'mut' ] 'record' [ 'struct' ] '(' [ <record-tuple-struct-fields> ] ')' [ <tuple-struct-body> ]
 <record-tuple-struct-fields> := <record-tuple-struct-fields> [ ',' <record-def-tuple-fields> ] [ ',' ]
                               | <record-def-tuple-fields> [ ',' ]
 <record-tuple-struct-fields> := <record-tuple-struct-field> { ',' <record-tuple-struct-field> }*
@@ -83,14 +83,10 @@ If a named tuple is assigned, the named fields must correspond to those in the s
 <record-def-tuple-field>     := <record-tuple-struct-field> '=' <expr>
 ```
 
-A record tuple struct, also known as a POD (Plain Old Data) tuple struct, is a variant of a tuple struct which is _structural_ instead of _nominal_.
-These tuple struct follow the rules defined [here](../nominal-vs-structural-types.md).
+A record tuple struct, also known as a POD (Plain Old Data) tuple struct, is a variant of a tuple struct which is a _record_ instead of _nominal_ type.
+These tuple struct follow the rules defined [here](../nominal-vs-record-types.md).
 
 For a record struct, it is allowed to leave out the `struct` keyword.
-
-Some of the most notable ones for tuple structs are:
-- All fields are public
-- All fields are mutable
 
 
 
