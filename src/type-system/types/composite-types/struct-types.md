@@ -1,6 +1,6 @@
 # Struct types
 ```
-<struct-type>   := [ 'mut' ] 'struct' [ <generic-params> ] '{' [ <struct-members> ] '}'
+<struct-type>   := <type-layout-specifiers> [ 'mut' ] 'struct' [ <generic-params> ] '{' [ <struct-members> ] '}'
 <struct-members>:= [ <struct-fields> ] { <assoc-item> }*
 ```
 
@@ -434,7 +434,7 @@ These must appear after all fields have been declared, not doing so will result 
 
 ## Record structs [↵](#struct-types)
 ```
-<record-struct-type>   := [ 'mut' ] 'record' [ 'struct' ] '{' <record-struct-fields> { <assoc-item> }* '}'
+<record-struct-type>   := <type-layout-specifiers> [ 'mut' ] 'record' [ 'struct' ] '{' <record-struct-fields> { <assoc-item> }* '}'
 <record-struct-fields> := <record-struct-field> { ',' <record-struct-field> } [ ',' ]
 <record-struct-field>  := <field-names> ':' <type> [ <struct-field-tag> ]
 ```
@@ -455,7 +455,7 @@ A unit struct may be seen as a distinct version of a unit type, but with the erg
 
 [union]:              ./union-types.md
 [slice]:              ../sequence-types/slice-types.md
-[`packed`]:           ../../type-layout/layout-representation.md#packed
+[`packed`]:           ../../type-layout/composite-layout.md#packed
 [`repr` attribute]:   ../../../attributes.md#repr-
 [struct expression]:  ../../../expressions/constructing-expressions/struct-expressions.md
 [initializer]:        ../../../items/initializers.md

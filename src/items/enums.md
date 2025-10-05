@@ -1,6 +1,6 @@
 # Enums
 ```
-<enum-item> := { <attribute> }* [ <vis> ] ( <adt-enum> | <flag-enum> )
+<enum-item> := { <attribute> }* <type-layout-specifiers> [ <vis> ] ( <adt-enum> | <flag-enum> )
 ```
 
 An enum item defines a named enum type.

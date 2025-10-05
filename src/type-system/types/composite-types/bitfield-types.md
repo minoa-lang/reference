@@ -1,6 +1,6 @@
 # Bitfield types
 ```
-<bitfield-type>     := [ 'mut' ] 'bitfield' [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] '{' <bitfield-members> '}'
+<bitfield-type>     := <type-layout-specifiers> [ 'mut' ] 'bitfield' [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] '{' <bitfield-members> '}'
 <bitfield-memebers> := [ <bitfield-fields> ] { <assoc-item> }*
 ```
 A bitfield type is similar to a struct type, but which is tightly packed and allows each field to be offset and sized to a bit (non-byte) value.
@@ -221,7 +221,7 @@ kind := f.kind;
 
 ## Record bitfield
 ```
-<record-bitfield-type> := [ 'mut' ] 'record' 'bitfield' [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] '{' <bitfield-members> '}'
+<record-bitfield-type> := <type-layout-specifiers> [ 'mut' ] 'record' 'bitfield' [ <bitfield-backing-int> ] [ <bitfield-bit-order> ] '{' <bitfield-members> '}'
 ```
 A record bitfield is a variant of a bitfield which is a _record_ instead of _nominal_ type.
 These structs follow the rules defined [here](../nominal-vs-record-types.md).

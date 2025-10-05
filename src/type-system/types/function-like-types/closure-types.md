@@ -434,7 +434,7 @@ As a result, it is possible for disjoint fields of an composite type to be dropp
 [raw function type]:      ./raw-function-types.md
 [shared referece]:        ../pointer-like-types/reference-types.md#shared-reference-
 [mutable reference]:      ../pointer-like-types/reference-types.md#mutable-reference-
-['packed`]:               ../../type-layout/layout-representation.md#packed
+['packed`]:               ../../type-layout/composite-layout.md#packed
 [field access]:           ../../../expressions/field-access-expressions.md
 [tuple index]:            ../../../expressions/tuple-index-expressions.md
 [array or slice index]:   ../../../expressions/index-expressions.md

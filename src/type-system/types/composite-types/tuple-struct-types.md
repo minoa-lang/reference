@@ -1,6 +1,6 @@
 # Tuple struct types
 ```
-<tuple-struct>        := [ 'mut' ] 'struct' '(' [ <tuple-struct-fields> ] ')' [ <tuple-stuct-body> ] ';'
+<tuple-struct>        := <type-layout-specifiers> [ 'mut' ] 'struct' '(' [ <tuple-struct-fields> ] ')' [ <tuple-stuct-body> ] ';'
 <tuple-struct-fields> := <tuple-struct-fields> [ ',' <def-tuple-fields> ] [ ',' ]
                        | <def-tuple-fields> [ ',' ]
 <tuple-struct-body>   := '{' { <struct-member> } '}'
@@ -74,7 +74,7 @@ If a named tuple is assigned, the named fields must correspond to those in the s
 
 ## Record tuple structs [↵](#tuple-struct-types)
 ```
-<record-tuple-struct>        := [ 'mut' ] 'record' [ 'struct' ] '(' [ <record-tuple-struct-fields> ] ')' [ <tuple-struct-body> ]
+<record-tuple-struct>        := <type-layout-specifiers> [ 'mut' ] 'record' [ 'struct' ] '(' [ <record-tuple-struct-fields> ] ')' [ <tuple-struct-body> ]
 <record-tuple-struct-fields> := <record-tuple-struct-fields> [ ',' <record-def-tuple-fields> ] [ ',' ]
                               | <record-def-tuple-fields> [ ',' ]
 <record-tuple-struct-fields> := <record-tuple-struct-field> { ',' <record-tuple-struct-field> }*

@@ -1,6 +1,6 @@
 # Unions
 ```
-<union-item> := { <attribute> }* [ <vis> ] [ 'mut' ] 'union' <name>  [ <generic-params> ] [ <where-clause> ] '{' <union-members> '}'
+<union-item> := { <attribute> }* <type-layout-specifiers> [ <vis> ] [ 'mut' ] 'union' <name>  [ <generic-params> ] [ <where-clause> ] '{' <union-members> '}'
 ```
 
 A union item defines a named union type.

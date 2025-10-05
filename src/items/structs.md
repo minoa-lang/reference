@@ -1,6 +1,6 @@
 # Structs
 ```
-<struct-item> := { <attribute> }* [ <vis> ] ( <struct> | <tuple-struct> | <unit-struct> )
+<struct-item> := { <attribute> }* <type-layout-specifiers> [ <vis> ] ( <struct> | <tuple-struct> | <unit-struct> )
 ```
 
 A structure item defines a named structure type.

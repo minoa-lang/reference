@@ -1,6 +1,6 @@
 # Union types
 ```
-<union-type>    := [ 'mut' ] [ 'safe' ] <union> '{' <union-elements> '}'
+<union-type>    := <type-layout-specifiers> [ 'mut' ] [ 'safe' ] <union> '{' <union-elements> '}'
 <union-element> := <union-field> { ',' <union-field> }* [ ',' ] { <assoc-item> }*
 ```
 
@@ -241,6 +241,6 @@ Therefore, if any field is borrowed mutably, no ther field can be borrwoed mutab
 [manually dropped]:    #fields "Todo: Link to ManualDrop docs"
 [transmute]:           #fields "Todo: Link to transmute"
 [enums]:               ./enum-types.md
-[`minoa` type layout]: ../../type-layout/layout-representation.md#minoa-representation-
+[`minoa` type layout]: ../../type-layout/composite-layout.md#minoa-representation-
 [`repr` attribute]:    ../../../attributes.md#repr-
 [struct expression]:   ../../../expressions/constructing-expressions.md#struct-expressions-
