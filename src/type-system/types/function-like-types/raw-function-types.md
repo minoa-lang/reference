@@ -47,7 +47,7 @@ The below table defines the desugared, where `Fn` can stand for any function-lik
 Location                     | Desugared
 -----------------------------|-----------
 [function closure parameter] | `impl Fn`
-[generic argument]           | `dyn Fn`
+[generic argument]           | `is Fn`
 
 This table also defines in which locations the type may be used.
 
@@ -69,6 +69,6 @@ n/a          | `Fn`
 [trait types]:                ../trait-types.md
 [ABI]:                        ../../../abi.md
 [default `minoa` ABI]:        ../../../abi.md "Todo: fix section"
-[function closure parameter]: ../../../items/functions.md "Todo: fix section"
-[function closure return]:    ../../../items/functions.md "Todo: fix section"
+[function closure parameter]: ../../../items/functions.md#function-closure-parameters-
+[function closure return]:    ../../../items/functions.md#raw-function-return-types
 [generic argument]:           ../../../generics.md#generic-arguments-
