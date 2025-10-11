@@ -439,7 +439,7 @@ Functions can be declared as `extern` or `export`, allow interactions with exter
 By default, they use the `C` calling convention.
 The calling convention can be explicitly set using the [`@callconv` attribute]
 
-> _Note_: For more information, check the [external & export blocks](./external-export-block.md) section.
+> _Note_: For more information, check the [extern & export blocks](./external-export-block.md) section.
 
 ### Extern [↵](#extern--exported-functions-)
 ```
@@ -450,10 +450,11 @@ The calling convention can be explicitly set using the [`@callconv` attribute]
 <extern-fn-param>      := <ext-name> ':' <type>
 ```
 
-An `extern` function allows code to call a function that is declared in an external library that is not imported using the provided language mechanisms.
+An `extern` function allows code to call a function that is declared in an external library that is not imported using a [`use` item].
 
 `extern` functions are declared with the name of the external library the symbol can be found in, cannot have a body, and are `unsafe` by default.
 
+When not declared inside of an [extern block], the `extern` function must explicitly provide the name of the library in which it is located, otherwise it will use that of the extern block.
 The compiler will automatically add a prefix and an extension to these names, which depend on the OS being compiled to.
 These can be controlled via arguments provided to the compiler.
 
@@ -477,7 +478,8 @@ Whenever a functions uses these, the function cannot be made `safe`.
 ```
 
 `export` functions define a function which can be imported and called by external code.
-They can also still be called by any code importing these functions.
+
+They cannot be accessed from any code importing the function using a [`use` item].
 
 All `export` functions are always publically visible (`pub`).
 
@@ -615,7 +617,8 @@ A function containing constant arguments will, for example, be partially applied
 [unsafe context]:                #unsafe-functions- "Todo"
 [unsafe expression]:             #unsafe-functions- "Todo"
 [`use` item]:                    ./use.md
-[external & export blocks]:      ./external-export-block.md
+[extern & export blocks]:        ./external-export-block.md
+[extern block]:                  ./external-export-block.md#extern- "Todo: Section does not exist yet"
 [`@callconv` attribute]:         ../attributes/abi-link-symbol-ffi.md#callconv-
 [block expression]:              ../expressions/block-expressions.md
 [constructing expressions]:      ../expressions/constructing-expressions.md
