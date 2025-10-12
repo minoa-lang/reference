@@ -113,6 +113,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `distinct`: to declare a [distinct type alias]
 - `extend`: as part of a [trait implementation]
 - `flag`: to declare a [flag enum]
+- `field`: within a [field property]
 - `full`: within a [meta attribute] declaration
 - `get`: to declare a [property getter]
 - `higher_than`: as part of a [precedence] declaration
@@ -136,7 +137,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `pre`: as part of a [function contract]
 - `precedence`: to declare a [precedence]
 - `prefix`: as part of an [operator] declaration
-- `property`: to declare a [property]
+- `prop`: to declare a [property]
 - `raw`: to get a [raw pointer value]
 - `record`: to declare a [record struct], [record tuple struct], [record enum], or [record bitfield]
 - `sealed`: to declare a [sealed trait]
@@ -174,8 +175,9 @@ A list of weak keywords can be found below (in alphabetic order):
 [initializer]:                     ../items/initializers.md
 [trait implementation]:            ../items/implementations.md#trait-implementation-
 [property]:                        ../items/properties.md
-[property observer]:               ../items/properties.md#observers-
+[field property]:                  ../items/properties.md#field-property
 [property getter]:                 ../items/properties.md#getters-
+[property observer]:               ../items/properties.md#observers-
 [property setter]:                 ../items/properties.md#setters-
 [thread-local static]:             ../items/statics.md#thread-local-storage-
 [sealed trait]:                    ../items/traits.md
