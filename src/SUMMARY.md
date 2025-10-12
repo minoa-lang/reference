@@ -28,7 +28,7 @@
   - [Enums](./items/enums.md)
   - [Bitfields](./items/bitfields.md)
   - [Const items](./items/consts.md)
-  - [Static iteems](./items/statics.md)
+  - [Static items](./items/statics.md)
   - [Properties](./items/properties.md)
   - [Traits](./items/traits.md)
   - [Implementations](./items/implementations.md)
