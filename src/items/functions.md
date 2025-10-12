@@ -378,7 +378,7 @@ Const function cannot be `async`
 
 ## Methods [↵](#functions)
 ```
-<method>           := <fn-specifiers> 'fn' <fn-receiver> <name> <fn-signature> { <contract> }* <fn-body>
+<method>           := <fn-specifiers> 'fn' <fn-receiver> <ext-name> <fn-signature> { <contract> }* <fn-body>
 <fn-receiver>      := '(' ( <fn-self-reciever> | <fn-type-reciever> ) ')'
 <fn-self-receiver> := [ '&' ] [ 'mut' ] 'self'
 <fn-type-receiver> := [ 'mut' ] 'self' ':' <type>
