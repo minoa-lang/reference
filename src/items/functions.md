@@ -415,7 +415,7 @@ A typed receiver can take in a user specified reciever type, which may be one of
 ## Trait functions & methods [↵](#functions)
 ``` 
 <trait-fn>            := <trait-fn-qualifiers> 'fn' <name> [ '?' ] <fn-signature> { <contracts> }* <trait-fn-body>
-<fn-method>           := <trait-fn-qualifiers> 'fn' <fn-reciever> <name> [ '?' ] <fn-signature> { <contracts> }* <trait-fn-body>
+<trait-method>        := <trait-fn-qualifiers> 'fn' <fn-reciever> <name> [ '?' ] <fn-signature> { <contracts> }* <trait-fn-body>
 <trait-fn-body>       := ';'
                        | <fn-body>
 <trait-fn-qualifiers> := { <attribute> }* [ ( [ ( 'const'  [ '!' ] ) | 'async' ] [ 'unsafe' ] [ 'gen' ] ) ]
