@@ -1,6 +1,6 @@
 # Properties
 ```
-<prop-item> := { <attribute> }* [ <vis> ] [ 'unsafe' ] [ 'init' ] 'prop' <ext-name> ':' <type> <prop-body>
+<prop-item> := { <attribute> }* [ <vis> ] [ 'unsafe' ] [ 'const' [ '!' ] ] [ 'init' ] 'prop' <ext-name> ':' <type> <prop-body>
 <prop-body> := <prop-accessors>
              | <prop-get-only>
              | <prop-direct-bind>
@@ -41,6 +41,8 @@ Accessors are used to either get, set, or observe the value.
 Accessors may have their own [visibility], allowing them to have a more limited visibility.
 If no visibility is provided, or the provided visibility would be greater than that of the actual property, the accessor will get the same visibility as the property.
 
+Additionally, accessors may individually be declared as `const` or `const!`
+
 Since properties can be defined inside of a [composite type]'s body, and the fact that `prop` is a weak keyword, it is possible to have a field which has the name `prop`.
 An actual property is defined by `prop`, followed by a name.
 
@@ -58,8 +60,8 @@ An actual property is defined by `prop`, followed by a name.
 
 ### Getters [↵](#accessors-)
 ```
-<prop-getter>       := [ <vis> ] [ 'mut' | 'ref' ] 'get' <accessor-body>
-<field-prop-getter> := [ <vis> ] [ 'mut' | 'ref' ] 'get' ( <accessor-body> | ';' )
+<prop-getter>       := [ <vis> ] [ 'const' [ '!' ] ] [ 'mut' | 'ref' ] 'get' <accessor-body>
+<field-prop-getter> := [ <vis> ] [ 'const' [ '!' ] ] [ 'mut' | 'ref' ] 'get' ( <accessor-body> | ';' )
 ```
 A getter is used to retrieve a value from the property.
 
@@ -94,8 +96,8 @@ When calling a getter as a function, the exact getter will be resolved by the bo
 
 ### Setters [↵](#accessors-)
 ```
-<prop-setter>       := [ <vis> ] 'set' [ '(' <name> [ ',' <name> ] ')' ] <accessor-body>
-<field-prop-setter> := [ <vis> ] 'set' [ '(' <name> [ ',' <name> ] ')' ] ( <accessor-body> | ';' )
+<prop-setter>       := [ <vis> ] [ 'const' [ '!' ] ] 'set' [ '(' <name> [ ',' <name> ] ')' ] <accessor-body>
+<field-prop-setter> := [ <vis> ] [ 'const' [ '!' ] ] 'set' [ '(' <name> [ ',' <name> ] ')' ] ( <accessor-body> | ';' )
 ```
 
 A setter is used to modify the value of a property, requiring the value the property is part of to be mutable.
@@ -141,8 +143,8 @@ If a value should be moved out for a `did_set` observer, the implicit `$1` value
 ```
 <prop-observer>     := <prop-observe-pre>
                      | <prop-observe-post>
-<prop-observe-pre>  := 'will_set' [ '(' <name> ',' <name> ')' ] <accessor-body>
-<prop-observe-post> := `did_set` [ '(' <name> ',' <name> ')' ] <accessor-body>
+<prop-observe-pre>  := [ 'const' [ '!' ] ] 'will_set' [ '(' <name> ',' <name> ')' ] <accessor-body>
+<prop-observe-post> := [ 'const' [ '!' ] ] `did_set` [ '(' <name> ',' <name> ')' ] <accessor-body>
 ```
 
 Observer allow code to act upon the changing of a value, both before and after the value has been set.
@@ -200,7 +202,14 @@ The expression has access to a `&self`, as it is a value getter.
 > }
 > ```
 
-## Init property
+## Constant property [↵](#properties)
+
+A constant property, not to be confused with a [constant], is similar to declaring a function as const.
+Meaning that it allows the property to be used in a compile-time context.
+
+In addition, if the property or any of its accessors is defined as `const!`, they will only be aviable at compile-time, and not at runtime.
+
+## Init property [↵](#properties)
 
 Init properties are special properties which can be used withing a [struct expression], instead of any corresponding fields.
 
@@ -340,7 +349,7 @@ When this is done, only the property that shadows the field can access the origi
 
 ## Field property
 ```
-<field-propety> := [ <vis> ] [ 'unsafe' ] 'field' 'prop' <ext-name> ':' <type> <prop-body> [ '=' <field-defs> ] [ <field-tag> ]
+<field-propety> := [ <vis> ] [ 'const' ] [ 'unsafe' ] 'field' 'prop' <ext-name> ':' <type> <prop-body> [ '=' <field-defs> ] [ <field-tag> ]
 ```
 
 A field property is a special version of a property which is itself also a field.
@@ -394,10 +403,10 @@ This means that unlike other properties, these do not have access to `self`.
 
 ## Trait properties [↵](#properties)
 ```
-<trait-property>               := 'prop' <ext-name> ':' <type> <trait-property-accessors>
+<trait-property>               := [ 'const' ] 'prop' <ext-name> ':' <type> <trait-property-accessors>
 <trait-property-accessors>     := '{' ? <trait-propery-accessor>, sub-elements need to be unique ? '}'
-<trait-property-accessor>      := [ 'mut' | 'ref' ] 'get' <trait-property-accessor-body>
-                                | 'set' <trait-property-accessor-body>
+<trait-property-accessor>      := [ 'const' ] [ 'mut' | 'ref' ] 'get' <trait-property-accessor-body>
+                                | [ 'const' ] 'set' <trait-property-accessor-body>
 <trait-property-accessor-body> := ';'
                                 | <property-accessor-body>
 ```
@@ -413,6 +422,7 @@ An implementation is not allowed to add any accessors that are not defined on th
 Observers are solely up to the implementation, meaning the trait cannot require thier existsence.
 
 
+[constant]:                ./consts.md
 [extension]:               ./extensions.md
 [external impl]:           ./implementations.md#external-implementations-
 [static items]:            ./statics.md
