@@ -1,31 +1,46 @@
-# Extensions
+# External & export blocks
 
+Extern and export blocks allow for interactions with external code.
+
+These blocks can be used to combine multiple external items within a group.
+
+The block may also be supplied with attributes, these will be applied on the block will be applied to all supported items within the block.
+
+When the [`@callconv` attribute] is applied to a block, it will propagate to all functions, but not statics, as they do not support this attribute.
+Without this attribute, the calling convention will default to `C`.
+
+`extern` blocks may contain the following items:
+- [extern & export function]
+- [extern & export statics]
+
+
+## External blocks [↵](#external--export-blocks)
 ```
-<extern-block> := { <attribute>* } [ 'safe' ] `extern` <string-literal> '{' <extern-static-item> | <extern-block-fn-item> '}'
-<export-block> := { <attribute>* } `export` '{' <extern-static-item> | <extern-block-fn-item> '}'
+<extern-block>      := { <attribute> }* [ 'safe' ] 'extern' <string-literal> '{' { <extern-block-item> }* '}'
+<extern-block-item> := <extern-block-static> | <extern-block-fn>
 ```
 
-External and export blocks allow their corresponding version of function and static variables to be declared, with all of them having the same attributes applied to them.
+An `extern` blocks allows for code to use items that are declared in external code.
 
-An `extern` block can import items from an external libary, they define the name of the library in which the item is located.
-The compiler will automatically add the file extension for a given OS.
+The `extern` block must explicitly provide the name of the library in which the items are located.
+The compiler will automatically add a prefix and an extension to these names, which depend on the OS being compiled to.
+These can be controlled via arguments provided to the compiler.
 
-Extern items will by default be marked as `unsafe`, but can be explicitly marked as `safe`.
+The `safe` specifier may be added to an `extern` block, which will propagate this specifier to all function declared within the external block.
 
-An `export` block on the other hand will mark an item for export.
+## Export blocks [↵](#external--export-blocks)
+```
+<export-block>      := { <attribute> }* 'export' '{' { <export-block-item> }* '}'
+<export-block-item> := <export-block-~static> | <export-block-fn>
+```
 
-Either can have additional info that is supplied using their corresponding [attributes].
-If applied to a block, it will apply to all items within that block.
+An `export` block defines items which can be imported and called from external code.
 
-The items also have their own respective properties as defined for [external functions] and [external statics].
-
-All items within an external block share the same source library, defined in the block's declaration.
-
-The external block may define the default calling convention using the [`@callconv` attribute].
-
+They cannot be accessed from any code importing the items using a [`use` item].
 
 
-[attributes]:            ../attributes.md#abi-link-symbol-and-ffi-attributes-
-[`@callconv` attribute]: ../attributes.md#callconv-
-[external functions]:    ../items/functions.md#external--exported-functions-
-[external statics]:      ../items/statics.md#external-statics-
+
+[`use` item]:               ./use.md
+[extern & export function]: ./functions.md#extern--exported-functions-
+[extern & export statics]:  ./statics.md#extern--export-statics-
+[`@callconv` attribute]:    ../attributes/abi-link-symbol-ffi.md#callconv-

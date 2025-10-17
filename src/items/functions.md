@@ -444,7 +444,7 @@ The calling convention can be explicitly set using the [`@callconv` attribute]
 ### Extern [↵](#extern--exported-functions-)
 ```
 <extern-fn-item>       := <extern-fn-qualifiers> 'extern' <string-literal> 'fn' <name> '(' <extern-fn-params> [ ',' [ <c-var-args> ] ] ')' [ <fn-return> ] ';'
-<extern-fn-block-item> := <extern-fn-qualifiers> 'extern' 'fn' <name> '(' <fn-param> [ ',' <c-var-args> ] ')' [ <fn-return> ] ';'
+<extern-block-fn>      := <extern-fn-qualifiers> 'extern' 'fn' <name> '(' <fn-param> [ ',' <c-var-args> ] ')' [ <fn-return> ] ';'
 <extern-fn-qualifiers> := { <attribute> }* [ <vis> ] [ 'safe' ]
 <extern-fn-params>     := <extern-fn-param> { ',' <extern-fn-params> }* [ ',' ]
 <extern-fn-param>      := <ext-name> ':' <type>
@@ -472,16 +472,14 @@ Whenever a functions uses these, the function cannot be made `safe`.
 
 ### Export [↵](#extern--exported-functions-)
 ```
-<export-fn-item>       := <extern-fn-qualifiers> 'export' 'fn' <name> '(' <fn-params>  [ ',' ] ')' [ <fn-return> ] <fn-body>
-<export-fn-block-item> := { <attribute> }* 'fn' <name> '(' <fn-param> ')' [ <fn-return> ] <fn-body>
-<extern-fn-params>     := <extern-fn-param> { ',' <extern-fn-params> }* [ ',' ]
+<export-fn-item>   := <extern-fn-qualifiers> 'export' 'fn' <name> '(' <fn-params>  [ ',' ] ')' [ <fn-return> ] <fn-body>
+<export-block-fn>  := { <attribute> }* 'fn' <name> '(' <fn-param> ')' [ <fn-return> ] <fn-body>
+<extern-fn-params> := <extern-fn-param> { ',' <extern-fn-params> }* [ ',' ]
 ```
 
 `export` functions define a function which can be imported and called by external code.
 
 They cannot be accessed from any code importing the function using a [`use` item].
-
-All `export` functions are always publically visible (`pub`).
 
 Function labels only matter when the function is called when imported via a [`use` item].
 
