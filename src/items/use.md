@@ -425,6 +425,31 @@ fn main() {
 }
 ```
 
+## Extension use [↵](#use-items)
+```
+<ext-use> := 'use' 'extension' <use-lib-root> [ '.' <use-path> ] ';'
+```
+
+An extension use is a variant on a use item which allows the importing of extension, which would normally be unavailable using a regular `use`.
+
+An extension must appear within the [library root].
+
+An extension use path must always start with a library.
+
+> _Example_
+> external:lib
+> ```
+> extension foo {
+>     ...
+> }
+> ```
+> 
+> lib.mn
+> ```
+> use extension external:lib.foo;
+> ```
+```
+
 
 [glob imports]:                                #glob-imports-
 [library root]:                                #library-relative-use-root-

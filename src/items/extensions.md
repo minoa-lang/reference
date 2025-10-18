@@ -1,27 +1,53 @@
 # Extensions
 ```
-<extension-item> := { <attribute>* } [ <vis> ] 'extension' [ <generic-params> ] <type> 'as' <name> [ <where-clause> ] '{' { <assoc-item> }* '}'
+<extension-item> := { <attribute> }* [ <vis> ] 'extension' <name> '{' { <ext-items> }* '}'
+<ext-items>      := <use-item>
+                  | <impl-item>
+                  | <when-item>
 ```
 
-Extensions allow functionality to be added to am external type, including allow traits to be implemented that when the implementation would not be coherent.
-They must be implemented on an external type, adding an extension to a type declared within the current library will result in a compiler error.
+Extensions allows for functionality to be added to an extern type, including allowing external traits to be implemented on these items, which would otherwise not be coherent.
+Extensions may **not** contain any coherent implementations, if a coherent implementation needs to exists, this should be done via a feature on the library.
 
-Extensions are named and need to be imported explicitly to be able to use any functionality declared in them.
+Each extension has a name which is used for an [extension `use` item], when imported, they are available throughout the entire library.
 
-When importing conflicting extensions, meaning that any item within the extension conflicts will also result in a compiler error.
-Item are conflicting when:
-- the item was implemented in the library the type was defined
-- a trait implementation was implemented in the library defining the trait
-- the item conflict with an item implemented in another currently imported extension
+Extensions can contain muliple implementations, which will all be imported when the extension is imported.
 
-## Trait extentions [↵](#extensions)
+When importing an extension, it may conflict with another implementation in one of the following cases:
+- the item already had a matching implementation in the library where the type or trait was already defined
+- 2 or more extension define a matching implementation
 
-An extension is a trait extension when the type refer to a given trait.
-Doing this allows additional functionality to be added to any type that implements the trait.
+If a conflict exists after importing the extensions, it will result in an error.
 
-This comes a the caveat that all extensions need to have an implementation withing the extension.
-This is because when a trait is used as a [trait object type], the extension is not stored within the object's vtable, but is instead placed in a function utilizing the interface that is provided by the trait object itself.
+> _Note_: For a more explicit version on this, which requires explicit casting, see [adapt type aliases]
+
+> _Example_
+> ```
+> extension FooExt {
+>     // Add functionality to `i32`
+>     impl i32 {
+>         fn(&self) fooify() -> Foo { ... }
+>     }
+>     
+>     // Implement an external trait on `i32`
+>     use ext:lib.Trait;
+>     impl i32 as Trait {
+>     }
+> }
+> ```
+
+> _Example_ Coherent implementations in an extension
+> ```
+> trait Bar;
+> 
+> struct Foo;
+> 
+> extension Coherent {
+>     // error: Cannot implement a coherent implementation within an extension
+>     impl Foo as Bar {}
+> }
+> ```
 
 
-
-[trait object type]: ../type-system/types/trait-object-types.md
+[extension `use` item]: ./use.md
+[adapt type aliases]:   ./type-aliases.md#adapt-type-alias-
