@@ -43,7 +43,8 @@ Some usecases of an anonymous struct:
 ```
 <struct-fields> := <struct-field> { ',' <struct-field> }* [ ',' ]
 <struct-field>  := { <attribute> }* [ <vis> ] [ 'mut' ] <field-names> ':' <type> [ '=' <field-defs> ] [ <field-tag> ]
-<field-namesx>  := <ext-name> { ',' <ext-name> }[N]
+                 | <field-property>
+<field-names>   := <ext-name> { ',' <ext-name> }[N]
 <field-defs>    := <expr> { ',' <expr> }[N]
 ```
 
