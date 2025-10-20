@@ -1,16 +1,33 @@
 # When items
 ```
-<when-item>  := 'when' <expr> <item-block> [ 'else' ( <when-item> | <item-block> ) ]
-<item-block> := '{' { <item> }* '}'
+<when-item> := 'when' <expr> <when-body> [ 'else' ( <when-item> | <when-item-body> ) ]
+<when-item-body> := '{' <item>* '}'
 ```
 
-A when item is similar to a [`when` expression], but can be located at a level where only items are allowed.
-Any occurance of `when` in a location expressions are allowed will be a [`when` expression].
+A when items allow for code to only exists when certain compile-time conditions are fulfilled.
 
-Similarly, it is controlled using a compile time condition, and does not generate a scope, but instead puts its contents into the same scope as the when item.
+A `when` item can be likened to an [compile-time `if` expression], including the fact that it also takes a compile-time expression.
+It can also be compared to a set of items marked with the [`cfg` attribute].
 
-This can be thought of as containing code marked with the cfg attribute.
+Unlike an `if`, a `when` item does not create a scope, but just adds the code contained within it, into the scope the `when` item is located in.
 
+There also exists both a [statement] and [expression] variant of this item.
+These will be used depending on the context of where the `when` is located.
 
+> _Example_: Different version of `Foo` on windows platforms
+> ```
+> when #target_os == .windows {
+>     struct Foo {
+>         ...
+>     }
+> } else {
+>     struct Foo {
+>         ...
+>     }
+> }
+> ```
 
-[`when` expression]: ../expressions/when-expressions.md 
+[`cfg` attribute]:              ../attributes/conditional-compilation.md#cfg-
+[statement]:                    ../statements/when-statement.md "Todo: does not exists yet"
+[expression]:                   ../expressions/when-expressions.md
+[compile-time `if` expression]: ../expressions/if-expressions.md#compile-time- "Todo: Section does not exists yet"
