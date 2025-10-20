@@ -95,7 +95,7 @@ When calling function on an abstract return type, which depends on a `Self` type
 > 
 > trait Bar {}
 > 
-> struct Wrapper<T> {
+> struct Wrapper[T] {
 >     val: T,
 > 
 >     fn bar() -> i32 { 42 }

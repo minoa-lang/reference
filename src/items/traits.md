@@ -105,7 +105,7 @@ These rules are the following:
 >     }
 > }
 > 
-> s := DynWrapper(dyn S)();
+> s := DynWrapper[dyn S]();
 > s.foo();           // error: `foo` is a non-dispatchable function with Sized bound
 > s.method();        // error: `method` is a non-dispatchable method with Sized bound
 > s.returns();       // error: `returns` is a non-dispatchable method returning a `Self` type
@@ -143,7 +143,7 @@ These rules are the following:
 >     fn(&self) returns() -> Self { Self }
 > }
 > 
-> s := DynWrapper(dyn S)(); // error: `S` is not dyn compatible
+> s := DynWrapper[dyn S](); // error: `S` is not dyn compatible
 > ```
 
 > _Example_: `Self is Sized` trait
@@ -153,7 +153,7 @@ These rules are the following:
 > struct S;
 > impl S as SizedTrait {}
 > 
-> s := DynWrapper(dyn S)(); // error: `S` is not dyn compatible
+> s := DynWrapper[dyn S](); // error: `S` is not dyn compatible
 > ```
 
 _Example_ 

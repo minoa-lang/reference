@@ -27,28 +27,28 @@ When generic parameters are passed from the alias type to the aliasee, the gener
 
 > _Example_: Default generic values
 > ```
-> type StringHashMap(V) = HashMap(String, V);
-> assert(StringHashMap(i32) == HashMap(String, i32));
+> type StringHashMap[V] = HashMap[String, V];
+> assert(StringHashMap[i32] == HashMap[String, i32]);
 > ```
 
 > _Example_: Generic bounds
 > ```
-> type HashMapOfInts(K is Hash) = HashMap(K, i32);
-> assert(HashMapOfInts(i32) == HashMap(i32, i32));
+> type HashMapOfInts[K is Hash] = HashMap[K, i32];
+> assert(HashMapOfInts[i32] == HashMap[i32, i32]);
 > 
-> let _: HashMapOfInts(i32) = ... ; // ok: i32 implements Hash
-> let _: HashMapOfInts(NonHashable) = ... ; // error: NonHashable does not implement `Hash`
+> let _: HashMapOfInts[i32] = ... ; // ok: i32 implements Hash
+> let _: HashMapOfInts[NonHashable] = ... ; // error: NonHashable does not implement `Hash`
 > ```
 
 > _Example_: Inhereted bounds
 > ```
-> struct Foo(T is Copy) { ... };
+> struct Foo[T is Copy] { ... };
 > 
-> type Bar(T) = Foo(T);
+> type Bar[T] = Foo[T];
 > ```
-> where `Bar(T)`, when fully expanded, will be
+> where `Bar[T]`, when fully expanded, will be
 > ```
-> type Bar(T) = Foo(T) where T is Copy;
+> type Bar[T] = Foo[T] where T is Copy;
 > ```
 
 A type alias cannot be used as the name for a [constructing expression], unless an explicit initializer is provided (i.e. only for `distinct` and `adapt` type aliases).
@@ -102,10 +102,10 @@ To support this externally, the distinct type must implement the relavent traits
 > or by implementing `From` and `To`:
 > ```
 > distinct type Foo = i32 {
->     impl as From(i32) {
+>     impl as From[i32] {
 >         fn from(val: i32) -> Self => val as Self;
 >     }
->     impl as To(i32) {
+>     impl as To[i32] {
 >         fn(self) to() -> i32 => self as i32;
 >     }
 > }

@@ -49,16 +49,16 @@ This will result in a single static which will be the same across any instance o
 
 > _Example_
 > ```
-> struct Foo<T> {
->     static COUNTER: Wrapper<u32> = Wrapper.new(0);
+> struct Foo[T] {
+>     static COUNTER: Wrapper[u32] = Wrapper.new(0);
 > 
 >     fn do_foo() {
 >         println("counter is \{COUNTER.get_and_inc()}");
 >     }
 > }
 > 
-> Foo<i32>.do_foo();
-> Foo<String>.do_foo();
+> Foo[i32].do_foo();
+> Foo[String].do_foo();
 > ```
 > will output
 > ```

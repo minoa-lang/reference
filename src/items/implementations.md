@@ -175,7 +175,7 @@ To support implementations of foreign trait on foreign types, the impl must be l
 > // }
 > 
 > // Works fine, `Heap` is not local, but `Bar` is
-> impl Heap(Bar) as Foo {
+> impl Heap[Bar] as Foo {
 >     fn(&self) do_foo() {
 >         println("Heap(Bar) does foo");
 >     }
@@ -238,10 +238,10 @@ Thse are called _constained parameters_, if a parameter appears in the generica 
 > impl[T] Struct(T) {}
 > 
 > // `T` is constained by being an argument to Trait
-> impl[T] Struct as Trait(T) {}
+> impl[T] Struct as Trait[T] {}
 > 
 > // `T` is constrained by being an argument to Struct, and `U` is also constrained by being part of the bound's associated type `Ty`
-> impl[T, U] Struct(T) T is HasAssocType(.Ty = U) {}
+> impl[T, U] Struct[T] T is HasAssocType[.Ty = U] {}
 > ```
 
 > _Example_: Invalid generic implementations
@@ -255,10 +255,10 @@ Thse are called _constained parameters_, if a parameter appears in the generica 
 > }
 > 
 > // `U` is constrained by the bound's associated type, but `T` is not constrained
-> impl[T, U] Struct where T is HasAssocType(.Ty = U) {}
+> impl[T, U] Struct where T is HasAssocType[.Ty = U] {}
 > 
 > // `T` is used within the bound, but not with an associated bound
-> impl[T, U] Struct(T) where T is Trait(T) {}
+> impl[T, U] Struct(T) where T is Trait[T] {}
 > ```
 
 
