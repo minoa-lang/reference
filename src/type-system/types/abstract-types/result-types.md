@@ -14,7 +14,7 @@ The reason for the seemingly inversed argument placement is as follows:
 - error type are most commonly able to be refered to by a path, or as a primitive type
 - puttin the `T` on the right does not require more complex type to be wrapped, i.e. `!^T` instead of `(^T)!`
 
-> _Note_: If a non-path error type is needed, it is recommened to write an explicit `Result(T, E)` type.
+> _Note_: If a non-path error type is needed, it is recommened to write an explicit `Result[T, E]` type.
 
 The main purpose of a result type is to indicate a fallible operation with explicit errors.
 
@@ -22,6 +22,8 @@ Additionally, [`if` expressions], [`while` loops], and [`for` loops] support syn
 The [`?` or `!` operator] and optional chaining (via `OptAccess`) is also supported for optional types.
 
 Errors can easily produces with help of the [`throw` expression].
+
+> _Note_: When using any type which is not a path or builtin type, an explicit `Result[T, E]` should be provided
 
 ## Assignment shorthand [↵](#result-types)
 
@@ -55,7 +57,7 @@ enum Result[T, E] {
     Err(E),
 }
 ```
-Meaning that any `!T` will be converted to `Result(T, _)`, and any `E!T` to `Result(T, E)`.
+Meaning that any `!T` will be converted to `Result[T, _]`, and any `E!T` to `Result[T, E]`.
 
 In addition, since certain error types require only a couple values, this could be stored within unused values in the type containing it.
 When this is the case, the result type will use the unused values to represent the `.Err(E)` state.

@@ -49,10 +49,10 @@ This can also be used to infer the type of the value.
 
 > _Example_
 > ```
-> // The compiler can already infer the type of be of the type `Option(_)`
+> // The compiler can already infer the type of be of the type `Option[_]`
 > let v = null;
 > 
-> // We now assign an integer value (defaulted to i32), so we can now infer that the full type of `v` is `Option(i32)`
+> // We now assign an integer value (defaulted to i32), so we can now infer that the full type of `v` is `Option[i32]`
 > v = 2
 > ```
 
@@ -66,7 +66,7 @@ enum Option[T] {
 }
 ```
 
-Meaning that any `?T` will be converted to `Option(T)`.
+Meaning that any `?T` will be converted to `Option[T]`.
 
 In addition, since only a single value is needed to represent a `.None` value, this can quite often allow the optional value to be stored within an unused value in the type containing it.
 When this is the case, the optional type will use one of the unused values to represent the `.None` state.
