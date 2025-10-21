@@ -160,6 +160,7 @@ To allow for this, an initializer must take in values in one of the following wa
 - as a parameter of the function, with a matching name and type
 
 If a parameter is missing, the type must first be provided all generic parameters before being able to be called.
+Any of these parameters which can be derived from the initializer may be inferred by providing a `_`.
 
 > _Example_
 > ```
@@ -185,8 +186,8 @@ If a parameter is missing, the type must first be provided all generic parameter
 > // when calling (0), the generic parameter do not have to be provided
 > f := Foo(arr0: [0, 1]);
 > 
-> // when calling (1), the generic paramters must be provided before the initializer can be called
-> f := Foo[i32, 2](arr1: [0, 1]);
+> // when calling (1), the generic paramters must be provided before the initializer can be called, but `N` can be left as `_`, as it can be inferred
+> f := Foo[i32, _](arr1: [0, 1]);
 > 
 > // when calling (2), `T` is derived from the arguments, so the generic paramters do not have to be provided
 > f := Foo(arr2: [0, 1]);
