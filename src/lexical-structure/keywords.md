@@ -145,11 +145,13 @@ A list of weak keywords can be found below (in alphabetic order):
 - `sparse`: to declare a [sparse array type]
 - `super`: as part of a [visibility specifier], or as a [simple path start]
 - `template`: to declare a [template string function]
+- `test`: to declare a [test] item
 - `tls`: to declare a [thread-local static]
 - `union`: to declare a [union]
 - `unique`: as part of a [closure capture list]
 - `volatile`: to declare a [volatile pointer]
 - `will_set`: to declare a [property observer]
+- `with`: as part of a [test] item
 
 ## Pattern keywords
 
@@ -180,6 +182,7 @@ A list of weak keywords can be found below (in alphabetic order):
 [property observer]:               ../items/properties.md#observers-
 [property setter]:                 ../items/properties.md#setters-
 [thread-local static]:             ../items/statics.md#thread-local-storage-
+[test]:                            ../items/tests.md
 [sealed trait]:                    ../items/traits.md
 [adapt type alias]:                ../items/type-aliases.md#adapt-type-aliases-
 [distinct type alias]:             ../items/type-aliases.md#distinct-type-aliases-
