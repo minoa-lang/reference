@@ -6,5 +6,5 @@
         | <errdefer-stmt>
 ```
 
-A statement is a component of a block, which is in turn part of an outer expression or a functions.
-Statements differ from expressions, as they do not return a value and can only directly exist within a scope.
+A statement is a component of a block, representing all non-terminal elements within it, and are part of the element they are located in.
+Statements differ from exprtession, in that they do not return a value and only directly exists within a scope.
