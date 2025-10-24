@@ -137,5 +137,4 @@ An error defer is also allowed to capture an error.
 [`return` expression]: ../expressions/return-expressions.md
 [`yield` expression]:  ../expressions/yield-expressions.md
 [`throw` expression]:  ../expressions/throw-expressions.md
-[`throw` expression]:  ../expressions/throw-expressions.md
 [catch operator]:      ../operators/special-operators.md#catch-operator-
