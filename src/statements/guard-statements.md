@@ -1,14 +1,34 @@
 # Guard statements
 ```
-<guard-stmt> := 'if' <expr> 'else' <block>
+<guard-stmt> := 'if' <branch-condition> 'else' <block>
 ```
 
-A guard statement is similar to an [`if` statement], but does the opposite.
-A guard statement only has an else block, which defines what should happen when the expression results in a `false` value.
-Since they do not have a regular body, they are not counted as expressions
+A guard statement is similar to an [`if` expression], but it only has an else branch, meaning the body gets executed if the condition evaluates to `false`.
 
-> _Note_: the reason this is a statement and not an expression, is because unlike an `if`, a `guard if` cannot return a value, since it only executes on a `false` value
+All codepaths within the body of a guard statement must end with a returning expression:
+- [`return` expression]
+- [`yield` expression]
+- [`throw` expression]
+
+This also means that the guard statement cannot return a value, and may therefore not be part of an expression, i.e. this is why this is a statement.
+
+> _Example_
+> ``` 
+> a := 3;
+> 
+> if a == 4 else {
+>     println("a is not 4");
+>     return;
+> };
+> ```
+> will output
+> ```
+> a is not 4
+> ```
 
 
 
-[`if` statement]: ../expressions/if-expressions.md
+[`if` expression]:     ../expressions/if-expressions.md
+[`return` expression]: ../expressions/return-expressions.md
+[`yield` expression]:  ../expressions/yield-expressions.md
+[`throw` expression]:  ../expressions/throw-expressions.md
