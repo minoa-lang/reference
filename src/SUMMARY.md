@@ -43,6 +43,7 @@
   - [Expression statements](./statements/expression-statements.md)
   - [Defer statements](./statements/defer-statements.md)
   - [Guard statements](./statements/guard-statements.md)
+  - [When statements](./statements/when-statements.md)
 - [Expressions](./expressions.md)
   - [Literal expressions](./expressions/literal-expressions.md)
   - [Path expressions](./expressions/path-expressions.md)
