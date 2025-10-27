@@ -1,166 +1,210 @@
 # Expressions
 ```
-<expr> := <expr-with-block> | <expr-no-block>
+<expr>            := <expr-with-block> | <expr-no-block>
 <expr-with-block> := <block-expr>
                    | <if-expr>
                    | <loop>
                    | <match-expr>
-<expr-no-block> := <literal-expr>
-                 | <path-expr>
-                 | <unit-expr>
-                 | <operator-expr>
-                 | <paren-expr>
-                 | <in-place-expr>
-                 | <type-cast-expr>
-                 | <type-check-expr>
-                 | <contructing-expr>
-                 | <index-expr>
-                 | <tuple-index-expr>
-                 | <call-expr>
-                 | <method-call-expr>
-                 | <field-access-expr>
-                 | <closure-expr>
-                 | <closure-arg-expr>
-                 | <op-method-expr>
-                 | <trailing-closure-expr>
-                 | <full-range-expr>
-                 | <break-expr>
-                 | <continue-expr>
-                 | <fallthrough-expr>
-                 | <return-expr>
-                 | <underscore-expr>
-                 | <throw-expr>
-                 | <comma-expr>
-                 | <when-expr>
-                 | <template-string-expr>
-                 | <key-path-expr>
-                 | <await-expr>
-                 | <yield-expr>
-                 | <meta-expr>
+<expr-no-block>   := <literal-expr>
+                   | <path-expr>
+                   | <unit-expr>
+                   | <underscore-expr>
+                   | <operator-expr>
+                   | <paren-expr>
+                   | <type-cast-expr>
+                   | <type-check-expr>
+                   | <construct-expr>
+                   | <index-expr>
+                   | <tuple-index-expr>
+                   | <call-expr>
+                   | <method-expr>
+                   | <op-method-expr>
+                   | <field-expr>
+                   | <closure-expr>
+                   | <closure-var-expr>
+                   | <full-range-expr>
+                   | <break-expr>
+                   | <continue-expr>
+                   | <fallthrough-expr>
+                   | <return-expr>
+                   | <throw-expr>
+                   | <comma-expr>
+                   | <template-string-expr>
+                   | <key-path-expr>
+                   | <await-expr>
+                   | <yield-expr>
+                   | <meta-expr>
+                   | <when-expr>
 ```
 
-Expressions do 2 things:
-- create a value
-- produce a side-effect
+An expression is code which has one or both of the following roles:
+- to produce a value to be used, or
+- to apply any side-effects that occur during its execution
 
-Each expression will return the value produced by it, while also applying any effect during evaluation.
-An expression can contain multiple sub-expressions, which are called the operands of an expression.
-
-Each expression dictates the following:
-- Whether or not to evaluate the operands when evaluating the expression.
-- The order in which to evaluate the operands
-- How to combine the operands' values to obtain the value of the expression.
+Each expression can contain multiple sub-expressions, these are called the operands of the expression.
+An expression dictates the following in regards to its operands:
+- whether or not to evaluate the operands when evaluating the expression
+- the order in which to evaluate the operands
+- how to combine the operands' values to obtain the result of the expression
 
 In this way, the structure of the expression dictates the structure of execution.
 
-The precedence of expressions follow the order defined below
+## Expression precedence & operator evaluation [↵](#expressions)
 
-expressions                                                     | associativity
-----------------------------------------------------------------|---------------
-paths                                                           |
-method calls                                                    |
-field accesses                                                  | left-to-right
-functions calls, indexing                                       | left-to-right
-`try`, `catch`                                                  |
-comma expression arguments to operators                         | left-to-right
-operators (see the [precedence section])                        |
-other comma expression                                          | left-to-right
-`return`, `break`, `continue`, `fallthrough`, `throw`, closures |
+Expressions have a fixed set of precedences, of which some expression may determine the precedence within their category.
+These are laid out in the following table, in order of highest to lowest precedence
 
-In general, the operands of an expression will be evaluated before any side-effects will be applied, and the operands are evaluated from left to right.
-Each expression that deviates from this order, will define if and in which order their expressions are evaluated.
+expression                                                                 | has additional precedence
+---------------------------------------------------------------------------|---------------------------------
+parenthesizes expression                                                   | no
+literals, underscore, unit                                                 | no
+paths, tuple indexing, template string, key-path, full range, closure vars | no
+method calls                                                               | no
+field accesses                                                             | no
+function calls, indexing, constructing                                     | no
+type casts, type checks                                                    | no
+`try`, `catch`, `await`                                                    | no
+comma expression operands of operators                                     | yes, see [chaining operators]
+operators                                                                  | yes, see [operator precedences]
+comma expressions                                                          | no
+assignment expressions                                                     | no
+`return`, `break`, `continue`, `fallthrough`, `throw`, `yield`, closures   | no
 
-## Expression details [↵](#9-expressions-)
+In general, all operands of the expression will be evaluated before any side-effects will be applied, and they are evaluated from left-to-right.
+If an expression deviates from this, it will defined if and in which order their expressions are evaluated.
 
-### Place, value & assign expressions [↵](#91-expression-details-)
+## Place, value, & assign expressions [↵](#expressions)
 
-Expressions can be divided in 3 categories:
-- Place expressions.
-- value expressions.
-- Assign expressions.
+Expressions are split up in 3 different categories
+- place expressions
+- assignee expressions
+- value expressions
 
-With each expression, operands may likewise occur in either place or value context.
-The evaluation of an expression depends both on its own category and the context it occurs in.
+Whithin each expression, operands may likewise occur in eitehr place or values contexts.
+The evaluation of an expression depends both on its category and the context in which it occurs.
 
-#### Place expressions [↵](#place-value--assign-expressions-)
+> _Note_: For the purpose of an expression's kind, any parentheses are essentially ignored, as they have the same kind as their inner expressions
 
-A place expression represents an expression that points to a location in memory.
+### Place expressions [↵](#place-value--assign-expressions-)
 
-They refer to the following expressions:
-- Local variable, like a path
-- Static variables, like a path
-- Dereferenced addresses or references
-- Indexing resulting in a place expression
-- Field references
-- Parenthesized place expressions
-- Any call (function and operator) that results in a place expression
-- Any property resulting in a place expression
+A place expressions refers to any expression which evaluates to a location within memory.
 
-#### Assign expressions [↵](#place-value--assign-expressions-)
+These expressions are produced by one of the following:
+- paths to
+  - [local variables]
+  - [static variables]
+- [dereferences] (`*expr`)
+- [operator expressions]
+- array indexing or [index expressions] which return place expressions (`expr[expr]`)
+- [field] references (`expr.field`)
+- [function] or [method] calls returning place expressions
+- [properties] returning place expressions
 
-An assign expression is any expression which can appear on the left hand side of an assignment operator.
+The following locations are place expression contexts, i.e. location where place expressions are expected
+- the left operand of:
+  - [assign operators]
+  - [in-place operator]
+- the unary operand of:
+  - [borrow operators]
+  - [raw borrow operators]
+  - [dereference operators]
+- the operands to a [field access]
+- the indexed operand of array indexing
+- operand of any [implicit borrows]
+- initializer of a [pattern variable declaration]
+- scrutinee of [match] and [let bindings]
 
-They refer to the following expressions:
-- Place expressions
-- Underscores
-- Tuples of assign expressions
-- slices of assign expressions
-- Tuple structs of assign expressions
-- Aggregate structs of assign expressions (with possible named fields).
-- Unit structs
+### Assignee expressions [↵](#place-value--assign-expressions-)
 
-#### Value expressions [↵](#place-value--assign-expressions-)
+An assignee expressions is a expressions which can be used in locations where an assignment occurs.
 
-Any expression that does not fit [place] or [assign] expressions are value expressions
+These consist of the following:
+- place expressions
+- underscore
+- tuples of assignee expressions
+- slices of assignee expressions
+- tuple structs of assignee expressions
+- struct of assignee expressions (with optionally named fields)
+- unit structs
+- bitfields of assignee expressions (with optionally named fields)
 
-### Moved & copied types [↵](#expression-details-)
+### Value expressions [↵](#place-value--assign-expressions-)
 
-When a place expression is evaluated as a value expression, or is bound to a value expression in a pattern, it denotes the value held in that memory location.
-If the type is copyable, then the value will be copied, otherwise if the value is sized, it is moved.
-Only the following place expressions can be moved out from:
-- variables that are not currently borrowed
-- temporary fields
-- fields of place expressions that can be moved out of, if the field does not need to be dropped or used in a drop implementation, i.e. if the field can be partially moved
-- Result of a expressions that supports moving out of, i.e. a type that implements `DerefMove`.
+A value epression is any expressioo which is not a place expressions.
+These expressions represents an actual value, which is not located in memory.
 
-After moving out of a place expression that is evaluated in a local expression, the location is then deinitialized and cannot be read from again until it is reinitialized.
+## Moves & copied types [↵](#expressions)
 
-In all other places, a place expression in a value expression will result in an error.
+When a place expressions is evaluated as a value expression, or is bound to a value expression in a pattern, it denotes the value held in that memory location.
 
-### Mutability [↵](#expression-details-)
+If this type implements `Copy`, then the value will be copied, unless it is an argument for an explicit [`move` parameter].
 
-For a place expression to be able to be assigned to, it needs to be mutable, either by being mutably referenced (either explicitly or implicitly), or must be explicitly refered to as mutable in a pattern.
-These are called _mutable place expression_, all other place expressions are _immutable place expressions_
+Othewise, if a value is `Sized`, then the value will possible be moved.
+Specifically, the following place expressions may be moved out of:
+- [local variables] that are currently not borrowed
+- temporary values
+- fields of a place expression which can be moved out of and don't implement `Drop`
+- the result of a [dereference] which implements `DerefMove`
 
-The following expressions can be used as mutable expressions:
-- Mutable variable that is currently not borrowed.
-- Temporary values
-- Fields
-- Dereferences of mutable pointers, i.e. `^mut T`
-- Dereferences of a variable or a field of one, with a type of `&mut T`
-- Dereferences of types supporting mutable dereferences, i.e. when the type implements `DerefMut`
-- Any expressions that results in a place expression that is mutable
+After moving out of a place expression which evaluates to a [local variables], the location is deinitialized and marked as invalid, meaning it cannot be read from until it is once again is re-initialized.
 
-### Temporaries [↵](#expression-details-)
+In all other cases, a place expression in the location of a value expression will result in an error.
 
-When using a value expression in a location a place expression is expected, a temporary unnamed memory location is created (usually on the stack) and is set to the value of the expression creating the temporary.
-The temporary value will then be used as the place expressions and will be dropped at the end of the expression's scope.
+## Mutability [↵](#expressions)
 
-### Implicit borrows [↵](#expression-details-)
+For a place expression to be able to be assigned to, it needs to be mutable, either by being mutably referenced (either explicit or implicitly), or must be explicitly refered to as mutable in a pattern or variable declaration.
+These are called _mutable place expression_, all other place exprssions are _immutable place expressions_.
 
-Certain expressions will treat an expression as a place expression by implicitly borrowing it.
+The following locations are mutable place expression context:
+- mutable variables which are currently not borrowed
+- mutable [static variables]
+- temporary variables
+- fields: this evaluates the sub-expression in a mutable place context
+- dereferences of mutable pointers, i.e. `^mut T`
+- dereferences of a variable, or field of a variable, with type `&mut T`
+- dereferences of a type that supports mutable derefernces, i.e. when the type implements `DerefMut`. This then requires that the value bieng dereferences is evaluated in a mutable expression context
+- indexing of a type that implements `IndexMut`, this then evaluates the indexed value (not the index) in a mutable place context
 
-Implicit borrowing takes place in the following expressions:
-- Left operand in a method call
-- Left operand in a field expression
-- Left operand in a call expression
-- Left operand in an index expression
-- Operand of a derefence operator
-- Operands of a comparison
-- Left operand of a compound assignment
+## Temporaries [↵](#expressions)
+
+When using a value expression in a location a place expression is expected, a temporary unnamed memory location is created (usually on the stack) and is set to the value of the expression creating and initializing the temporary value.
+This expression than evaluarates to that location instead, except if [promoted] to a `static`.
+If not promoted, they will be dropped at the end of the expression's scope.
+
+## Implicit borrows [↵](#expressions)
+
+Certain expression will treat an expression as a palce expression by implicitly borrow it.
+
+Values will be implicitly borrowed in the following expression:
+- left operand in a [method] call
+- left operand in a [field access]
+- left operand in a [function] call
+- left operand in a [index expression]
+- operands to an operator, implemented for type `T`, but taking a parameter as `&T`
 
 
-
-[assign]:             #assign-expressions-
-[place]:              #place-expressions-
-[precedence section]: ./precedences.md
+[implicit borrows]:             #implicit-borrows-
+[function]:                     ./expressions/call-expressions.md
+[field]:                        ./expressions/field-access-expressions.md
+[field access]:                 ./expressions/field-access-expressions.md
+[let bindings]:                 ./expressions/if-expressions.md#let-bindings-
+[index expression]:             ./expressions/index-expressions.md
+[index expressions]:            ./expressions/index-expressions.md
+[match]:                        ./expressions/match-expressions.md
+[method]:                       ./expressions/method-expressions.md
+[operator expressions]:         ./expressions/operator-expressions.md
+[`move` parameter]:             ./items/functions.md#parameter-specifiers-
+[static variables]:             ./items/statics.md
+[properties]:                   ./items/properties.md
+[assign operators]:             ./operators.md#assginment-operators-
+[chaining operators]:           ./operators.md#chain-
+[borrow operators]:             ./operators/special-operators.md#borrow-operators-
+[dereference]:                  ./operators/special-operators.md#derefence-operator-
+[dereferences]:                 ./operators/special-operators.md#derefence-operator-
+[dereference operators]:        ./operators/special-operators.md#derefence-operator-
+[in-place operator]:            ./operators/special-operators.md#in-place-operator-
+[raw borrow operators]:         ./operators/special-operators.md#raw-borrow-operators-
+[operator precedences]:         ./precedences.md
+[local variables]:              ./statements/variable-declarations.md
+[pattern variable declaration]: ./statements/variable-declarations.md#pattern-variable-declaration-
+[promoted]:                     ./type-system/destructors.md#constant-promotion-
