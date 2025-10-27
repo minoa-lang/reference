@@ -5,12 +5,12 @@
                    | <if-expr>
                    | <loop>
                    | <match-expr>
-<expr-no-block>   := <literal-expr>
+<expr-no-block>   := <paren-expr>
+                   | <literal-expr>
                    | <path-expr>
                    | <unit-expr>
                    | <underscore-expr>
                    | <operator-expr>
-                   | <paren-expr>
                    | <type-cast-expr>
                    | <type-check-expr>
                    | <construct-expr>
