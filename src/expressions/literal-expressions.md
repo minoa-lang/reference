@@ -1,64 +1,60 @@
 # Literal expressions
 ```
-<lit-expr> := ? <literal> except <int-decimal-literal> ? [ [ "'" ] <name> ]
-            | <int-decimal-literal> [ "'" <name> ]
+<lit-expr> := <literal> [ <name> ]
 ```
-A literal expression consists of a literal token (or multiple in case of multi-line strings), that denotes the value it will evaluate to.
-It is similar to a constant value, and is (primarily) evaluated at compile time.
 
-In addition, literal expression can also invoke a literal operator to be applied of them, which can either be evaluated at compile time, in case of a fixed size type, but may also evaluate at runtime, for example when needing to allocate backing memory.
-Literal operators may have an effect on which values the contents are allowed to be.
+A literal expression constists out of a literal token (or multiple, in case of multi-line strings), which denotes the value it will evaluate to.
+They can be seen as a constant which is defined inline, and is primarily, but not always, executed at compile-time.
 
-In most cases, the literal operator can be applied by directly appending it to the end of the literal.
-The integer decimal literal is an exception, as `3m` will be interepreted as a name and not as a literal `3`, followed by a literal operator.
-In this case, a `'` (single quote) can be used, resulting in the example being `3'm`, this can be done as 2 literals can never follow each other.
+In addition, an optional literal operator may be provided after the literal.
+This allows the literal to be evaluated to different types either at compile-time, in case of a fixed size type, but may also evaluate at runtime, e.g. when needing to allocate backing memory.
+Literal operators may also restrict the possible values that can be used to represent the given type.
 
-A `'` (single quote) is allowed for other literals, but it not neccesary.
+> _Note_: For more info about the functionality of literal operators, see their [relavent section].
 
-If a signle quote is used, it must be directly attached to the literal and may not have any whitespace.
+> _Note_: Literal operators cannot be confused with [extended names], as they do not share any location where both values are allowed.
 
-## Literal type conversion [↵](#literal-expression)
+## Implicit literal types
 
-Each literal defined within the [Literals section](../literals.md) has its own literal representation, which itself cannot be the type of the literal expression.
-Therefore each literal needs to be converted to a type that can be used.
+Each literal defined within the [literals section] has its own literal representation which, unless explicitly declares, will not be the type of the literal expression.
 
-If a literal operator is used, this is fairly simple, as the value will be of the type returned by the literal operator.
+In cases where no explicit literal operator is defined, the compiler will pick the most well suited type for the literal.
+If a primitive type is explicitly defined, the literal will coerce into the given type, if it is allowed as defined in the below table
 
-If none is used, the compiler needs to figure out the best possible type. If this can be derived from the surrounding environment, the value will be implicitly converted.
-Each kind of literal can be converted into a set of type defined below:
+Literal kind         | Allowed types
+---------------------|---------------------------------------------
+Integral decimal     | [signed] and [unsigned] integers
+Float decimal        | [floating point]
+Binary               | [signed] and [unsigned] integers
+Octal                | [signed] and [unsigned] integers
+Integral hexadecimal | [signed] and [unsigned] integers
+Float hexadecimal    | [floating point]
+Boolean              | [booleans]
+Character            | [character]
+String               | [string slices]
 
-Literal kind                 | Possible types
------------------------------|----------------
-Integral decimal literal     | [Signed integers] and [unsigned integers]
-Float decimal literal        | [Floating point]
-Binary literal               | [Signed integers] and [Unsigned integers]
-Octal literal                | [Signed integers] and [Unsigned integers]
-Integral hexadecimal literal | [Signed integers] and [Unsigned integers]
-Float hexadecimal literal    | [Floating point]
-Boolean literal              | [Booleans](../type-system/types/primitive-types.md##boolean-types)
-Character literal            | [Characters](../type-system/types/primitive-types.md##character-types)
-String literal               | [String slices](../type-system/types/string-slice-type.md)
+Otherwise, if no explicit builtin type is defined, the compiler will default to type defined below
 
-In case the compiler cannot figure out the type from surrounding context, it will default to the following:
-
-Literal kind                 | Default types
------------------------------|----------------
-Integral decimal literal     | `i64`
-Float decimal literal        | `f64`
-Binary literal               | `u64`
-Octal literal                | `u64`
-Integral hexadecimal literal | `u64`
-Float hexadecimal literal    | `f64`
-Boolean literal              | `bool`
-Character literal            | `char`
-String literal               | `str`
+Literal kind         | Default type
+---------------------|---------------------------------------------------
+Integral decimal     | `i32` if a value fits whithin it, `i64` otherwise
+Float decimal        | `f64`
+Binary               | `u32` if a value fits whithin it, `u64` otherwise
+Octal                | `u32` if a value fits whithin it, `u64` otherwise
+Integral hexadecimal | `u32` if a value fits whithin it, `u64` otherwise
+Float hexadecimal    | `f64`
+Boolean              | `bool`
+Character            | `char`
+String               | `&str`
 
 
 
-[Literals section]:  ../literals.md)
-[Characters]:        ../type-system/types/primitive-types.md##character-types
-[Booleans]:          ../type-system/types/primitive-types.md##boolean-types
-[Floating point]:    ../type-system/types/primitive-types.md#floating-point-types
-[Signed integers]:   ../type-system/types/primitive-types.md#signed-types
-[unsigned integers]: ../type-system/types/primitive-types.md#unsigned-types
-[String slices]:     ../type-system/types/string-slice-type.md
+[relavent section]:  ../operators/literal-operators.md
+[extended names]:    ../lexical-structure/names.md#extended-names-
+[Literals section]:  ../literals.md
+[boolean]:           ../type-system/types/builtin-types/boolean-types.md
+[character]:         ../type-system/types/builtin-types/character-types.md
+[gloating point]:    ../type-system/types/builtin-types/floating-point-types.md
+[signed]:            ../type-system/types/builtin-types/integer-types.md#signed-types-
+[unsigned]:          ../type-system/types/builtin-types/integer-types.md#unsigned-integer-types-
+[string slices]:     ../type-system/types/sequence-types/string-array-slice-types.md
