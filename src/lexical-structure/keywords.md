@@ -50,6 +50,8 @@ A list of strong keywords can be found below (in alphabetic order):
 - `!is`
 - `isize`
 - `let`
+- `let?`
+- `let!`
 - `loop`
 - `null`
 - `match`
