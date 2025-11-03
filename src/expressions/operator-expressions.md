@@ -5,20 +5,24 @@
            | <expr> <infix-op> <expr>
 ```
 
+An operator expressions applies an operator on 1 or 2 sub-expressions.
+The exact effect of an operator depends on the implementation of the operator for the 2 given types.
 
-An operator expression applies operators on 1 or 2 sub-expressions.
-The resulting value of these expression will depend on the implementation of the operators.
+Operators are special from a syntax perspective, as they are one of the rare occasions where whitespace has an effect on how they are interpreted.
+Specifically, the occurance of whitespace or not is what determines the exact parsing of the operators.
 
-When calling a prefix of postfix operator, the operator needs to be directly next to the expression it applies to and may not be separated by space.
-When it comes to infix operators, they may be placed between sub-expressions without spaces, as this means there there is not pre- or postfix expression within the either operand.
-Otherwise, if a post or prefix expression must be used, it must not be directly placed against the another expression, but must be separated with a space.
+Unary operators must be directly attached to the expression they affect.
+If multiple unary operators must be applied to an expression, each operator must be nested wihin a [parenthesized expression], e.g. chaining 2 `-` prefix operators must be written the following way: `-(-val)`, as `--val` would be applying the `--` operator instead.
 
-Prefix and postfix operators can only chained when the by using parenthesized expression, meaning that chaining 2 `-`s requires the following to be written: `-(-val)`.
+Infix operators depends on the exact location between 2 expression.
+Both operands of the expressions must either both be attached to the operator, e.g. `a+b`, or both be seperated from the operator, e.g. `a + b`.
+The expression `a+ b` will be interpreted as the postfix operator `+` applied to `a`, followed by the expression `b`.
 
-For additional info on operators, check the [Operator section].
+More information about operators can be found in their [section].
 
-> _Note_: Is it generally preferred to have spaces around infix operators regardless of when a prefix of postfix expression is on either side.
+> _Note_: It is generally preferred to always have an infix separated from its operands
 
 
 
-[Operator section]: ../operators.md
+[parenthesized expression]: ./paren-expressions.md
+[section]:                  ../operators.md
