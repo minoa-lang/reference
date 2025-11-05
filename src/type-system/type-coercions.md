@@ -63,7 +63,7 @@ Coercions between the following types are allowed (`->` means "coerces to"):
 - `&mut T` -> `&T`
 - `^mut T` -> `^T`
 - `[^]mut T` -> `[^]T`
-- `[^;n]mut T` -> `[^;n]T`
+- `[^:N]mut T` -> `[^:N]T`
 - `&T` or `&mut T` -> `&U`, if `T` implements `Deref(.Target = U)`
   ```
   struct CharWrapper {
