@@ -56,20 +56,23 @@ This means that if a field should have a default value that is calculated at com
 
 ## Coercion from tuple expression
 
-Since tuple struct type have their data aranged like a tuple, it is possible to initialize a tuple struct using a [tuple expression] or from another tuple.
+Since tuple struct type have their data aranged like a tuple, it is possible to initialize or assign a tuple struct using a [tuple expression] or from another tuple.
 If a named tuple is assigned, the named fields must correspond to those in the struct
 
 > _Example_:
 > ```
 > struct Foo(bar: i32, baz: i32, i32);
 > 
-> let f: Foo = (0, 1, 2);
+> f: Foo = (0, 1, 2);
 > 
-> let t = (0, 1, 2);
-> let f: Foo = t;
+> tf: = (0, 1, 2);
+> f: Foo = t;
 > 
-> let t = (bar: 0, 1, 2);
-> let f: Foo = t;
+> t := (bar: 0, 1, 2);
+> mut f: Foo = t;
+> 
+> // Also works when assign a tuple
+> f = (bar: 3, 4, 5)
 > ```
 
 ## Record tuple structs [↵](#tuple-struct-types)
