@@ -9,7 +9,7 @@ They are used for explicit vectorization of code, since automatic vectorization 
 While a vectorized type looks like an array, its size defines the number of lanes on which the vectorized type will operate.
 This value can be anywhere from 1 to 65'536 lanes.
 
-The vector is guaranteed to support the following element types:
+The vectorized type is guaranteed to support the following element types:
 - [boolean types]
 - [integer types]
 - [floating point types]
