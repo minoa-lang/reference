@@ -3,7 +3,7 @@
 <block-expr> := [ <block-~specifier> ] <block>
 <block>      := '{' { <stmt> }* [ <expr> ] '}'
 <block-specifier> := 'const'
-                   | 'async' [ 'move' ]
+                   | 'async' [ 'gen' ] [ 'move' ]
 ```
 
 A block expressions is a an expressions which introduces a new anonymous namespace and scope for items and variable declarations.
@@ -97,6 +97,8 @@ They can be seen as an anonymout async closures with no arguments, which are imm
 > }();
 > ```
 
+If the `async` block is marked as `gen`, it is an async generator.
+
 ### Capture modes [↵](#async-block-)
 
 Async blocks capture variables from the surrounding environment, similarly to how a [closure] captures variables.
@@ -113,9 +115,9 @@ Meaning that `async` blocks may contain [`await`] expressions.
 
 `async` blocks introduce a function boundary, meaning that cetain control flow expression behave differently than they would in a regular block.
 
-Calling [`return`] or [`throw`], or using the [catch operator] affect the future being returned, not the enclosing function or other context.
+Calling [`return`], [`throw`], [`yield`], or using the [catch operator] affect the future being returned, not the enclosing function or other context.
 That is:
-- [`return`] expressions within the block will return the result as the output of the future
+- [`return`] and [`yield`] expressions within the block will return the result as the output of the future
 - [`throw`] expressions will cause the future to return a [result] type with a compatible error
 - the [catch operator] will propagate any error to the return type of the future with a compatible error ([result] or [optional] type)
 
@@ -137,6 +139,7 @@ fn foo() {
 There are certain limitations on which expressions are allowed within an async block.
 The following expressions are **not** allowed within an `async` block:
 - [`return`]
+- [`yield`]
 - [`throw`]
 - [`break`], [`continue`] or [`fallthrough`] to labels outside of the async block
 - [catch operator]
@@ -151,6 +154,7 @@ The following expressions are **not** allowed within an `async` block:
 [labelled blocks]:   ./loop-expressions.md
 [`return`]:          ./return-expressions.md
 [`throw`]:           ./throw-expressions.md
+[`yield`]:           ./yield-expressions.md
 [const item]:        ../items/consts.md
 [catch operator]:    ../operators/special-operators.md#catch-operator-
 [closure]:           ../type-system/types/function-like-types/closure-types.md#capture-modes-
