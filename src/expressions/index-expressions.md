@@ -54,7 +54,7 @@ assert(arr[9..11] == null);
 Similar to an [optional field access], the index expression support optional chaining, also known as null-propagating indexing.
 This means that the indexing operation only happens when the left-hand operand is a value that does not have an erronous value.
 
-This operation is handled by the `OptAccess` trait and work on all type implementing it.
+This operation is handled by the `OptAccess` trait and works on all type implementing it.
 
 _Example_
 ```
