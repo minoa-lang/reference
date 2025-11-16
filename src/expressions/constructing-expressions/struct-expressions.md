@@ -179,7 +179,7 @@ This shorthand allows for a more compact syntax and less duplication.
 ## Field initialization shorthand [↵](#struct-expressions)
 ```
 <field-init-shorthand> := <ext-name> '{' [ <struct-elems> ] '}'
-                        | <ext-name> <func-args>
+                        | <ext-name> <fn-args>
 ```
 
 Whenever a field would be initialized using either a struct expression, or via a function-like call to an initializer, the field name may be directly succeeded with the syntax of the expression

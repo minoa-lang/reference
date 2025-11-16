@@ -1,6 +1,6 @@
 # Method expressions
 ```
-<method-call-expr> := <expr> '.' <iden> <func-args>
+<method-call-expr> := <expr> '.' <iden> <fn-args>
 ```
 
 Method calls are used to call any associated method, either as direct methods or trait method implementations.
