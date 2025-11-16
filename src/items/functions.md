@@ -430,7 +430,10 @@ They may provide a set of contracts, which need to be adhered to by its implemen
 
 In addition, there is also support for optional trait functions and methods, which are indicated with a `?` following the name.
 These are function that are not required to be implementation and may not exists, requiring explicit handling to be called.
-Calling these can be done using an [optional chaining call] or [optional chaining method call].
+
+They therefore always return a value of `?T`, where `T` is the return type of the function, which will be `null` when the function does not exist.
+
+The only way of calling these functions is using an [optional method call] (not to be confused with an [optional chaining method call]).
 
 ## Extern & exported functions [↵](#functions)
 
@@ -623,9 +626,9 @@ A function containing constant arguments will, for example, be partially applied
 [implicit return]:               ../expressions/block-expressions.md#implicit-return- "Todo: Section does not exists yet"
 [autoclosure]:                   ../expressions/closure-expressions.md#autoclosures-
 [call expression]:               ../expressions/call-expressions.md#variadic-arguments- "Todo: Section does not exists yet"
-[optional chaining call]:        ../expressions/call-expressions.md#optional-chaining-  "Todo: Section does not exists yet"
 [literal expression]:            ../expressions/literal-expressions.md
-[optional chaining method call]: ../expressions/method-expressions.md#optional-chaining-  "Todo: Section does not exists yet"
+[optional chaining method call]: ../expressions/method-expressions.md#optional-chaining-
+[optional method call]:          ../expressions/method-expressions.md#optional-methods-
 [path expressions]:              ../expressions/path-expressions.md
 [parenthesized expressions]:     ../expressions/paren-expressions.md
 [`return`]:                      ../expressions/return-expressions.md
