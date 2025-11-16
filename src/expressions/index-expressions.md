@@ -32,22 +32,22 @@ Whenever an an index implementation were to return a reference, it will be impli
 This will not re-borrow the value, but will ensure the dereference does not happen.
 
 
-_Example_
-```
-arr: [10]i32 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-// regular index
-assert(arr[2] == 3);
-assert(&arr[4..6] == &[5, 6]);
-
-// index relative to the end of the array, i.e. index at arr.len() - idx
-assert(arr[^3] == 7);
-assert(&arr[4..^3] == &[5, 6])
-
-// Index outside of range with an optional indexing operation
-assert(arr[?11] == null);
-assert(arr[9..11] == null);
-```
+> _Example_
+> ```
+> arr: [10]i32 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+> 
+> // regular index
+> assert(arr[2] == 3);
+> assert(&arr[4..6] == &[5, 6]);
+> 
+> // index relative to the end of the array, i.e. index at arr.len() - idx
+> assert(arr[^3] == 7);
+> assert(&arr[4..^3] == &[5, 6])
+> 
+> // Index outside of range with an optional indexing operation
+> assert(arr[?11] == null);
+> assert(arr[9..11] == null);
+> ```
 
 ## Optional chaining [↵](#index-expressions)
 
@@ -56,16 +56,16 @@ This means that the indexing operation only happens when the left-hand operand i
 
 This operation is handled by the `OptAccess` trait and works on all type implementing it.
 
-_Example_
-```
-a := ?[4]i32 = [1, 2, 3, 4];
-b := ?[4]i32 = null;
-
-assert(a?[2] == 3);
-
-// the `null` value is propagated and the indexing is skipped
-assert(b?[2] == null);
-```
+> _Example_
+> ```
+> a := ?[4]i32 = [1, 2, 3, 4];
+> b := ?[4]i32 = null;
+> 
+> assert(a?[2] == 3);
+> 
+> // the `null` value is propagated and the indexing is skipped
+> assert(b?[2] == null);
+> ```
 
 ## Multi-value indexing [↵](#index-expressions)
 
