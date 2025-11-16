@@ -80,6 +80,7 @@ A list of strong keywords can be found below (in alphabetic order):
 - `uptr`
 - `use`
 - `usize`
+- `with`
 - `while`
 - `when`
 - `where`
