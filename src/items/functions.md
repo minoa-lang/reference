@@ -78,7 +78,7 @@ Each parameter may be suplied with an additional specifier, this specifier is lo
 The specifier can be one of the following:
 - `mut`: allows the variable to be directly modified
 - `const`: takes the parameter in as a compile-time parameter, which will be interpreted as a generic function parameter
-- `lazy`: takes in the parameter as if it were an [autoclosure] producing a value of the type this parameter has, after the initial use, this parameter will then be available as if it was like any other parameter.
+- `lazy`: takes in the parameter as if it were an automatically wrapped with a closure, and producing a value of the type this parameter has, after the initial use, this parameter will then be available as if it was like any other parameter.
 - `move` indicates that the argument will be moved into the function, regardless or whether it implements `Copy` or not.
 
 When any of these specifiers are applied to a pattern, this will count for all bindings within it.
@@ -624,7 +624,6 @@ A function containing constant arguments will, for example, be partially applied
 [block expression]:              ../expressions/block-expressions.md
 [constructing expressions]:      ../expressions/constructing-expressions.md
 [implicit return]:               ../expressions/block-expressions.md#implicit-return- "Todo: Section does not exists yet"
-[autoclosure]:                   ../expressions/closure-expressions.md#autoclosures-
 [call expression]:               ../expressions/call-expressions.md#variadic-arguments- "Todo: Section does not exists yet"
 [literal expression]:            ../expressions/literal-expressions.md
 [optional chaining method call]: ../expressions/method-expressions.md#optional-chaining-
