@@ -90,7 +90,7 @@ In case of a property, which will borrow all fields used in the returned value o
 
 If a type does not implement `Drop` and is stored as a local variable, this also applies to moving out of each field.
 However, this has no impact on properties, as a non-borrowing property does not move out, but only create a new value.
-This also does not appy if automatic dereferencing is done through user defined type that don't support `DerefMove`
+This also does not appy if automatic dereferencing is done through user defined type that don't support `DerefMove`.
 
 > _Example_
 > ```
