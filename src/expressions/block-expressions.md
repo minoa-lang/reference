@@ -85,7 +85,7 @@ Async blocks produce type implementing the [`Future`] trait, but the type layout
 > };
 > ```
 
-They can be seen as an anonymout async closures with no arguments, which are immediatally executed.
+They can be seen as an anonymous async closures with no arguments, which are immediatally executed.
 
 > _Example_
 > 
