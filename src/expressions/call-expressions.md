@@ -59,7 +59,7 @@ Any default parameter do not have to be passed, if these are not supplied, their
 ## Optional chaining [↵](#call-expressions)
 
 Similar to an [optional field access], the call expression supports optional chaining, also known as a null-propagating call.
-This means the call only happends then the left-hand expression is a value that does not have an erronous value.
+This means that the call only happens when the left-hand expression is a value that does not have an erronous value.
 
 This operation is handled by the `OptAccess` trait and works on all types implementing it.
 
@@ -160,9 +160,9 @@ Calling a method this way can also be used to prevent either automatically borro
 [`AsyncFn`]:             #call-expressions "Todo: link to docs + ensure correct trait name"
 [`AsyncFnMut`]:          #call-expressions "Todo: link to docs + ensure correct trait name"
 [`AsyncFnOnce`]:         #call-expressions "Todo: link to docs + ensure correct trait name"
+[optional field access]: ./field-access-expressions.md#optional-chaining- "Todo: section does not exists yet"
 [place]:                 ../expressions.md#place-expressions-
 [value]:                 ../expressions.md#value-expressions-
-[optional field access]: ../expressions/field-access-expressions.md#optional-chaining- "Todo: section does not exists yet"
 [function item]:         ../items/functions.md
 [labelless]:             ../items/functions.md#parameter-labels-
 [initializer]:           ../items/initializers.md
