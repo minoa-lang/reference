@@ -2,7 +2,7 @@
 ```
 <if-expr>     := <label> <if-sub-expr>
                | <res-if-expr>
-<if-sub-expr> := [ 'const' ] 'if' <branch-condition> <block> [ 'else' ( <if-sub-expr> | <block> ) ]
+<if-sub-expr> := [ 'const' ] 'if' <condition> <block> [ 'else' ( <if-sub-expr> | <block> ) ]
 ```
 
 An `if` expression is a conditional branch in program control.
@@ -58,11 +58,11 @@ An `if` expression may also be explicitly marked as `const`, meaning that the co
 
 ## Branch conditions [↵](#if-expressions)
 ```
-<branch-condition> := <condition-elem> { ('&&' | '||') <branch-condition> }
-                    | '('<condition-elem> { ('&&' | '||') <branch-condition> } ')'
-<condition-elem>   := <expr>
-                    | <let-binding>
-                    | '(' <branch-condition> ')'
+<condition>      := <condition-elem> { ('&&' | '||') <condition> }
+                  | '('<condition-elem> { ('&&' | '||') <condition> } ')'
+<condition-elem> := <expr>
+                  | <let-binding>
+                  | '(' <condition> ')'
 ```
 > _Note_: Any branch condition in the grammar above may be contained within any number of parenthesized expressions
 
