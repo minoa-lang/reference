@@ -143,25 +143,50 @@ Additional types may provide this functionality by adding the [`@bind_shorthand`
 
 ## Result if expressions [↵](#branch-conditions-)
 ```
-<ref-if-expr> := `if` [ <name> '=' ] <expr> '?' <block> 'else' '(' <name> ')' <block>
+<ref-if-expr> := `if` <res-if-cond> <block> 'else' '(' <name> ')' <block>
+<res-if-cond> := <let-binding>
+               | [ <name> '=' ] <expr> '?'
 ```
 
-Another variant of an `if` epxressions is the so-called _result `if`_, this allows for a value with 2 possible variants to be mapped to the main and else branch of the if statement.
-The value available within each block depends on the pattern being matched to.
+Another variant of an `if` expression is the so-called _result `if`_, this allows for a value to be either map to the main or else branch of the `if` expression.
+This can be done in 2 ways:
+- if a `let`-binding is provided and the pattern is refutable, the main branch will be entered when the pattern matches.
+  Otherwise the full unmatched value will be passed to the else branch.
+- if a optional shorthand is used, it allows for a value with 2 possible variants to be mapped to the branches.
+  The main block will be executed if the shorthand results in a match, otherwise it will be passed to the `else` branch.
 
-This can be compared to the optional shorthand specified above, but will also bind a value to the 
+  This can be compared the optional shorthand specified above, but will also bind the 'error' value to the `else` branch.
 
-Additionally, it is possible to explicitly pass a name to bind the resulting value of a true branch to.
-If not passed, only named values will be bound.
+  Additionally, it is possible to explicitly pass a name to bind the resulting value of a true branch to.
+  If not passed, only named values will be bound.
+  
+  By default, this is only support for values of a [result type].
+  Additional types may provide this functionality by adding the [`@bind_shorthand` attribute] to the type it will apply to, requiring the optional second argument to be passed.
+
+  > _Todo_: `@bind_shorthand` is passed 2 patterns, which it will be matched to, with each having a single binding, e.g. for `@bind_shorthand(.Ok(val), .Err(val))`, where `val` is replace by the compiler
+
 
 The `else` branch must always define a name to bind a value to.
 
-By default, this is only support for values of a [result type].
-Additional types may provide this functionality by adding the [`@bind_shorthand` attribute] to the type it will apply to, requiring the optional second argument to be passed.
-
-> _Todo_: `@bind_shorthand` is passed 2 patterns, which it will be matched to, with each having a single binding, e.g. for `@bind_shorthand(.Ok(val), .Err(val))`, where `val` is replace by the compiler
-
 > _Example_
+> 
+> The `let`-binding version
+> ```
+> enum Foo { A(i32), b(i32), C(i32) }
+> 
+> fn get_foo() -> Foo { .A(1) }
+> 
+> foo := Foo.A(1);
+> 
+> if let .A(val) = get_foo() {
+> 
+> } else (foo) {
+>     // `foo` can be used, even if a regular `if` expression, it would otherwise have been discarded
+>     // `foo` has the value returned by `get_foo()`, not a pattern matched one
+> }
+> ```
+> 
+> The shorthand version
 > ```
 > foo: i32!bool = true; // Result[i32, bool]
 > 
@@ -190,4 +215,3 @@ Additional types may provide this functionality by adding the [`@bind_shorthand`
 [result type]:                     ../type-system/types/abstract-types/result-types.md
 
 [`@bind_shorthand` attribute]:     #optional-shorthand- "Todo: attribute does not exist yet"
-[`@res_bind_shorthand` attribute]: #optional-shorthand- "Todo: attribute does not exist yet"
