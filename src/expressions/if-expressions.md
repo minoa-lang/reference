@@ -157,14 +157,13 @@ This can be done in 2 ways:
 
   This can be compared the optional shorthand specified above, but will also bind the 'error' value to the `else` branch.
 
-  Additionally, it is possible to explicitly pass a name to bind the resulting value of a true branch to.
+  Additionally, it is possible to explicitly pass a name to bind the resulting value of a `true` branch to.
   If not passed, only named values will be bound.
   
   By default, this is only support for values of a [result type].
   Additional types may provide this functionality by adding the [`@bind_shorthand` attribute] to the type it will apply to, requiring the optional second argument to be passed.
 
   > _Todo_: `@bind_shorthand` is passed 2 patterns, which it will be matched to, with each having a single binding, e.g. for `@bind_shorthand(.Ok(val), .Err(val))`, where `val` is replace by the compiler
-
 
 The `else` branch must always define a name to bind a value to.
 
