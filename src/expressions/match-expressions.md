@@ -1,36 +1,95 @@
 # Match expressions
 ```
-<match-expr> := [ <label> ] `match` <expr> '{' { <match-case> }* <final-case> '}'
-<match-case> := [ <label> ] <pattern> '=>' ( <expr> ',' | <block> [ ',' ] )
-<final-case> := [ <label> ] <pattern> '=>' ( <expr> [ ',' ] | <block> [ ',' ] )
-<scrutinee>  := ? <expr> except <struct-expr> ?
+<match-expr> := [ <label> ':' ] 'match' <scrutinee> '{' { <match-arm> }* [ <final-arm> ] '}'
+<match-arm>  := [ <label> ':' ] <pattern> '=>' ( ( <expr> ',' ) | ( <block> [ ',' ] ) )
+<final-arm>  := [ <label> ':' ] <pattern> '=>' ( <expr> | <block> [ ',' ] )
 ```
 
-A `match` expression branches based on a value of a scrutinee.
-The value of which will then be checked compared to the patterns provided within each branch.
-The scrutinee and all expression must have the same type.
+The `match` expression which branches based on the value of its scrutinee.
+The value will be checked to all the provided arms, and will branch to the first arm with a matching pattern.
+Within a pattern, it is checked from left to right.
 
-A `match` behaves differently depending on whether or not the scrutinee expression is a place or value expression.
-Place expression will immediatelly be matched, while value expressions will first be evaluated to a temporary location.
-This value is subsequently compared to the patterns in the arms until a match is found.
-The first arm with a matching pattern is chosen as the branch target of the `match`, any variables bound by the pattern are assigned to local variables in the arm's block, and control enters the block.
+The scrutinee and patterns within the arms must have the same type.
 
-When the scrutinee is a place expression, the match does not allocate a temporary location; however, a by-value binding may copy or move from the memory location.
-When possible, it is preferable to match on place expressions, as the lifetime of these matches inherits the lifetime of the place expression rather than being restricted to the inside of the match.
+A `match` behaves differently depending on whether the scrutinee is a place or value expression.
+- when it is a [place expression], the match does not need to place it in a temporary location, but when bound to a by-value binding, it may be copied or moved from the memory location.
+  If possible, it is prefered to match on a place expression, as the resulting bindings depend on the lifetime, rather than being limited to only inside the `match` expression
+- when it is a [value expression], the result of it will first be evaluated and put in a temporary memory location.
+  If the expression is matched to an arm, any variables bound will be directly assigned to local variables represented by those bindings.
 
-Variables bound within the pattern are scoped to the match guard and the arm's expression.
-The binding mode (move, copy, or reference) depends on the pattern.
+Bindings within the pattern are scope to the current arm.
+Their binding mode (i.e. move/copy, or reference) is determnined by the provided pattern.
 
-Multiple match patterns may be joined with the `|` operator.
-Each pattern will be tested in a left-to-right sequence until a successful match is found
+Multiple patterns may be joined using an [alternative pattern], e.g. `|`.
+As defined by the alternative pattern, any bindings need to appear in all alternatives, with the same binding mode, to be able to be usable within the arm's body.
 
-Every binding in each `|` separated pattern must appear in all of the patterns in the arm.
-Every binding of the same name must have the same type, and have the same binding mode.
+> _Example_
+> ```
+> x := 0;
+> message := match x {
+>     0 | 1 => "not many",
+>     2..=9 => "a few",
+>     _     => "lots"
+> };
+> 
+> assert(message == "a few");
+> 
+> struct S(i32, i32);
+> 
+> match S(1, 2) {
+>   S(z @ 1, _) | S(_, z @ 2) => assert(z == 1),
+>   _ => #panic(),
+> }
+> ```
 
-### 9.20.1. Fallthrough labels [↵](#match-expressions)
+# Scruntinee [↵](#match-expressions)
+```
+<scrutinee> := ? <expr> except <struct-expr> ?
+```
 
-A pattern is allowed to have a label.
-A label may only be referenced by a `fallthrough` expression within an arm of the `match` expression.
-This will then proceed to evaluate another arm in the `match`.
+The scrutinee has a certain set of limitation which are caused by how parsing works.
+Therefore, it may *not* contain any of the following:
+- [struct expression]
+- [block expression], except when it wraps the entire expression.
 
-Labels are only allowed if the arm does not capture any bindings.
+unless they are located inside of a:
+- [parenthesized expression]
+- [block expression]
+- [struct expression]
+
+## Fallthrough labels [↵](#match-expressions)
+
+Since `math` expressions allow for a [`fallthrough`] to be used, each arm may start using a label, a fallthrough may can go to.
+This label may only be referenced by a `fallthrough` within the arm's expression.
+
+This label can then be used to evaluate another arm whithin the `match`.
+
+However, labels are only allowed if the arm's pattern does not capture any bindings.
+
+> _Example_
+> 
+> Because of the `fallthrough`s, both the second and last arm will both be executed.
+> ```
+> step := 1;
+> match step {
+>     :start: 0 => {
+>         println("start processing");
+>         fallthrough :middle:
+>     },
+>     :middle: 1 => {
+>         println("in the middle of processing");
+>         fallthrough :end:
+>     },
+>     :end: 2 => {
+>         println("end processing");
+>         // ...
+>     }
+> }
+> ```
+
+
+
+[`fallthrough`]:       ./fallthrough-expressions.md
+[place expression]:    ../expressions.md#place-expressions-
+[value expression]:    ../expressions.md#value-expressions-
+[alternative pattern]: ../patterns/alternative-patterns.md
