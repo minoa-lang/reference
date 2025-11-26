@@ -16,6 +16,7 @@ Each variable introduced by a variable will live until the end of the current sc
 ## Simple variable declaration [↵](#variable-declarations)
 ```
 <simple-var-decl> := [ 'mut' ] <name> { ',' <name> }* ':' [ <type> ] '=' <expr> ';'
+<var-name>        := <name> | '_`
 ```
 
 Simple variable declarations introduce provide a quick way of introducing variables.
@@ -58,6 +59,18 @@ When more than 1 name is provided, the expresion must be one of the following:
   - [tuple struct type]
 
 If the latter is provided, the value will be automatically destructured.
+
+Additionally, in this case, the use of an `_` will discard any of the values.
+
+> _Example_
+> ```
+> a, _ := (1, 2);
+> ```
+> is equivalent to
+> ```
+> a = 1;
+> ```
+> since the value of `2` is discarded by the fact that it is assigned to an underscore
 
 ## Pattern variable declaration [↵](#variable-declarations)
 ```
