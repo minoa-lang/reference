@@ -153,7 +153,7 @@ This can be done in 2 ways:
 - if a `let`-binding is provided and the pattern is refutable, the main branch will be entered when the pattern matches.
   Otherwise the full unmatched value will be passed to the else branch.
 - if a optional shorthand is used, it allows for a value with 2 possible variants to be mapped to the branches.
-  The main block will be executed if the shorthand results in a match, otherwise it will be passed to the `else` branch.
+  The main branch will be executed if the shorthand results in a match, otherwise it will be passed to the `else` branch.
 
   This can be compared the optional shorthand specified above, but will also bind the 'error' value to the `else` branch.
 
@@ -180,7 +180,7 @@ The `else` branch must always define a name to bind a value to.
 > if let .A(val) = get_foo() {
 > 
 > } else (foo) {
->     // `foo` can be used, even if a regular `if` expression, it would otherwise have been discarded
+>     // `foo` can be used, even if in a regular `if` expression, it would otherwise have been discarded
 >     // `foo` has the value returned by `get_foo()`, not a pattern matched one
 > }
 > ```
