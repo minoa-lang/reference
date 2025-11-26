@@ -3,16 +3,46 @@
 <return-expr> := 'return' [ <expr> ]
 ```
 
-Return expressions moves its argument into the designated output location for the current function call, destroys the current function activation frame, and transfers control to the caller frame.
-When the function being called has named returns, the `return` expression is allowed to overwrite the named return values.
+Return expressions allow for explicit exits from a function, allowing the function to destroy its current function activation frame, and transfer control back to teh caller fame.
 
-If a return is followed by a comma expression, it will return a tuple, which may be named.
+A `return` may also be provided with a value, this will then place this value in the location defined by the function signature, so it can be passeed to the caller.
 
-### 9.24.1. Return in generator functions [↵](#return-expressions)
+A [comma expression] can be provided to a return expression, which will then be implicitly produce an [tuple] value.
 
-In addition to the regular use of a return, it also has a special meaning in a generator function.
-Unlike a [`yield` expression], which allows the async function to generate more values, `return` fully terminates the function.
+> _Example_
+> ```
+> fn foo() {
+>     if cond() {
+>         // conditional early out, immediatally exists the function
+>         return;
+>     }
+> 
+>     println("regular return");
+> 
+>     // explicitly return from an expression
+>     return;
+> }
+> 
+> fn bar() -> i32 {
+>     // return an explicit value
+>     return 42;
+> }
+> 
+> fn baz() -> (i32, f32) {
+>     // automatically warps the provided values to produce a tuple
+>     return 2, 3.0;
+> }
+> ```
+
+# Return in generator funcitons [↵](#return-expressions)
+
+When a `return` is located within a [generator function], it will act similarly as if it were located within a regular function.
+Meaning that it will exit the function, but also end the generation of new values, i.e the generator function cannot generate new values after it.
+
+To return a value from a generator function without terminating the generation, a [`yield` expression] can be used.
 
 
-
+[comma expression]:   ./comma-expressions.md
 [`yield` expression]: ./yield-expressions.md
+[generator function]: ../items/functions.md#generator-functions-
+[tuple]:              ../type-system/types/composite-types/tuple-types.md
