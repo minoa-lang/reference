@@ -3,15 +3,43 @@
 <break-expr> := 'break' [ <label> ] [ <expr> ]
 ```
 
-When `break` is encountered:
-- in a loop, execution of the associated loop body is immediatelly terminated.
-- in a `match`, execution of the associated arm is immediatelly terminated.
+A `break` expressions allows the surrounding control flow construct to be exited.
+This is done either in:
+- a [loop expression], it terminates the current iteration of the loop and skips any assoicated `else` blocks
+- a [`match` expression], it terminates the current arm and surrounding `match` expression
 
-A `break` expression is normaly associated with the innermost loop or `match` exclosing the `break` expression, but a label can be used to specify which enclosing loop or `match` is affected.
+The `break` is only permitted with the (main) body of the expressions mentioned above.
 
-A `break` expression is only permited in the body of a loop, or an arm of a `match`.
+A `break` expression is normally associated with the innermost loop or `match` that encloses the expression.
+A label can be provided to allow the `break` to apply to any outer loop or `match`, as long as they are marked with the same label.
 
-### 9.21.1. Break and loop/match values [↵](#break-expressions)
+## `break` and loop/`match` values
 
-When associated with a loop, a break expression may additionally return a value from that loop.
-`break` without an explicit expression is considered identical to a `break` with the expression `()`.
+A `break` expression may be provided with an additional value, which will be passed as the evaluated value of the loop/`match` the `break` applies to.
+When no explicit value is provided, the `break` will default to returning a `()` value.
+
+_Example_
+```
+a := :outer: loop {
+    // inner
+    while cond() {
+        // breaks out of the current 'inner' loop
+        break;
+
+        // breaks out of thh current 'inner' loop, and makes it evaluated to a value of `1`.
+        break 1;
+
+        // directly breaks out of the `outer` loop
+        break :outer;
+
+        
+        // directly breaks out of the 'outer' loop, and makes it evaluated to a value of `1`.
+        break :outer 1;
+    }
+}
+```
+
+
+
+[loop expression]:    ./loop-expressions.md
+[`match` expression]: ./match-expressions.md
