@@ -1,10 +1,28 @@
 # Comma expressions
 ```
 <comma-expr> := <comma-elem> { ',' <comma-elem> }*
-<comma-elem> := [ <name> ':' ] <expr>
+<comma-elem> := [ <ext-name> ':' ] <expr>
 ```
 
-Comma expressions are a set of expressions separated by commas.
-It is a very niche expression type that has a very limited amount of places it can be used.
+Comma expression combine multiple expressions into a single one, where each sub-expression is separated by a comma.
 
-Comma expression may also includ names for each element, an example usecase of this is when returning a comma expression, where the names can be used to label the values for a named tuple.
+This is generally quite a nice expression and has limited usecases, which are the following:
+- value of a [`return` expression]
+- the right-hand argument of a [`consume` operator]
+- either side of an [assignment operator]
+
+In addition, when used in a [`return` expression], each element may contain an optional name, this will then be used as the name of a 
+
+> _Example_
+> ```
+> a, b = (1, 2);
+> 
+> c, d = a, b;
+> 
+> return 1, name: 3;
+> ```
+
+
+[`return` expression]: ./return-expressions.md
+[`consume` operator]:  ../operators.md#consume-
+[assignment operator]: ../operators.md#assginment-operators-
