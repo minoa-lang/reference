@@ -4,7 +4,8 @@
 <when-stmt-body> := '{' <stmt>* '}'
 ```
 
-A when statement is the statement version of a [`when` item], which can be located in.
+A `when` statement is the statement version of a [`when` item], which can be located within a location which allows statements.
+
 More informtation can be found in it's section.
 
 > _Example_
@@ -17,5 +18,7 @@ More informtation can be found in it's section.
 >     println("This isn't windows");
 > }
 > ```
+
+
 
 [`when` item]: ../items/when-items.md
