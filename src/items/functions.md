@@ -596,16 +596,26 @@ Each variant can then be compared for any possible collisions, if one is found, 
    fn foo(b: i32, a: i32) {} // foo(b:a)
    ```
 
-## String template functions [↵](#functions)
+## Template string functions [↵](#functions)
 ```
 <template-string-fn> := <fn-qualifiers> 'template' 'fn' <fn-signature> { <contract> }* <fn-body>
 ```
 
 A template string function is a special function which can be used by a [template string expression].
+They cannot be called as a normal function.
 
-It takes in an interpolated string, and optionally a set of variadic arguments, which can be used to pass values without interpolcate them within the string itself.
-And returns a custom type, this can be thought of like a [literal operator], but is called at runtime and can take the above mentioned interpolated string.
-A common usecase of this is to map them to a `{N}` occurance within the string, and insert them there.
+It always takes in an interpolated string literal as its first parameter, with optional parameters after that.
+
+If no additional paramters are provided, the values will be stored within the interpolated string literal value.
+
+However, if these additional parameters are provided, the values provided to the corresponding interpolated string must match these arguments.
+The provided string must have at least as many interpolated values as non-variadic arguments.
+
+If the paremeters end in a variadic parameters, the number of parameter only provides a lower bound, interpolated arguments that go over this count will be passed to the variadic parameter.
+
+Optional parameters are allowed, but they must appear after all non-optional parameters.
+
+> _Note_: Template string functions ignore all parameters labels
 
 ## Partial application (currying) [↵](#functions)
 

@@ -3,12 +3,36 @@
 <template-string-epxr> := ( '$' | <name> ) <string-literal>
 ```
 
-A template string expressions can be seen as a special function call to a template string function, but works by directly prepending the name of it in front of the string literal.
-Template string allow for interpolations to be added in the string passed to them.
+A template string expression allows a [template string function] to be called, by prepending its name in front of a [string literal], most commonly [interpolated strings].
+This expression is the only way to call template string expressions.
 
-In addition to interpolation, it is also common practice that in cases where the template string function is called like a normal function, to allow value to be passed as positionals, using `{N}`, where `N` represents the index within the variadic arguments passed to said function.
-Although this practice may differ between different functions.
+Additionally, a special template string exists, which is prefixed using a `$`, this indicates a formatted string, allowing for a convenient shortcut to format a string.
 
-A special template string exists which is prefixed by `$`, this calls the format string template as defined in the implicit context, allowing for a convenient shortcut to format a string.
+> _Todo_: How this format string can be overwritten by a user has not yet been determined.
 
-The functions that are used for template string functions are defined [here](../items/functions.md#template-string-functions-)
+```
+template fn sql(input: InterpStringLiteral) -> SqlQuery { ... }
+
+table := "data";
+query := sql"SELECT * FROM \{table}";
+
+template fn name(input: InterStringLiteral, first_name: &str, last_name: &str) -> Name { ... } 
+
+first_name := "John";
+last_name := "Doe";
+name := name"\{first_name} \{last_name}";
+
+// error: not enough interpolated values
+// name := name"\{first_name} Doe";
+
+middle_name := "Jane";
+// error: too many interpolated values
+// name := name"\{first_name} \{middle_name} \{middle_name}";
+
+// error: interpolate values don't match the expected types
+// name := name"\{first_name} \{10}";
+```
+
+[string literal]:           ../literals.md#string-literals-
+[interpolated strings]:     ../literals.md#string-interpolation-
+[template string function]: ../items/functions.md#template-string-functions-
