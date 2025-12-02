@@ -1,6 +1,7 @@
 # Index expressions
 ```
 <index-expr> := <expr> [ '?' ] '[' [ '?' ] <expr> [ ':' <expr> ] ']'
+<index>      := [ <name> ':' ] <expr> [ ';' <expr> ]
 ```
 
 An index expression can be used to get an element or a slice of elements from a type at the given index.
@@ -49,6 +50,36 @@ This will not re-borrow the value, but will ensure the dereference does not happ
 > assert(arr[9..11] == null);
 > ```
 
+## Labelled indexing [↵](#index-expressions)
+
+Each index may have a label defined before it, in case the implementation expects a labelled index.
+The labels are provided as part of the indexing tuple type, meaning to have a label, the indexing type must be at least a [1-ary named tuple].
+
+This also allows for multiple index implementations with the same type, but different labels.
+
+> _Example_
+> ```
+> struct Foo {
+>     // Index without label
+>     impl as Index[i32] -> ... { // (0)
+>         // ...
+>     }
+> 
+>     impl as Index[(key: i32,)] { // (1)
+>         // ...
+>         fn(&self) index(index: i32) -> ... { ... }
+>     }
+> }
+> 
+> foo := Foo;
+> 
+> // calls (0)
+> val := foo[10];
+> 
+> // calls (1)
+> val := foo[key: 10];
+> ```
+
 ## Optional chaining [↵](#index-expressions)
 
 Similar to an [optional field access], the index expression support optional chaining, also known as null-propagating indexing.
@@ -79,6 +110,21 @@ In cases like this, the implementation will be given a tuple of indices.
 > b := a[0, 4];
 > ```
 
+In addition, multi-value indexing also supports labelled indexing.
+This can be done by passing a string for each element of the tuple defined as an indexing type.
+
+> _Example_
+> ```
+> struct Foo {
+>     impl as Index[(x: i32, y: i32)] {
+>         // ...
+>     }
+> }
+> 
+> foo := Foo;
+> 
+> ```
+
 ## Sentinel indexing [↵](#index-expressions)
 
 Indexing operation may also provide an expected sentinel value.
@@ -94,12 +140,26 @@ Sentinel indexing is the only way, other than from a literal, to obtain a sentin
 > arr: [5:0]i32 = [1, 2, 0, 3, 4];
 > 
 > // takes the slice or a range, and check if the following byte is a) in range, and b) has a valid sentinel
-> a := arr[0..2:0];
-> b := arr[3..5:0];
+> a := arr[0..2;0];
+> b := arr[3..5;0];
 > 
 > // Failing to have a correct sentinel value, will panic
-> // c := arr[0..3:0];
+> // c := arr[0..3;0];
 > ```
+
+Sentinel indexing is syntactic sugar for
+```
+a := arr[0..2, sentinel: 0];
+```
+
+Meaning that any implementation that takes in a tuple of which the last element is a named field with the name `sentinel`, adds support for sentinel indexing
+```
+fn Foo {
+    impl as Index[(i32, sentinel: i32)] {
+        // ...
+    }
+}
+```
 
 ## Array and slice indexing [↵](#index-expressions)
 
@@ -129,4 +189,5 @@ The actual index operation will be decomposed into a set of individual indices, 
 [optional field access]: ./field-access-expressions.md#optional-chaining- "Todo: section does not exists yet"
 [end-ralative operator]: ../operators/special-operators.md#end-relative-operator-
 [optional type]:         ../type-system/types/abstract-types/optional-types.md
+[1-ary named tuple]:    ../type-system/types/composite-types/tuple-types.md#named-tuples-
 [result type]:           ../type-system/types/abstract-types/result
