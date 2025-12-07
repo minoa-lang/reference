@@ -493,6 +493,10 @@ Genetor functions are a way of programatically writing iterator-like types that 
 
 The function can return multiple values with the use of [`yield`] expressions, and will continue to be able to yield even more values, until either a return or the end of the function is encountered.
 
+Whenever a generator function is called, it will generate an iterable type, and will then do one of the following:
+- produce a value when no compatible iterable is expected, this will only ever allow the first yield to be executed
+- pass the created value when an iterable is expected
+
 ## Async functions [↵](#functions)
 
 A function can be marked as `async`, which allows it to be called from an `async` context.
