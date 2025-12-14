@@ -3,14 +3,26 @@
 <grouped-pattern> := '(' <pattern> ')'
 ```
 
-Grouped patterns are used to explicitly control the precedence of compound patterns.
+Group patterns match any values which matches the inner pattern.
+They are used to explicitly control the precedence of coumpound patterns.
 
-An example would be `&0..=5`, which is ambiguous and not allowed, this can be solved by instead writing `&(0..=5)`, as `&0` is not allowed in a range.
-
-The form `(..)` is not a grouped pattern, but instead a [tuple pattern].
-
-A gouped pattern is rufutable if it subpattern is refutable.
+A grouped pattern is refutable if the inner pattern is refutable.
 
 
+> _Note_: Even though `(..)` looks like a grouped pattern with a [rest pattern] within it, this will instead refer to a [tuple pattern].
 
-[tuple pattern]: ./tuple-patterns.md
+> _Example_
+> 
+> The following code without a grouped pattern would imply a range from `&0` to `5`, which is not a valid range pattern.
+> The grouped expression explicitly specifies that the [range pattern] as a whole is refered to by the [reference pattern]
+> ```
+> match int_ref => {
+>     &(0..=5) => (),
+> }
+> ```
+
+
+[range pattern]:     ./range-patterns.md
+[reference pattern]: ./reference-patterns.md
+[rest pattern]:      ./rest-patterns.md
+[tuple pattern]:     ./tuple-patterns.md

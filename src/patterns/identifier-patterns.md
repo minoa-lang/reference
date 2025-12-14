@@ -1,89 +1,186 @@
 # Identifier patterns
 ```
-<identifier-pattern> := [ 'ref' ] [ 'mut' ] <name> [ '@' <pattern-no-top-alt> ]
+<iden-pattern> := [ 'ref' ] [ 'mut' ] <name> [ '@' <pattern-no-top-alt> ]
 ```
 
-Identifier patterns bind the value they are matched to to a variable of a given name.
-This names needs to be unique within the pattern.
-This binding (newly created variable) is allowed to shadow any variable that is defined before the pattern.
-The scope of the binding depends on the location of where the pattern is used.
+Identifiers patterns bind the value they match to to a variable with the same name, and will be located in the [value namespace] the binding is located in.
+This name must be unique within the pattern.
 
-`mut` can be added to make the resulting binding mutable in code, if this is used with ut `ref`, the value will be moved into the binding.
-`ref` can be added to take reference to the element being matched, instead of moving or copying it on match.
-`ref` must be used instead of '&' as it is used to destructure a reference, i.e. it removes the reference from the variable.
+This binding (the newly created value) is allowed to shadow any variable within the current namespace.
+It's scope is dependent on that of the pattern it is located in (such as a `let` bindings or `match` arm)
 
-A binding may be restricted to only bind if the value adheres to another pattern, which is located behind the name.
-An identifier pattern is irrifutable if the subpattern is irrifutable, or no subpattern is provided.
+By default, identifiers patterns bind a variable to a copy or move from the matched value, depending on how whether they implement `Copy`.
 
-By default, the variable will be copied or moved, depending on wether a value implements `Copy`.
+Each identifier pattern may have an associated pattern, which specifies a subpattern to which the identifier must adhere to to result in a match.
 
-## Binding modes [↵](#identifier-patterns-)
+> _Note_: An alternative pattern is not allowed to be directly used, since `a @ 2 | 3` will be interpreted as `(a @ 2) | 3` instead of `a @ (2 | 3)`
 
-For ergonomics reasons, identifier patterns can operate in different binding modes depending on the context they are found in.
-The binding mode is dependent on the value being matched, the pattern, and the explicitly defined binding mode.
+> _Example_
+> ```
+> match a {
+>     // bind the value of `a` to `val`, if it matches the sub-pattern
+>     val @ 1..=5 => println("value in range [1, 5]: \{val}"),
+>     other       => println("Other value: \{other}"),
+> }
+> ```
 
-When matching a pattern, the value being matched and the pattern are used to determine the binding mode, as defined [below](#determining-the-default-binding-move-).
-To avoid the default binding mode being something other than 'move', the value being matched against can either be derefenced before matching, or have the outer pattern being a [reference pattern].
+Some additional modifiers may be added to the pattern, modifying how the value is bound and how the resulting variable:
+- `mut`: makes the resulting variable mutable
+- `ref`: takes a reference to the bound value instead of copying/moving the value of it.
+         The `ref` keyword must be used instead of a `&`, as the latter is used to destructure a reference.
 
-If no explicit `mut`, `ref`, or `ref mut` is defined, the binding uses the default mode.
+  > _Example_: `ref` vs [reference pattern]
+  > ```
+  > val := 10;
+  > a: ?&i32 = &val;
+  > 
+  > // Takes a reference to the reference to the value in `a`
+  > match a {
+  >     .None => (),
+  >     .Some(ref val) => (),
+  > }
+  >
+  > // removes the reference from `a`, and copies the inner value
+  > match a {
+  >     .None => (),
+  >     .Some(&val) => (),
+  > }
+  > ```
 
-The binding mode can only be explicitly set if the default binding mode is 'move'.
-For example, the following are not valid, as they all have a default binding mode of 'ref':
+- `ref mut`: takes a mutable reference to the bound value, allowing mutation of the value within the scrutinee
+
+> _Example_
+> ```
+> // moves the value out of `a`
+> match a {
+>     .None => (),
+>     .Some(val) => (),
+> }
+> 
+> // moves the value out of `a`, but allows mutation of the resulting `val` variable
+> match a {
+>     .None => (),
+>     .Some(val) => (),
+> }
+> 
+> // takes a reference to the inner field bound to `val` inside of `a`
+> match a {
+>     .None => (),
+>     .Some(ref val) => (),
+> }
+> 
+> 
+> // takes a mutagble reference to the inner field bound to `val` inside of `a`, allowing mutation of it
+> match a {
+>     .None => (),
+>     .Some(ref mut val) => (),
+> }
+> ```
+
+When an identifier pattern may also be interpreted as a [path pattern]
+
+Whenever a binding is defined as either `ref` or `mut ref`, it may **not** shadow any constant values within the scope.
+
+By default, an identifier pattern is irrufutable, unless the subpattern provided is itself refutable.
+
+## Binding modes [↵](#identifier-patterns)
+
+To help with ergonomics, identifier patterns can operate in different binding modes, depending on the surrounding context.
+The binding mode is dependent on the value being matched, the patter, and the explicitly defined binding mode.
+
+> _Note_: While the binding mode is error checked for any pattern, it will only have behavioral changes whenever an identifier patterns is used
+
+Determining which binding mode can be done using the method defined [below].
+
+To avoid the default binding mode being something other than `move`, the value being matched against can either be dereferenced before matching, or have a [reference pattern] as an outer pattern.
+
+_Example_
 ```
-let [mut a] = &[()]; // error
-let [ref a] = &[()]; // error
-let [ref mut a] = &[()]; // error
-```
-The same counts for a [reference pattern].
-Meaning the following is also not allowed:
-```
-let [&a] = &[&()]; // error
-```
+val := 10;
+a: &i32 = &val;
 
-The above example can be valid, by explicitly placing the outer slice pattern in a reference pattern, like:
-```
-let &[ref a] = &[()]; // This is now allowed
-```
+// derefencing `a` will result in `val` having its value moved into it
+match *a {
+    val => (),
+}
 
-Move and reference pattern may be combined together in a single pattern.
-This will result the value being partially moved, and thus cannot be used afterwards.
-This only applies when the type is not copyable.
-
-For example:
-```
-let Person{ name, ref age } = person;
-
-// _ = person.name; // error: 'name' has been moved
-_ = person.age; // still allowed, age has not been moved
+// the surrounding reference pattern makes the inner `val` result in having its value moved into it
+match a {
+    &val => (),
+}
 ```
 
-### Determining the default binding move [↵](#binding-modes-)
+The binding mode may also be defined explicitly by utilizing either `mut`, `ref` or `ref mut`, these will result in the following binding modes:
+- `mut`: move or copy
+- `ref`: immutable reference
+- `ref mut`: mutable reference
 
-The default mode starts by being set to 'move'.
-The compiler will then go over each pattern, and follow it until it hits a binding.
+However, these explicit binding modes are only allowed whenever the current default binding mode is `move`, in any other cases, it will result in an error
 
-To decide the current default mode, the following is done:
-- If a reference value is matched to an outer non-reference, for every reference in the value:
+> _Example_: Explicit binding mode with a default binding mode of 'by reference'
+> ```
+> let [mut a] = &[()];     // error: cannot have an explicit mutable 'move' within a default 'by reference' binding mode context
+> let [ref a] = &[()];     // error: cannot have an explicit 'by reference' mode within a default 'by reference' binding mode context
+> let [ref mut a] = &[()]; // error: cannot have an explicit 'by mutable reference' mode within a default 'by reference' binding mode context
+> ```
+> This can be gotten around by explicitly placing the pattern in a reference pattern
+> ```
+> let &[mut a] = &[()];
+> ```
+
+Similarly, a [reference pattern] may only appear when the default binding mode is 'move'
+
+> _Example_
+> ```
+> let [&x] = &[&()]; // error: cannot have an explicit reference pattern within a default `by reference` binding mode
+> ```
+
+Both 'move' and either 'by reference' bindings may be mixed within a single pattern.
+This will result in a partial move, where the 'move' field cannot be accessed, nor the value containing them as a whole.
+
+> _Example_
+> ```
+> // `name` is bound by 'move', and `age` is bound by 'by reference'
+> let Person{ name, ref age } = person;
+> 
+> // error: `person` has been partially moved out of
+> // _ = &person;
+> 
+> // error: `Person.name` has been moved out of `person`
+> // _ = &person.name;
+> 
+> // allowed, as it only has a reference taken, but cannot be moved out of, as the reference still exists
+> _ = &person.age;
+> ```
+
+### Determining the default binding mode [↵](#identifier-patterns)
+
+To determine the default binding mode for each pattern, the following process is used.
+
+For determining these, the following patterns are defined as being non-reference patterns:
+- bindings, i.e. identifier patterns
+- [wildcard pattern]
+- [`const` pattern] of a reference type
+- [reference pattern]
+
+The default binding mode start off as 'move`.
+Then starting from the outer most pattern each patterns is set to the current binding mode, before any inner binding mode is determined.
+
+For each subpattern, the following is decided:
+- if a referenced value is matched to an outer non-reference, for every reference in the value:
   1. update the default binding mode
-    - If the value is a mutable reference, and the default mode is 'move', update the default mode to 'mut ref'
-    - If the value is a shared reference, and the default move is not 'ref', update the default mode to 'ref'
-  2. dereference the value
-- Otherwise, the default mode will be set to 'move'
-
-In short, this means if the outer value being matched against contains a non-mutable `&`, the default move will be 'ref'.
-If instead it does not contain a non-mutable `&` and only `&mut`, the default move will be 'ref mut'.
-And otherwise it will be 'move'
-
-> _Note_: A non-reference pattern is any pattern, with the exception of the following:
-> - [bindings i.e. identifer patte
-> - [wildcard pattern]
-> - [paths to constant items] of a reference type
-> - [reference patterns]
+    - if the value is a mutable reference, and the default mode is 'move', update the default mode to 'by mutable reference'
+    - if the value is a shared reference, and the default mode is 'move', update the default mode to 'by reference'
+    - otherwise the default mode will remain unchanged
+  2. dereference the value, if the dereferenced value is still a reference value, repeat this process with the dereferenced value
+- otherwise, the default mode will be set to 'move'
 
 
 
-[bindings i.e. identifer patterns]: ./identifier-patterns.md
-[paths to constant items]:          ./path-patterns.md
-[reference pattern]:                ./reference-patterns.md
-[reference patterns]:               ./reference-patterns.md
-[wildcard pattern]:                 ./wildcard-patterns.md
+
+[below]:             #determining-the-default-binding-mode-
+[path pattern]:      ./path-patterns.md
+[reference pattern]: ./reference-patterns.md
+[wildcard pattern]:  ./wildcard-patterns.md
+[`const` pattern]:   ../patterns.md#constant-patterns-
+[value namespace]:   ../namespaces-scopes.md#namespaces
