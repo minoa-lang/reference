@@ -46,7 +46,7 @@ The `else` block will only execute based in the following 2 conditions:
 
 A result `while` is similar to a [result `if`],this allows for a value to be either map to the main or else branch of the `while` expression.
 This can be done in 2 ways:
-- if the `in` keyword is *not* followed by a `?` and the provided pattern is refutable, the main branch will be entered when the pattern matches.
+- if the `in` keyword is **not** followed by a `?` and the provided pattern is refutable, the main branch will be entered when the pattern matches.
   Otherwise the full unmatched value will be passed to the `else` branch.
 - if the `in` keyword is followed by a `?`, it allows for a value with 2 possible variants to be mapped to the branches.
   The provided pattern must be infallible.

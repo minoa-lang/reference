@@ -48,7 +48,7 @@ As defined by the alternative pattern, any bindings need to appear in all altern
 ```
 
 The scrutinee has a certain set of limitation which are caused by how parsing works.
-Therefore, it may *not* contain any of the following:
+Therefore, it may **not** contain any of the following:
 - [struct expression]
 - [block expression], except when it wraps the entire expression.
 

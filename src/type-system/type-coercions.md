@@ -44,7 +44,7 @@ Propagation expressions and their relativent sub-expressions are one of the foll
 
 The following propagation expressions results in coercion sites for the given sub-expression to type `U` or its relative type `Un`.
 
-- [array expressions] for an array of type `[n]U`:
+- [array expressions] for an array of type `[N]U`:
   - each sub-expression in a list syntax
   - the repeating expression in a repeating syntax
   - in a comprehension syntax

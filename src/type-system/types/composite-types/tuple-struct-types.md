@@ -24,7 +24,7 @@ Like struct fields, each field may also define its [visbility] and [mutability].
 
 These fields, like [tuple] fields, may be accessed either using a [tuple index expression], or via a [field access expression] if the field is provided with a name.
 
-Unlike a struct, it is *not* possible to declare multiple names within a single field.
+Unlike a struct, it is **not** possible to declare multiple names within a single field.
 
 ### Default tuple struct fields [↵](#fields-)
 ```

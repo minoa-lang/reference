@@ -1,8 +1,8 @@
 # Whitespace
 
 Whitespace is uses to determine how lexical elements withing a file are interpreted, and used to
-- separate seperate lexical elements
-- decide how a mix of pre/post/in-fix operator is interpreted.
+- separate lexical elements
+- decide how a mix of pre/post/in-fix operator is interpreted
 
 For any other purpose, whitespace is essentially ignored.
 All whitespace is preserved in any reconstructed file.
