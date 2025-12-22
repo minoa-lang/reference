@@ -102,7 +102,7 @@ In addition, each keyword has additional info in which use-case it is counted as
 A list of weak keywords can be found below (in alphabetic order):
 - `accessor`: within a [meta attribute] declaration
 - `adapt`: to declare an [adapt type alias]
-- `alias`: to declare an [constraint disambiguation alias]
+- `alias`: to declare an [disambiguation alias]
 - `align`: to declare the alignment of a [pointer type]
 - `allowzero`: to declare an [`allowzero` pointer type]
 - `assign`: as part of an [operator] declaration
@@ -174,6 +174,7 @@ A list of weak keywords can be found below (in alphabetic order):
 [function contract]:               ../constracts.md#function-contracts-
 [closure capture list]:            ../expressions/closure-expressions.md
 [simple path start]:               ../identifiers-paths.md#simple-paths-
+[disambiguation alias]:            ../items/disambig-aliases.md
 [flag enum]:                       ../items/enums.md#flag-enum-
 [lazy parameter]:                  ../items/functions.md#lazy-parameters-
 [template string function]:        ../items/functions.md#template-string-functions-
@@ -189,7 +190,6 @@ A list of weak keywords can be found below (in alphabetic order):
 [sealed trait]:                    ../items/traits.md
 [adapt type alias]:                ../items/type-aliases.md#adapt-type-aliases-
 [distinct type alias]:             ../items/type-aliases.md#distinct-type-aliases-
-[constraint disambiguation alias]: ../generics.md#constraint-disambiguation-aliases-
 [meta attribute]:                  ../metaprogramming.md#meta-attributes-
 [meta function]:                   ../metaprogramming.md#regular-meta-functions-
 [meta pattern]:                    ../metaprogramming.md#meta-patterns-

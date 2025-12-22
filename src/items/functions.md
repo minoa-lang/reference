@@ -68,6 +68,22 @@ fn name((value, _): (i32, i32)) -> i32 { value }
 
 If any parameter has a type of `type`, it must be marked as `const`.
 
+In addition, it is possible to define an `const` parameter which may be deduced from the surrounding context, like deduced parameter, but still allow them to be explicitly passed to the function.
+This can be done by providing this parameter a default value of `_`.
+
+> _Example_:
+> ```
+> fn foo[PurelyDeduced](val: PurelyDeduced, to: const OptionallyDeduced = _) -> OptionallyDeduced {}
+> 
+> // `OptionallyDeduced` is deduced based on the expected return type
+> a: i32 = foo(0);
+> 
+> // `OptionallyDeduced` is explicitly provided in the call
+> b := foo(0, to: i32);
+> ```
+
+> _Todo_: How to pass in-place initializer arguments ?
+
 ### Parameter specifiers [↵](#parameters-)
 ```
 <fn-param-specifiers>  := [ 'mut' | 'const' | 'lazy' | 'move' ]
@@ -408,7 +424,7 @@ This is a shorthand for the following receivers:
 A typed receiver can take in a user specified reciever type, which may be one of the following
 - `Self`
 - `&Self` or `&mut Self`
-- any type `T` using `Self` (i.e. `Self` must appear in the type), which implements `Deref(.Target = T)`
+- any type `T` using `Self` (i.e. `Self` must appear in the type), which implements `Deref[.Target = T]`
 
 > _Todo_: `T` might need some kind of `Dispatch` trait associated with it instead of `Deref`
 
@@ -434,6 +450,15 @@ These are function that are not required to be implementation and may not exists
 They therefore always return a value of `?T`, where `T` is the return type of the function, which will be `null` when the function does not exist.
 
 The only way of calling these functions is using an [optional method call] (not to be confused with an [optional chaining method call]).
+
+## Constraint functions & methods [↵](#functions)
+```
+<constraint-fn>     := <constraint-fn-specifiers> 'fn' <name> [ '?' ] <fn-signature> ';'
+<constraint-method> := <constraint-fn-specifiers> 'fn' <fn-receiver> <name> [ '?' ] <fn-signature> ';'
+<constraint-fn-specifiers> := [ ( 'const' [ '!' ] ) | 'async' ] [ 'unsafe' ] [ 'gen' ]
+```
+
+Constraint functions and methods are slight variations on trait functions and methods, except that they don't allow either attributes or a default implementation.
 
 ## Extern & exported functions [↵](#functions)
 

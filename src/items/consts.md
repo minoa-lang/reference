@@ -53,6 +53,13 @@ A trait constant declares a constant that is associated with that trait's implem
 
 The default value may be provided, which will be used when no explicit type alias is defined within an implemention.
 
+## Trait constant [↵](#const-item)
+```
+<trait-const> := 'const' <name> ':' <type> [ '=' <expr> ] ';'
+```
+
+A constaint constant is similar to a trait constant, except that it doesn't allow a default valuel.
+
 
 [const functions]:     ./functions.md#const-functions-
 [block expressions]:   ../expressions/block-expressions.md

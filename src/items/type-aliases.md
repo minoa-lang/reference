@@ -169,6 +169,14 @@ An implicit `Sized` trait is applied on the type alias, which can be relaxed usi
 
 A default type may be provided, which will be used when no explicit type alias is defined within an implementation.
 
+## Constraint type alias [↵](#type-aliases)
+```
+<constraint-alias> := 'type' <name> [ <generic-params> ] [ <type-bounds> ] [ <where-clause> ] ';'
+```
+
+A constraint type alias is similar to a trait type alias, except that it doesn't allow a default type.
+
+
 
 [`From`]:                  #distinct-type-alias- "Todo: Link to docs"
 [`To`]:                    #distinct-type-alias- "Todo: Link to docs"

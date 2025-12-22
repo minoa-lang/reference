@@ -1,6 +1,6 @@
 # Type check expressions
 ```
-<type-check-expr> := <expr> <is-op> ( <type> | <trait-bound> )
+<type-check-expr> := <expr> <is-op> ( <type> | <trait-bound> | <inline-constraint> )
 <is-op> := 'is' | '!is'
 ```
 

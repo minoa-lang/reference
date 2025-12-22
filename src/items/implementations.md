@@ -68,7 +68,7 @@ If the implementation is marked as `unsafe`, any functions and methods defined w
 
 ### Trait impl [↵](#external-implementations-)
 ```
-<trait-impl> := { <attribute> }* [`const`] [ 'unsafe' ] [ 'extend' ] 'impl' [ ?no whitespace? <generic-params> ] ?whitespace?  <type> 'as' <trait-bound> [ <where-claus> ] '{' { <assoc-item> }* '}'
+<trait-impl> := { <attribute> }* [`const`] [ 'unsafe' ] [ 'extend' ] 'impl' [ ?no whitespace? <generic-params> ] ?whitespace?  <type> 'as' <trait-bound> [ <where-clause> ] '{' { <assoc-item> | <disambig-alias> }* '}'
 ```
 
 A trait implementation is defined with a trait that the type will implement.

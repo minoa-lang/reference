@@ -421,6 +421,19 @@ A trait may provide default implementations for any of the accessors, which will
 An implementation is not allowed to add any accessors that are not defined on the trait property, with the exception of any observers.
 Observers are solely up to the implementation, meaning the trait cannot require thier existsence.
 
+> _Todo_: Allow for `prop name : ty;`, which will have all accessors
+
+## Constaint [↵](#properties)
+```
+<constraint-property>           := [ 'const' ] 'prop' <ext-name> ':' <type> <constraint-property-accessors>
+<constraint-property-accessors> := '{' ? { <constraint-propery-accessor> }*, sub-elements need to be unique ? '}'
+<constraint-property-accessor>  := [ 'const' ] [ 'mut' | 'ref' ] 'get' ';'
+                                 | [ 'const' ] 'set' ';'
+```
+
+A constraint property is similar to a trait property, except that is does not allow any default accessor implementations.
+
+
 
 [constant]:                ./consts.md
 [extension]:               ./extensions.md
