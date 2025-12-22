@@ -2,7 +2,7 @@
 ```
 <fn-item>       := <fn-qualifiers> 'fn' <name> <fn-signature> { <contract> }* <fn-body>
                  | <template-string-fn>
-<fn-qualifiers> := { <attribute> }* [ <vis> ] [ ( [ ( 'const'  [ '!' ] ) | 'async' ] [ 'unsafe' ] [ 'gen' ] ) ]
+<fn-qualifiers> := { <attribute> }* [ <vis> ] [ ( 'const'  [ '!' ] ) | 'async' ] [ 'unsafe' ] [ 'gen' ]
 <fn-signature>  := [ <deduced-params> ] '(' [ <fn-params>  [ ',' ] ] ')' [ <fn-return> ] [ <where-clause> ]
 ```
 
@@ -46,7 +46,7 @@ Optional parameters get a `?` prepended to them, and variadic parameters will be
 <fn-param>             := <fn-req-param>
                         | <fn-opt-param>
                         | <fn-variadic-param>
-<fn-req-param>         := [ <fn-param-label> ] <fn-param-name>  ':' [ <fn-param-specifiers> ] ( <type> | <raw-closure-type> )
+<fn-req-param>         := [ <fn-param-label> ] { <attribute> }* <fn-param-name>  ':' [ <fn-param-specifiers> ] ( <type> | <raw-closure-type> )
 <fn-param-name>        := <name> { ',' [ <fn-param-label> ] <name> }
                         | <pattern-top-no-alt>
 <fn-param-type>        := <type> 
@@ -176,7 +176,7 @@ The default value needs to be a compile-time known expression.
 
 ### Variadic parameters [↵](#parameters-)
 ```
-<variadic-param> := <fn-param-name> ':'  <type> '...' [ '=' <expr> ]
+<variadic-param> := { <attribute> }* <fn-param-name> ':'  <type> '...' [ '=' <expr> ]
 ```
 
 A variadic parameter allows for 0 or more values of the the parameter pack's type to be passed to a function.
@@ -434,7 +434,7 @@ A typed receiver can take in a user specified reciever type, which may be one of
 <trait-method>        := <trait-fn-qualifiers> 'fn' <fn-reciever> <name> [ '?' ] <fn-signature> { <contracts> }* <trait-fn-body>
 <trait-fn-body>       := ';'
                        | <fn-body>
-<trait-fn-qualifiers> := { <attribute> }* [ ( [ ( 'const'  [ '!' ] ) | 'async' ] [ 'unsafe' ] [ 'gen' ] ) ]
+<trait-fn-qualifiers> := { <attribute> }* [ ( 'const'  [ '!' ] ) | 'async' ] [ 'unsafe' ] [ 'gen' ]
 ``` 
 
 Trait functions and methods are special variants for their normal counterparts, which are used to define the signatures that any trait impl must implement.

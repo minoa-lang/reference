@@ -404,7 +404,7 @@ This means that unlike other properties, these do not have access to `self`.
 ## Trait properties [↵](#properties)
 ```
 <trait-property>               := [ 'const' ] 'prop' <ext-name> ':' <type> <trait-property-accessors>
-<trait-property-accessors>     := '{' ? <trait-propery-accessor>, sub-elements need to be unique ? '}'
+<trait-property-accessors>     := '{' ? { <trait-propery-accessor> }*, sub-elements need to be unique ? '}'
 <trait-property-accessor>      := [ 'const' ] [ 'mut' | 'ref' ] 'get' <trait-property-accessor-body>
                                 | [ 'const' ] 'set' <trait-property-accessor-body>
 <trait-property-accessor-body> := ';'
@@ -447,7 +447,3 @@ A constraint property is similar to a trait property, except that is does not al
 [struct types]:            ../type-system/types/composite-types/struct-types.md
 [field tag]:               ../type-system/types/composite-types/struct-types.md#fields-tags-
 [visibility]:              ../visibility.md
-
-# Old
-
-> _Todo_: allow direct binds to be used in a struct expression, instead of the bound variable (both work, but only one of them)

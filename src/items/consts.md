@@ -44,7 +44,7 @@ This will be called whenever any copy of the constant value goes out of scope.
 > }
 > ```
 
-## trait constant [↵](#const-item)
+## Trait constant [↵](#const-item)
 ```
 <trait-const> := 'const' <name> ':' <type> [ '=' <expr> ] ';'
 ```
