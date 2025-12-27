@@ -100,61 +100,82 @@ A weak keyword is a keyword that is dependent on the surrounding context and can
 In addition, each keyword has additional info in which use-case it is counted as an actual keyword.
 
 A list of weak keywords can be found below (in alphabetic order):
-- `accessor`: within a [meta attribute] declaration
+- `accessor`: to declare a [meta attribute role]
 - `adapt`: to declare an [adapt type alias]
 - `alias`: to declare an [disambiguation alias]
 - `align`: to declare the alignment of a [pointer type]
 - `allowzero`: to declare an [`allowzero` pointer type]
+- `arbitrary`: as part of meta [hygiene info]
 - `assign`: as part of an [operator] declaration
 - `associativity`: as part of a [precedence] declaration
-- `attr`: to declare a [meta attribute]
+- `attr`: to declare a [meta attribute] or [meta attribute role] or as part of a [meta pattern]
 - `bitfield`: to declare a [bitfield]
+- `block`: as part of a [meta pattern]
 - `chain`: as part of an [operator] declaration
 - `consume`: as part of an [operator] declaration
-- `derive`: within a [meta attribute] declaration
+- `derive`: to declare a [meta attribute role]
 - `did_set`: to declare a [property observer]
 - `distinct`: to declare a [distinct type alias]
+- `expr`: as part of a [meta pattern]
 - `extend`: as part of a [trait implementation]
 - `flag`: to declare a [flag enum]
 - `field`: within a [field property]
-- `full`: within a [meta attribute] declaration
+- `field_convert`: as part of meta [hygiene info]
+- `full`: to declare a [meta attribute role]
 - `get`: to declare a [property getter]
 - `higher_than`: as part of a [precedence] declaration
+- `iden`: as part of a [meta pattern]
 - `infix`: as part of an [operator] declaration
 - `init`: to declare an [initializer]
 - `invar`: as part of a [function contract]
+- `item`: as part of a [meta pattern]
 - `lazy`: to declare a [lazy parameter], or as part of an [operator] declaration
 - `lib`: as part of a [visibility specifier]
-- `literal`: as part of a [literal operator] or [meta pattern]
+- `lit`: as part of a [meta pattern]
+- `literal`: as part of a [literal operator]
 - `lower_than`: as part of a [precedence] declaration
 - `lsb`: as part of the bit order for a [bitfield]
-- `member`: within a [meta attribute] declaration
-- `member_attr`: within a [meta attribute] declaration
+- `member`: to declare a [meta attribute role]
+- `member_attr`: to declare a [meta attribute role]
 - `meta`: to declare a [meta function]
+- `meta_pat`: as part of a [meta pattern]
 - `msb`: as part of the bit order for a [bitfield]
+- `named`: as part of meta [hygiene info]
+- `names`: as part of meta [hygiene info]
 - `opaque`: to declare an [opaque type]
+- `overloaded`: as part of meta [hygiene info]
 - `package`: as part of a [visibility specifier]
-- `peer`: within a [meta attribute] declaration
+- `pat`: as part of a [meta pattern]
+- `path`: as part of a [meta pattern]
+- `peer`: to declare a [meta attribute role]
 - `post`: as part of a [function contract]
 - `postfix`: as part of an [operator] declaration
 - `pre`: as part of a [function contract]
 - `precedence`: to declare a [precedence]
-- `prefix`: as part of an [operator] declaration
+- `prefix`: as part of an [operator] declaration or meta [hygiene info]
 - `prop`: to declare a [property]
 - `raw`: to get a [raw pointer value]
 - `record`: to declare a [record struct], [record tuple struct], [record enum], or [record bitfield]
 - `sealed`: to declare a [sealed trait]
 - `set`: to declare a [property setter]
 - `sparse`: to declare a [sparse array type]
+- `stmt`: as part of a [meta pattern]
+- `suffix`: as part of meta [hygiene info]
 - `super`: as part of a [visibility specifier], or as a [simple path start]
 - `template`: to declare a [template string function]
 - `test`: to declare a [test] item
 - `tls`: to declare a [thread-local static]
+- `toks`: as part of a [meta pattern]
+- `tt`: as part of a [meta pattern]
+- `ty`: as part of a [meta pattern]
 - `union`: to declare a [union]
 - `unique`: as part of a [closure capture list]
+- `vis`: as part of a [meta pattern]
 - `volatile`: to declare a [volatile pointer]
 - `will_set`: to declare a [property observer]
 - `with`: as part of a [test] item
+
+
 
 ## Pattern keywords
 
@@ -190,9 +211,11 @@ A list of weak keywords can be found below (in alphabetic order):
 [sealed trait]:                    ../items/traits.md
 [adapt type alias]:                ../items/type-aliases.md#adapt-type-aliases-
 [distinct type alias]:             ../items/type-aliases.md#distinct-type-aliases-
+[meta function]:                   ../metaprogramming.md
 [meta attribute]:                  ../metaprogramming.md#meta-attributes-
-[meta function]:                   ../metaprogramming.md#regular-meta-functions-
+[meta attribute role]:             ../metaprogramming.md#attribute-roles-
 [meta pattern]:                    ../metaprogramming.md#meta-patterns-
+[hygiene info]:                    ../metaprogramming.md#hygiene-info-at-the-declaration-site-
 [operator]:                        ../operators.md#operator-items-
 [literal operator]:                ../operators/literal-operators.md
 [raw pointer value]:               ../operators/special-operators.md#raw-borrow-operators-

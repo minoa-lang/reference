@@ -1,370 +1,888 @@
 # Metaprogramming 
 ```
-<meta-decl>       := 'meta' 'fn' <name> [ <deduced-params> ] [ <meta-signature> ] '->' <meta-return> <block>
-                   | 'meta' 'fn' <name> <meta-pattern-match-body>
-<meta-signature>  := <meta-pattern-parse-signature>
-                   | '(' <name> ':' ? Token slice or AST type ? ')'
-                   | '()'
-<meta-return>     := 'type'
-                   | ? Tokens or AST type ?
-
-<meta-expr>       := '#' <name> [ <meta-invocation> ]
-<meta-invocation> := '(' <tokens> ')'
-                   | '{' <tokens> '}'
-                   | '[' <tokens> ']'
+<meta-decl> := { <attributes> }* 'meta' [ '(' <meta-hygiene-info> ')' ] 'fn' <name> [ <deduced-parameters> ] [ <mata-signature> ] <block>
 ```
 
-Meta-functions are special function-like items which allow for the compile-time generation of code.
-Like regular functions, meta-function can be passed induced arguments and type arguments.
-But unlike regular functions, meta-functions can return type created within the function.
+A meta-function is a special function-like item which can work directly on sections of code and generated new code based on it.
+Similar to regular functions, metafunctions may take in both deduced and regular parameters, although the latter work differently.
 
-In addition to the data passed to the meta-function, the meta-function can also use the provided info passed in the implicit context.
+Unlike regular functions, meta-functions are also allowed to return a value of the type `type`.
 
-Meta-function can be defined within the library they are declared it, and can use any function available within that library.
-However, a major restriction is that the code it relies on may **not** have any circular reliance on the current meta-function.
+In addition, each meta-function has access to a special instance of the [implicit context], which can be used during code generation.
 
-> _Note_: Meta-function must be defined directly within a module and may not be defined inside of any other item.
+Meta-functions can be defined within the same library they are used in, meaning they do not need to come from an external library to be able to be used.
+The sole restrictions is that any code the meta function relies on, may not circularly rely on the meta-function being written.
 
-> _Todo_: Is the API correct for this entire section?
+> _Note_: In the context of a metaprogramming, a _fragment_ represents any piece of code which can be parsed as a single element as a whole
 
-## Meta variable [↵](#metaprogramming)
+> _Note_: Meta-function must be defined directly within a module and may not be defined inside of any other item, with the exception of meta-method.
 
-A meta variable takes in no arguments and just returns some generated code.
+> _Example_
+> 
+> Create a json object using json syntax
+> ```
+> let json_obj = #json {
+>     "foo" = "5",
+>     "bar" = {
+>         "baz" = "true",
+>         "quux" = [ "a", "b", "c" ]
+>     }
+> };
+> ``` 
 
-Meta variables can both be called with or without subsequent meta invocation (i.e. delimiters).
-
-In addition, if a meta-function takes in parameters, but all have default value defined, the function can be called as a meta-variable and will be provided with the default values.
-
-For example:
+## Meta signature [↵](#metaprogramming)
 ```
-meta fn meta_var() {
-    ...
-}
-```
-Can be called as either `#meta_var()` or `#meta_var`
-
-## Regular meta functions [↵](#metaprogramming)
-
-A regular meta-function acts like a normal function, taking in data directly from the compiler.
-
-Although a meta-function may take any kind of input, there are 3 special signatures that have a different effect.
-
-The special signatures are:
-- `(tokens: meta.TokenStream)`: Provides the raw tokens given by the meta-function invocation
-- `(partial_ast: meta.PartialAst)`: Provides a combination of AST fragments and tokens
-- `(ast: meta.Ast)`: Provides a pre-parsed AST of the tokens given by the meta-function invocation
-
-> _Note_: only the types need to match for the special signatures, the names don't matter
-
-For example
-```
-use minoa:meta;
-
-meta fn foo(tokens: meta.TokenStream) -> ... {
-    ...
-}
-
-meta fn bar(ast: meta.Ast) -> ... {
-    ...
-}
+<meta-signature> := '(' <meta-param> { ',' <meta-param> } [ ',' ] ')' [ '->' <type> ]
+                  | <meta-pattern-signature> '->' <type>
+                  | <match-meta-patttern-signature>
+<meta-param>     := <fn-arg>
+                  | <meta-pattern-param>
 ```
 
-## Meta patterns [↵](#metaprogramming)
+A meta-function's signature defines how the passed code will be interpreted, and what is retuned by the meta-function.
+The meta-function is allowed to take in a mix of values that are passed as is, and code which will be provided by a supported representation.
+
+A meta function is not required to return anything, but limits its usefulness to what side-effects can be done by interacting with the `meta` library.
+
+The types that support parsed code being passed is one of the following:
+- `meta.TokenStream`: code is passed as a sequence of tokens
+- `meta.FragmentStream`: code is passed as a sequence of parsed fragments
+- `meta.Ast`: code is passed as a fully parsed sub-AST
+
+These types are also those which can be returned from a meta-function, and which the compiler will evaluate as code, rather than a value.
+If the actual value of one of these types should be returned, this should be wrapped by a [1-ary tuple].
+
+> _Example_
+> ``` 
+> // valid meta-function, but has limited functionality
+> meta fn limited_use() {}
+> 
+> // return a value of type `type`
+> meta fn return_type() -> type { ... }
+> 
+> // returns a tokenstream, which the compiler will parse into the surrounding code
+> meta fn parsable_code() -> meta.TokenStream { ... }
+> 
+> // return the actual tokenstream value, and does not parse it
+> meta fn token_stream_value() -> (meta.TokenStream,) { ... }
+> ``` 
+
+## Meta patterns [↵](#meta-signature-)
 ```
-<meta-pattern>           := { <token> | <meta-pattern-variable> }+
-<meta-pattern-variable>  := '$' <name> : <meta-token-type>
-                         | '$' '(' <meta-pattern-signature> ')' <macro-rep>
-<meta-pattern-type>      := 'item'
-                         | 'block'
-                         | 'stmt'
-                         | 'pat'
-                         | 'expr'
-                         | 'ty'
-                         | 'iden'
-                         | 'path'
-                         | 'meta'
-                         | 'vis'
-                         | 'lit'
-                         | 'toks'
+<meta-pattern-signature> := '$' '(' <meta-pattern> ')'
+<meta-pattern-param>     := <meta-pattern-variable>
+                          | '$' '(' <meta-pattern> ')'
+<meta-pattern>           := { ? <token> except for '$' ? | <meta-pattern-variable> | '$$' }*
+<meta-pattern-variable>  := '$' <name> [ ':' <meta-tok-kind> ]
+                          | '$' '(' <meta-pattern> ')' <meta-pattern-sep> <meta-pattern-rep> 
+<meta-fragment-kind>     := 'item'
+                          | 'block'
+                          | 'stmt'
+                          | 'expr'
+                          | 'pat'
+                          | 'ty'
+                          | 'iden'
+                          | 'path'
+                          | 'attr'
+                          | 'vis'
+                          | 'lit'
+                          | 'toks'
+                          | 'tt'
+                          | 'meta_pat'
 <meta-pattern-rep>       := '?' | '*' | '+'
+<meta-pattern-sep>       := ? <token> other than '*' or '+' ?
+                          | '(' { <token> }* ')'
 ```
 
-Meta patterns can be used to extract AST fragments form a given set of token inputs.T
-They can be thought of as syntactic sugar utilizing some of the builtin meta-functions.
+A meta-pattern extracts a sequence of fragments from the provided `meta.TokenStream` or `meta.FragmentStream`, or convert the tokens to another `meta.FragmentStream`.
 
-Meta-functions taking in meta patterns will have a signature that either takes in a `meta.TokenStream` or a `meta.FragmentStream`.
+The meta-pattern also allows the function to directly use any of these values using the pattern's provided variables.
+These variables are directly available by their name, as defined within the pattern.
 
+Below is a table of each fragment kind, its mapped type, and the item it refers to:
 
-A meta function allows the function to take in a set of pre-parsed AST elements.
-In addtion, `toks` can be used to supply a delimited set of raw tokens within the pattern (including the open and closing delimiters).
+fragment kind | fragment type                 | corresponding langauge fragment
+--------------|-------------------------------|---------------------------------
+`item`        | `meta.fragment.Item`          | an [item]
+`block`       | `meta.fragment.Block`         | a [block]
+`stmt`        | `meta.fragment.Statement`     | a [statement]
+`expr`        | `meta.fragment.Expression`    | an [expression]
+`pat`         | `meta.fragment.Pattern`       | a [pattern]
+`ty`          | `meta.fragment.Type`          | a [type]
+`iden`        | `meta.fragment.Identifier`    | an [identifier]
+`path`        | `meta.fragment.Path`          | a [path]
+`attr`        | `meta.fragment.AttributeData` | an [attribute] or any attribute data
+`vis`         | `meta.fragment.Visibility`    | [visibility]
+`lit`         | `meta.fragment.Literal`       | a [literals]
+`toks`        | `meta.TokenStream`            | any sequence of [lexical token]
+`tt`          | `meta.TokenTree`              | same as `toks`, but containing only matching sets of delimiters `()`, `[]` or `{}`, no separate ones
+`meta_pat`    | `meta.fragment.MetaPattern`   | a meta-pattern
 
-Each pattern type is syntactic sugar for the corresponding AST node, each corresponding to the following type, assuming `use minoa:meta;`:
+> _Example_
+> ```
+> fn pattern$($key:expr => $lhs:expr + $rhs:expr) {}
+> 
+> #pattern(a => b + c - d + e);
+> // this will have the following framents for
+> key := a;
+> lhs := b;
+> rhs := c - d + e;
+> ```
 
-pattern kind | fragment type         | corresponding language 'item'
--------------|-----------------------|-------------------------------
-`item`       | `meta.ast.Item`       | an [item]
-`block`      | `meta.ast.Block`      | a [block]
-`stmt`       | `meta.ast.Stmt`       | a [statement]
-`pat`        | `meta.ast.Pattern`    | a [pattern]
-`expr`       | `meta.ast.Expr`       | an [expression]
-`ty`         | `meta.ast.Type`       | a [type]
-`name`       | `meta.ast.Identifier` | a [name]
-`path`       | `meta.ast.Path`       | a [path]
-`meta`       | `meta.ast.Meta`       | an [attribute]
-`vis`        | `meta.ast.Vis`        | a [visibility]
-`lit`        | `meta.ast.Literal`    | a [literals]
-`toks`       | `meta.TokenStream`    | Any lexical [token]
+If the name of the variable happens to match the name for the fragment kind it represents, its kind can be left out
 
-> _Note_: The fragments themselves are wrapped in type `meta.Fragment(T)`, where `T` is the fragment type
+_Example_
+```
+// the first variable has a different name compared to its kind, so must explicitly mention it
+// the second variable has the same name as its kind, so its kind may be left out.
+fn pattern$($name:iden => $expr)
+```
 
+Additionally, a subset of the pattern may be defined as repeating for a given amount of repititions.
+These repitions are defined by the repetition that is located directly after the `${ ... }` element.
 
-WHen using a special group pattern, indicated by a sub-pattern surrounded by `${}`, the amount of repetition are decided by the character following it.
-This is one of the following:
+These can either be one of the following simple repetitions:
 
-char | meaning
------|-------------------------
-`?`  | zero or one occurance
-`*`  | zero or more occurances
-`+`  | one or mor occurances
+repetition                                          | meaning
+----------------------------------------------------|---------
+`?`                                                 | zero or one occurance
+`*`                                                 | zero or more occurances
+`+`                                                 | one or more occurances
 
-Group pattern are represented using a corresponding `meta.AstList(T)` type.
+> _Example_
+> ```
+> fn zero_or_once$($( $name:iden )?);
+> 
+> #zero_or_once();
+> #zero_or_once(a);
+> 
+> // error: expected either 0 or 1 repetitions of an identifier
+> #zero_or_once(a b);
+> 
+> fn zero_or_more$($( $name:iden )*);
+> 
+> #zero_or_more();
+> #zero_or_more(a);
+> #zero_or_more(a b);
+> 
+> fn one_or_more$($( $name:iden )+);
+> 
+> // error: expected at least 1 repetitions of an identifier
+> #one_or_more();
+> 
+> #one_or_more(a);
+> #one_or_more(a b);
+> ```
 
+or a more complex repetition in the form of `[<name>]`, `[<name>:<rep>]`, or `[<name>:<range>]`.
+Here, the number of repetitions is stored in a variable of `<name>`, which may then optionally be followed by either:
+- a simple repetition, defining a simple bound
+- an integer range of allowed repetitions
+
+If the value stored in `<name>` is used in multiple locations in the pattern, all these repetition must repeat the same number of times.
+
+> _Example_
+> ```
+> fn common_rep$($( | )[N] $name:iden $( | )[N]);
+> 
+> common_rep(a);
+> common_rep(| b |);
+> common_rep(||| b |||);
+> 
+> // mismatch between repetitions in pattern
+> common_rep(| b ||);
+> 
+> fn simple_rep_bound$($( | )[N:+] $name:iden $( | )[N:+]);
+> 
+> // error: expected at least on repetition of `|`
+> simple_rep_bound(a);
+> 
+> simple_rep_bound(| b |);
+> simple_rep_bound(||| b |||);
+> 
+> 
+> fn range_rep_bound$($( | )[N:2..3] $name:iden $( | )[N:2..3]);
+> 
+> // error: expected at least 2 repetitions of `|`
+> range_rep_bound(| b |);
+> 
+> range_rep_bound(||| b |||);
+> 
+> // error: expected at most 3 repetitions of `|`
+> range_rep_bound(|||| b ||||);
+> ```
+
+When using either the `*`, `+`, or complex repetition, a separator may be placed before it, this indicates the sequence used to separate multiple different repetitions.
+If not provided, no separator will be used.
+
+If the separator consists out of a single token, it can be placed directly between the pattern and repetition (any token except for `*` or `+`).
+Any other separator, i.e. `*`, `+` or a multi-token separator, must be located between `()`.
+
+Since `$` is used of the to introduce special patterns, it can also represent a `$` token directly, this can be done in 2 ways:
+- by escaping the `$` with another `$`, i.e. `$$` (this is mainly when used in a larger token)
+- by having a `$` with whitespace directly after it, i.e. `$ other_token`
+
+> _Note_: A standalone meta-function that extracts a sequence of fragments from a pattern and an input, is available as [`#parse_pattern`].
+
+> _Note_: Additional restriction on parsing patterns might be added in the future
+
+> _Implementation_: When a meta-function is declared using a meta-pattern signature, it will implicitly take in a single parameter of type `meta.FragmentStream`, but this is not directly accessible
+
+### Meta-match function [↵](#meta-patterns-)
+```
+<meta-match-signature> := '$' '->' <type> '{' { <meta-match-arm> }* '}'
+<meta-match-arm>       := <meta-pattern> '=>' <block-expr>
+                        | '$' '_' => <block-expr>
+```
+
+A meta-match function is a variant of a pattern meta-function, which allows multiple possible patterns to be provided, each resulting in a different result.
+
+The match does not have to be exhaustive, however, if no arm matches, it will result in an error.
+
+> _Example_
+> ```
+> meta fn matched$ -> i32 {
+>     $val:lit => val as i32,
+>     $_ => 0,
+> }
+> 
+> assert(#matched() == 0);
+> assert(#matched(2) == 2);
+> ```
+
+> _Note_: A standalone meta-functon that can match on meta-patterns, is available as [`#match_pattern`].
+
+### Meta pattern matching [↵](#meta-patterns-)
 
 When matching a pattern, no lookahead is performed.
-Meaning that patterns may be ambiguous, in this case, it will result in an error.
-An example of an ambigous pattern is the following:
-```
-$( $i:iden )* $j:iden
-```
-as it can never reach the final identifiers
+This means that a pattern may be ambiguous during parsing, in this case, this will result in an error.
 
+> _Example_: Ambiguous pattern
+> ```
+> $($iden:iden)* $iden:iden
+> ```
+> 
+> This pattern will consume all identifiers within the repetition, only exiting it when it consumes all possible identifiers.
+> This will result in the last identifier outside of the repetition to never be able to match a valid fragment.
 
-Pattern meta-functions are syntactic sugar for a meta-function taking in tokens and applying the `#pattern_parse` meta-function to them.
+> _Todo_: In the future, it might be possible to add an explicit lookahead control to the pattern syntax.
 
-Meaning that
+## Mutli-stage method-functions [↵](#metaprogramming)
+
+Sometimes a meta-function must be ran in multiple stages to operate correctly.
+This is required, as both precedences and operators affect the resulting parsed order of fragments passed into the meta-function.
+
+This is controlled by 2 things:
+- a [`@meta_stages`] attribute
+- a `stage` value within the context
+
+The following stages are supported:
+- `precedence`: the meta-function generates a precedence
+- `operator`: the meta-function generates an operator set
+- `default`: main pass of the meta-function
+
+> _Example_
+> ```
+> @meta_stages(precedence, operator, default)
+> meta fn multi_stage(ast: meta.Ast) -> meta.Ast {
+>     match #ctx.stage {
+>         .Precedence => { ... },
+>         .Operator => { ... },
+>         // .Default
+>         _ => { ... },
+>     }
+> }
+> ```
+
+> _Implementation_: When any meta-function with a `precedence` or `operator` stage, the parser will parse the library in stages, only parsing what is necessary to evaluate these stages, only after this, will it parse the rest of the library
+
+## Meta methods [↵](#metaprogramming)
 ```
-meta fn foo$( $iden:iden ) {
-    ...
-}
-```
-can be thought of as
-```
-meta fn foo(tokens: []meta.Token) {
-    #meta.pattern_parse(tokens, $iden:iden);
-    ...
-}
+<meta-method> := { <attributes> }* 'meta' 'fn' <fn-receiver> <name> [ <deduced-parameters> ] [ <mata-signature> ] <block>
 ```
 
-> _Note_: This is syntactic sugar for a meta-function
+If is also possible to create [method]-like meta-functions, i.e. meta-function which are called on a receiver.
 
-### Parsed pattern meta-functions [↵](#meta-patterns-)
-```
-<meta-pattern-parse-signature> := '$' '(' <meta-pattern> ')'
-```
-A parsed pattern meta-function will automatically parse its input according to a given pattern.
+Unlike a meta-fuction, and like methods, a meta-method must be defined as an associated item to a type.
 
-This meta-function can be thought of as syntactic sugar for
-```
-meta fn name(tokens: meta.FragmentStream) {
-    #pattern_parse(tokens, <pattern>)
-}
-```
-Where `<pattern>` represents the pattern defined in the signature
+> _Example_
+> ```
+> struct Foo;
+> 
+> impl Foo {
+>     meta fn(&self) meta_method() -> i32 { 1 }
+> }
+> 
+> foo := Foo;
+> foo.#meta_method();
+> ```
 
-### Matched pattern meta-functions [↵](#meta-patterns-)
+## Meta invocation [↵](#metaprogramming)
 ```
-<meta-pattern-match-body> := '$' '{' { <meta-match-arm> }+ '}'
-<meta-match-arm> := '(' <meta-pattern> ')' '=>' <block-expr>
+<meta-invocation>        := '#' <meta-invoke-root> [ '(' <meta-args> ')' ]
+                          | '#' <meta-invoke-root> <expr> ';'
+                          | '#' <meta-invoke-root> ? any fragment other than 'expr' ?
+<meta-invocation-expr>   := '#' <meta-invoke-root> <meta-call-args>
+<meta-method-invocation> := <expr> [ '?' ] '.' '#' <ext-name> <meta-call-args>
+<meta-invoke-root>       := '#' <ext-name>
+                          | '#' <path>
+<meta-call-args>         := '(' <meta-args> ')'
+                          | '[' <meta-args> ']'
+                          | '{' <meta-args> '}'
+                          | <expr>
+<meta-args>              := <meta-arg> { ',' <meta-arg> }* [ ',' ]
+<meta-arg>               := <fn-arg>
+                          | ? { <toks> }*, except ',', unless handled by the pattern ?
 ```
-A matched pattern meta functions allows a meta-function to change its behavior based on the data passed into it.
 
-The meta-funciton is essentially syntactic sugar for
-```
-meta fn name(tokens: meta.FragmentStream) {
-    #pattern_match { tokens,
-        <pattern-0> => { ... },
-        <pattern-...> => { ... },
-        <pattern-n> => { ... },
-    }
-}
-```
-Where `<pattern-...>` represent the patterns defined in the meta body.
+A meta-invocation allows a meta-function to be called and if the resulting value is a code representation, parsed into the AST.
+
+The meta invocation comes in 3 forms:
+- a version using `{}`, which may be used anywhere code is allowed.
+- 2 versions using `()` and `[]` respecively, these can only be used in locations where an expressions is allowed.
+
+> _Implementation_: Since the compiler cannot determine the exact input of a meta-function during parsing, the parsing happens only later on in the process
+
+## Meta variables [↵](#metaprogramming)
+
+A meta variable is a special variant of a meta function which takes in either:
+- no parameters
+- a single fragment
+
+This also counts when these are the only non-optional parameters, any optional parameters will get there default value in this case.
+
+When a meta-variable has no parameters, it will just be replaced by the code generated by the metafunction.
+
+When a meta-variable is followed by a fragment as its sole parameter, it will take the fragment immediatally after it, and consume it as an argument.
+The variable and the subsequent fragment will then be replaced by the output of the meta-function.
+
+> _Note_: For the purpose of parsing a meta-variable with a subsequent expression, it will take in the entire expression following it, i.e. it has the lowest precedence
+
+> _Example_
+> ```
+> meta fn one() -> i32 { 1 }
+> 
+> #one;
+> // equivalent to
+> #one();
+> 
+> meta fn cat(expr: meta.Expression) {}
+> 
+> #cat 1 + 2;
+> // equivalent to
+> #cat(1 + 2);
+> 
+> meta fn with_opt(val: i32 = 2) {}
+> 
+> #with_opt;
+> // equivalent to
+> #with_opt();
+> ```
 
 ## Meta attributes [↵](#metaprogramming)
 ```
-<meta-attribute>          := 'attr' [ '(' <meta-attribute-role> ')' ] 'fn' <name> '(' <meta-attr-signature> ')'
-<meta-attribute-role>     := 'derive' '(' <path> { ',' <name> }* ')'
-<meta-attr-signature>     := <name> : ? AST type ? [ ',' <name> ':' ? Attribute argument map type ? ] [ ',' ]
-                           | <meta-pattern-signature> [ ',' <name> ':' ? Attribute argument map type ? ] [ ',' ]
+<meta-attribute> := { <attribute> }* 'attr' [ '(' <meta-attr-role> [ ',' <meta-hygiene-info> ] ')' ] <ext-name> <meta-signature> [ '->' <type> ] <block>
+<meta-attr-role> := 'full'
+                  | 'peer'
+                  | 'member'
+                  | 'member_attr'
+                  | 'accessor'
+                  | 'derive' '(' <path> { ',' <ext-name> [ <meta-signature> ] } ')'
 ```
 
-A meta-attribute is a variation on a meta-function and represents an attribute that is applied to a piece of code.
+A meta-attribute is variant on a meta-functions which is applied to code as an [attribute].
 
-Unlike regular meta-functions, meta-attributes have a strict input signature and return type.
-Meta-attributes must take either one of the following as input:
-- `meta.Fragment(..)`: This takes in a specific fragment and restrict what the attribute can be applied on
-- `meta.Ast`: This takes in any AST sub-tree this attribute is applied on
-In additon, a second argument can be passed of type: `meta.AttrArgs`, this contains a collection of key-value pairs of arguments passed to the attribute.
+Unlike meta-functions, a meta-attribute needs to follow a specific signature, as it is applied in a fixed set of locations.
+The signature must always take in one of the following types as its first parameter, with the label being ignored:
+- `meta.Ast`, the label will be ignored
+- any fragment supporting attributes, this will limit the attribute to any fragment of that kind.
+  If no meta-attribute with the same named exists that takes in a `meta.Ast`, multiple meta-attribute with the same name but different fragments types are allowed
 
-The role of meta-attribute is supplied directly after the `attr` keyword, and is one of the following:
-- `full`: consumes the full fragment to which it is attached, allowing the user to use it in any way they like. If the fragment is not returned, the original fragment will not be compiled.\
-  This is the default mode of a meta-attribute.
-- `peer`: adds code inside of the same scope in which the fragment it is applied to is located. The original fragment is unaffected.
-- `member`: adds code within the fragment. The fragment must be an item. The original fragment is unaffected.
-- `member_attr`: adds attributes to the any of the members of the item it is applied to. The original fragment is unaffected.
-- `accessor`: adds accessors to a field or property. When implemented on a field, it might automatically convert the field into a property, depending on the additional info that is provided.
-- `derive(Trait)`: used to add an implementation of the associated trait to the type. This function can be called by either using the meta-attribute directly, or when the trait is given to the [`derive` attribute]. The original fragment is unaffected.\
-  In addition, a derive attribute may also declare a set of helper macros it can use.
-  These are defined after the trait within the `derive` role.
-  They may take in any amount of additional info.
+This parameter will contain the fragment on which it is applied.
 
-> _Note_: When a meta-attribute mentions that the original fragment is unaffected, it means that all the original content of the fragment will be retained, it however does get additional code added to it.
+> _Example_
+> ```
+> attr fn foo(val: meta.fragment.Struct) {}
+> 
+> // duplicate name allowed, but only since it's a meta-attribute with a unique fragment type
+> attr fn foo(val: meta.fragment.Union) {}
+> 
+> // this meta-attribute will result in only a single variant being allowed of its role
+> // attr fn foo(val: meta.fragment.Ast) {}
+> ```
 
-Multiple meta-attributes are allowed to share a name, if they have distinct roles.
-For example, 2 functions with the same name, but one with a `member_attr` role and the other with a `accessor` role, could exist.
-This allows the same name to be used in different contexts, where the different role can be distinguished by its location.
+### Attribute roles [↵](#meta-attributes-)
 
-In cases where multiple attributes with the same name would operate on a fragment, both will be ran.
+Since meta-attribute can only be applied as an attribute, they may use an identifier with an extended name.
 
-> _Note_: `full` cannot be assigned together with any other role
+In addition, each attribute can declare which role of attribute it is.
+If no explicit role is provided, the attribute is not allowed to generate any resulting value.
+
+> _Example_: basic attribute (no role)
+> ```
+> attr fn print_name(ast.Ast) { ... }
+> 
+> @attr
+> struct Foo;
+> ```
+> assuming that the attribute prints the name during compilation, the code will be unchanged (with the exception of the attribute not being present anymore).
+> It will however output the following in the compiler's output
+> ```
+> Struct name: Foo
+> ```
 
 
-Some meta-attribute roles require some additional info to be provided:
-- `names`: provided the names of the generated fragments. Required for `peer`, `member`, and `accessor`.\
-  The value provided to this has to be one of the following, and also defines the name of the generated fragment:
-  - `named(...)`: the name will be specific name given to this value
-  - `overloaded`: the name will be the same as the fragment its applied on
-  - `prefixed(...)`: the name will be that of the fragment, but with the given value as a prefix
-  - `suffixed(...)`: the name will be that of the fragment, but with the given value as a suffix
-  - `arbitrary`: the name cannot be determined beforehand
-- `field_convert`: notifies whether a meta-function might convert a field into a property. Only allowed for `accessor`.
+The following attribute roles are available:
+- `full`: creates a fragment which will replace the entirety of the fragment the attribute is applied to, meaning the original fragment is consumed by the attribute.
+  Since a `full` attribute could cause for confusing results, it is possible to enable a compiler flag to output a warning on the expension of a `full` meta-attribute
+  > _Example_
+  > ```
+  > attr(full) fn full(val: meta.Ast) -> meta.Ast { ${ struct Abc; } }
+  > 
+  > // replaces the entirety of `struct A;` with the result of the attribute
+  > @full
+  > struct A;
+  > ```
+  > the attribute will replace the entirety of the fragment it is applied to, resulting in:
+  > ```
+  > struct Abc;
+  > ```
 
-The return type of these attributes depend on the type of meta-attribute being defined:
-- `member_attr`: returns an iterator of member names and attribute fragments to be added, i.e. `(String, meta.Fragment(meta.ast.Attribute))`
-- `accessor`: returns an iterator of property accessors to be added, i.e. `meta.Fragment(meta.PropertyAccessor)`
-- `derive`: return an impl field fragments, i.e. `meta.Fragment(meta.ast.ImplField)`
-- otherwise returns an AST sub-tree.
+- `peer`: creates a fragment which will be located within the same scope as the fragment is it applied on
+  > _Example_
+  > ```
+  > attr(peer) fn impl_outer(val: meta.Ast) -> meta.fragment.Implementation { 
+  >     ty := get_item_type(val);
+  >     #{
+  >         impl $ty {
+  >             fn peer_added_fn() { println("Function added by a peer attribute"); }
+  >         }
+  >     }
+  > }
+  > 
+  > @impl_outer
+  > struct Foo {}
+  > ```
+  > adds an implementation in the same scope as `Foo`, resulting in:
+  > ```
+  > struct Foo {}
+  > 
+  > impl Foo {
+  >     fn peer_added_fn() { println("Function added by a peer attribute"); }
+  > }
+  > ```
+
+- `attr`: creates one or more attributes which will be applied to the fragment the attribute is applied to
+  > _Example_
+  > ```
+  > attr(attr) fn foo(val: meta.Ast) -> [2]meta.fragment.Attribute {
+  >     [
+  >         #{ @bar },
+  >         #{ @baz },
+  >     ]
+  > }
+  > 
+  > @foo
+  > struct A;
+  > ```
+  > resulting in
+  > ```
+  > @bar
+  > @baz
+  > struct A;
+  > ```
+
+- `member`: creates a fragment which will be located within the current fragment, and serve as a member of it.
+  This requires the fragment it is applied on to support the fragment produces as a member.
+  > _Example_
+  > ```
+  > attr(member) fn impl_inner(val: meta.Ast) -> meta.fragment.ImplementationField { 
+  >     ty := get_item_type(val);
+  >     #{
+  >         impl {
+  >             fn peer_added_fn() { println("Function added by a peer attribute"); }
+  >         }
+  >     }
+  > }
+  > 
+  > @impl_inner
+  > struct Foo {}
+  > ```
+  > adds an implemention inside of `Foo`, resulting in:
+  > ```
+  > struct Foo {
+  >     impl {
+  >         fn peer_added_fn() { println("Function added by a peer attribute"); }
+  >     }
+  > }
+  > ```
+
+- `member_attr`: adds attribute on any member of the current fragment.
+  The meta-attribute decides which member the attribute will be applied to, by providing a [key-value pair] with the members it will be applied to.
+  The meta-attribute must return a value of type `meta.MemberAttributes`.
+  > _Example_
+  > ```
+  > attr(member_attr) fn add_attrib(val: meta.Ast) -> meta.MemberAttributes {
+  >     meta.MemberAttributes([
+  >         "bar" => #{ @foo_attr },
+  >         "quux" => #{ @quux_attr }
+  >     ])
+  > }
+  > 
+  > @add_attrib
+  > struct Foo {
+  >     bar: i32,
+  >     baz: i32,
+  >     quux: i32,
+  > }
+  > ```
+  > adds an attribute to a select set of members, resulting in:
+  > ```
+  > struct Foo {
+  >     @bar_attr
+  >     bar: i32,
+  >     baz: i32,
+  > 
+  >     @quux_attr
+  >     quux: i32,
+  > }
+  > ```
+
+- `accessor`: adds an accessor to the property on which the accessor is applied. This attribute may only take in a `meta.Property` fragment.
+  The attribute may also be provided on a field, which will convert the field to a [field property] with the given accessors.
+  The attribute must return a value of one of the following types:
+  - `meta.fragment.PropertyAccessor`
+  - `[N]meta.fragment.PropertyAccessor`
+  - `DynArr[meta.Fragment.PropertyAccessor]`
+  > _Example_
+  > ```
+  > attr(accessor) fn add_set(val: meta.fragment.Property) -> meta.fragment.PropertyAccessor {
+  >     #{
+  >         set { self.val = $0 }
+  >     }
+  > }
+  > 
+  > struct Foo {
+  >     val: i32,
+  > 
+  >     @add_set
+  >     prop Value: i32 => self.val,
+  > }
+  > ```
+  > , resulting in:
+  > ```
+  > struct Foo {
+  >     val: i32,
+  > 
+  >     prop Value: i32 {
+  >         get{ self.val },
+  >         set{ self.val = $0 }
+  >     }
+  > }
+  > ```
+
+- `derive(Trait)`: implements the trait passed to the [`derive`] attribute on the type of the fragment it is applied to.
+                   The name of that attribute cannot be applied directly, and must be done via the `derive` attribute.
+                   This attribute may only be defined for traits that are defined in the current module.
+
+  In addition, this trait may also define any helper traits which may be applied on any elements in the fragment it is applied to.
+  These helper traits must also define the signature which they must adhere to.
+
+  The attribute may only return a value of type `meta.fragment.ImplementationField`
+  > _Example_
+  > ```
+  > attr(derive(Foo), foo_helper(count: i32)) fn foo_derive(val: meta.Ast) -> meta.fragment.Implementation {
+  >     names_and_vals := get_members_with_helper();
+  >     #{
+  >         impl as Foo {
+  >             fn foo() {
+  >                 println("auto-generated derive");
+  >                 ${
+  >                     println("tagged_member: \{$names_and_vals.0} => \{$names_and_vals.1}")
+  >                 }*
+  >             }
+  >         }
+  >     }
+  > }
+  > 
+  > trait Foo {
+  >     fn foo();
+  > }
+  > 
+  > @derive(Foo)
+  > struct Bar {
+  >     a: i32,
+  > 
+  >     @foo_helper(1)
+  >     b: i32,
+  > }
+  > ```
+  > resulting in:
+  > ```
+  > struct Bar;
+  > 
+  > impl Bar as Foo {
+  >     fn foo() {
+  >         println("auto-generated derive");
+  >         pritnln("tagged_member: b => 1");
+  >     }
+  > }
+  > ```
+
+Unless specified otherwise, all attribute roles must return either a `meta.Ast` or fragment type, which is allowed in the same location as the original fragment.
+
+In addition to attributes allowing a common name when taking in different fragments types, an attributes name may also be shared with attribute that have a different role.
+However, both attributes must have compatible signatures.
+When applying an the attribute, this attribute will apply both roles to the fragment it is attached to.
+
+If the attributes have roles that need to be in distinct locations, only the roles that are applicable on that fragment will be applied.
+
+An attribute with the `full` roles cannot be declared alongside of the other roles for any given fragment.
+
+> _Example_
+> ```
+> attr(member_attr) fn foo(ast: meta.Ast) -> meta.fragment.Attribute { ... }
+> 
+> // This is allowed, as the attribute has a different role
+> attr(peer) fn foo(ast: meta.Ast) -> meta.Ast { ... }
+> 
+> // This is also allowed, but will only be applied when the attribute is applied on a member.
+> attr(member) fn foo(ast: meta.Ast)
+> 
+> // applied both the `member_attr` and `peer` attributes
+> @foo
+> struct Bar {
+>     // applies the `member` attribute
+>     @foo
+>     a: i32
+> }
+> ```
+
+Some roles have limitation to where they can be applied, these are the following:
+- `member` and `member_attr`: may only be applied on items which support members
+- `accessor`: may only be applied on fields or properties
+- `derive(...)`: may only be applied to items/types which can implement a trait
 
 > _Note to LSP developers_: It could be useful to provide the programmer a way of know if a mete-attribute is of kind `full` or `accessor` and let them know code might be changed.
 
-There are also some limitation to where a meta-attribute can be applied:
-- `member` and `member_attr`: Only allowed on fragments that may contain members.
-- `accessor`: Only allowed of fields and properties.
-- `derive(...)`: Only allowed on items
+### Attribute parameters [↵](#meta-attributes-)
 
-## Meta returns
+Since attribute may take in a set of nested values, each meta-attribute may take in a set of additional parameters.
 
-Meta functions may do not have a specific return value, and may therefore return values, types, tokens, ASTs, etc.
+This can be done in 2 ways:
+- via a second param with type `meta.AttrMetaArgs`
+- as list of parameters, with the expected types.
+  Unlike functions, while labelless parameter need to be in the same order as in the signature, any optional parameters may be provided in any order after the labelless parameters.d
 
-Returning a value can be useful when wanting to take in one representation, and outputting a value that has a different representation of it, without requiring a ton of function calls.
-Especially when you want to use functionality which is normally private to the library containing the type of the value being returned.
+> _Example_
+> ```
+> attr fn foo(ast: meta.Ast, args: meta.AttrMetaArgs) { ... }
+> 
+> // when taking in attribute meta arguments, any arguments may be provided.
+> @foo(bar, baz(a, b=2))
+> struct A;
+> 
+> 
+> attr bar(ast: meta.Ast, _ a: i32, _ b: f32, d: bool, c: &str) { ... }
+> 
+> @bar(1, 1.0, c = "hello", d = true)
+> ```
 
-For example, writing json directly in code and returning a json type:
+Nested values can be done by taking in parameters with a struct type, which has the [`@attr_param`] attribute.
+
+> _Example_
+> ```
+> @attr_param
+> struct Bar {
+>     a: i32,
+>     b: f32,
+> }
+> 
+> 
+> @attr_param
+> struct Baz {
+>     b: f32,
+>     c: bool
+> }
+> 
+> attr fn foo(ast: meta.Ast, bar: Bar, baz: Baz) {}
+> 
+> @foo(bar(a = 1, b = 2), baz(b = 3, c = true))
+> struct Struct;
+> ```
+
+Name only arguments are also supported, this is done by passing a value with one of the following types:
+- `()`: this requires the name to be present for the attribute to be applied
+- `meta.NameOnlyAttrMeta`: this will indicate whether a name is present, but has no associated value. It has one of 2 possible states:
+  - `.None` or `null`: the name has not been provided
+  - `.Present`: the name has been provided
+- `meta.OptAttrMeta[T]`: this indicates a an argument in 3 possible states:
+  - `.None` or `null`, the value has not been provided
+  - `.NameOnly`: only the name of the value has been provided
+  - `.Some(_)`: A value of type `T` has also been provided
+
+> _Example_
+> ```
+> attr fn foo(
+>     ast: meta.Ast,
+>     name_only: meta.NameOnlyAttrMeta,
+>     other_name_only: meta.NameOnlyAttrMeta,
+>     a: meta.OptAttrMeta[i32],
+>     b: meta.OptAttrMeta[i32],
+>     c: meta.OptAttrMeta[i32]
+> ) {
+>     assert(name_only == .Present);
+>     assert(other_name_only == .None);
+> 
+>     assert(a == null);
+>     assert(b == .NameOnly);
+>     assert(c == .Some(2));
+> }
+> 
+> @foo(name_only, b, c = 2)
+> struct Struct;
+> ```
+
+## Meta alias [↵](#metaprogramming)
 ```
-let json_obj = #json {
-    "foo" = "5",
-    "bar" = {
-        "baz" = "true",
-        "quux" = [ "a", "b", "c" ]
-    }
-}
-```
-This can be used to return a `JsonObject` type, and allows private items of the type to be used, as the value is returned, not the code producing the value.
-
-> _Note_: This may also return a value of type `type`
-
-### Special meta return types
-
-In addition to returning values of a given type, there are special return types with additional meanings, these are the following:
-- `meta.TokenStream`: returns a sequence of tokens, which will than be parsed by the compiler within the surrounding code.
-- `meta.Fragment(...)`: returns a specific fragment type.
-- `meta.Ast`: returns an AST sub-tree.
-- `(T, meta.HygieneInfo)`, where `T` is any of the above types: return one of the above types, but additionally provided data with hygiene rules to prevent things like shadowing of variables.
-
-## Meta-aliases
-```
-<meta-alias> := ( 'meta' | 'attr' [ '(' <meta-attribute-role> ')' ]) 'fn' <name> [ <deduced-parameters> ] <meta-signature> '=' <macro-invocation> ';'
+<meta-alias> := ( 'meta' | ( 'attr' [ '(' <meta-attr-role> ')' ] ) ) 'fn' <ext-name> <meta-signature> '=' ( <meta-invocation> | ( <meta-invocation-expr> ';' ) )
 ```
 
-Meta aliases allow simple way of re-using macros with different inputs, while still achieving the same output.
-They can alias both regular meta-functions and meta-attributes.
+Meta-functions/aliases may be aliased by assigning instead of requiring it to have a return type and body, it instead gets assigned a meta-invocation.
+The alias will take over the return type, the attribute role, and any hygiene info from the aliasee.
 
-## Meta-function execution
+Aliases are not support for meta-methods.
 
-Meta-functions are executed from top to bottom, and outer to inner, on the fragments they are attached to.
-If 2 meta-functions are in independent context, there is not guarantee to which will be implemented first.
+## Meta hygiene [↵](#metaprogramming)
 
-With the exception of a `full` meta-attribute, the generated code will be added at the end of the current code.
-While for non-member fragments, this has no impact, this is important to know when
+Meta-hygiene defines how a meta-function/attribute will interact with surrounding code.
+A meta-function/attribute is defined as hygienic when the resulting fragment does not interact with any code that is declared outside of the fragment.
 
-Therefore, the user can generally **not** rely on having info of any code that is generated by another meta-function.
-However, meta-attribute can be forced to wait for another meta-attribute to have been evaluated before or after another meta-attribute.
-This is done by wrapping the attribute inside of a `@meta_order` attribute
+Therefore, it is only possible for a meta-function to be _fully hygienic_ when it does not take in, or output any fragments, but instead just plain values (i.e. it does not interact with any code external to the meta-invocation).
 
-Whenever meta-functions are executed, they are ran in a sandboxed way, they can therefore not:
-- access files on the system
-- accces any network
-- share state between runs
-- have any other side-effects
+> _Example_
+> ```
+> // `foo` is fully hygienic, as it does not rely on any externally declared values, nor returns a fragment which may add variables or items into the external code.
+> meta fn foo(val: i32) -> type { ... }
+> ```
 
-## Meta invocations [↵](#metaprogramming)
+The majority of meta-functions/attributes will at best be only partially hygienic, and a worst be fully unhygienic.
+
+The compiler can be provided with additional info about the hygiene of a meta-function/attribute in 2 ways:
+- by explicitly providing the compiler with hygiene info from the macro, by providing the context by providing a filled in `meta.HygieneInfo` stucture
+- by providing hygiene info in the declaration of the meta-function/attribute
+
+The meta-function/attribute is said to be _unhygienic_ when no hygiene info is provided.
+
+The compiler may inform the user about any possible shadowing which may happen as a result of bad meta-hygiene usign the `meta_shadow` lint.
+
+To ensure any variables defined within the resulting fragments which may conflict or shadow any external variables of items, the context provides the `make_unique_name()` helper functions.
+Which will produce a fully unique names for any variables within the expanded meta-function/attribute.
+In addition, the `make_unique_name(name: "")` variant allows the name to include a more descriptive name to aid debugging.
+
+### Hygiene info at the declaration site [↵](#meta-hygiene-)
+```
+<meta-hygiene-info>          := <meta-hygiene-info-elem> { ',' <meta-hygiene-info-elem> }* [ ',' ]
+<meta-hygiene-info-elem>     := <meta-hygiene-names>
+                              | <meta-hygiene-field-convert>
+<meta-hygiene-names>         := 'named' '(' [ <fn-receiver> ] <ext-name> [ <fn-signature> ] { ',' [ <fn-receiver> ] <ext-name> [ <fn-signature> ] }* ')'
+                              | 'overloaded'
+                              | 'prefixed' '(' <ext-name> { ',' <ext-name> } ')'
+                              | 'sufficed' '(' <ext-name> { ',' <ext-name> } ')'
+                              | 'arbitrary'
+<meta-hygiene-field-convert> := 'field_convert'
 ```
 
-<meta-invoke> := '#' <simple-path> [ <meta-invocation> ]
-<meta-args>   := '(' <tokens> ')'
-               | '{' <tokens> '}'
-               | '[' <tokens> ']'
-```
+Hygiene info may be provided at the declaration site within either the `meta` or `attr` specifiers.
 
-A meta invocation is used to invoke a meta variable or function.
+The following hygiene info can be added:
+- `names`: provides a list of names that the attribute will produce when it is being applied, the attribute may only produce elements with the names declared, but is not required to produce all.
+  This is provided for either a meta-function, or a meta-attribute with the following roles: `peer`, `member`, and `full`.
+  The following values can be used:
+  - `named(...)`: provides a list of known names of the elements added by the attribute
+  - `overloaded`: an element will be added with the same name as the fragment it is applied to
+  - `prefixed(...)`: provides a list of names which will be prefixed by the name of the fragment it is applied to
+  - `suffixed(...)`: provides a list of names which will be suffixed by the name of the fragment it is applied to
+  - `arbitrary`: elements will be added with names that are only known during the application of the attribute, this allows for elements to be generated without knowing their names ahead of time.
+- `field_convert`: indicates the accessor attribute may convert a field into a [field property]. This is provided for a meta-attribute with the `accessor` role.
 
-A meta variable is invoked by just calling the meta variable without any arguments.
+These roles are mainly meant to provide the compiler with info ahead of time, and to allow additional control when it comes to meta-hygiene.
 
-Each invocation will be replaced by the code produced by the meta-function.
+## Evaluating meta-functions/attributes [↵](#metaprogramming)
 
-A meta invocation can be located anywhere in code, but requires the surrounding delimiters to match, as a meta-function may not introduce unmatched delimiters.
+### Evaluation order [↵](#evaluating-meta-functionsattributes-)
 
-A meta-invocation may appear in the following situations:
-- [expressions]
-- [statements]
-- [patterns]
-- [types]
-- [items]
+Meta-functions do not have a fixed order in which they are evaluated.
+On the other hand, meta-attributes are generally applied in a top-down, outer to inner order to the fragment they are attached to.
 
-## Meta hygiene
+> _Example_: Meta-attribute evaluation order
+> ```
+> @peer_attr // (1)
+> @add_member_attrs // (2)
+> struct Foo {
+>     @member_attr // (3)
+>     // @added_member_attr (4)
+>     a: i32
+> }
+> ```
 
-The hygiene of a macro depends on what it returns.
+Any attribute generated by another attribute will be places at the end of the current applied attribute.
 
-If a macro returns a value, it is _hygienic_, as it does not impact the surrounding code, as not variables are declared that are visible outside of the macro invocation.
+It is however possible to specify the order of execution using the [`@meta_order`] attribute.
 
-If a macro return any of the special types, without any `HygieneInfo`, then they are,  _unhygienic_, meaning that they may introduce new variables of items within code.
-These variables can shadow pre-declared variables, whenever this happens, a `meta_shadow` lint will be produced.
-By default, this lint is set as `@!warn(meta_shadow)`, and can be disabled using the `@allow(meta_shadow)` attribute.
+> _Example_
+> ```
+> attr fn foo() { ... }
+> attr fn bar() { ... }
+> 
+> @meta_order(before(foo), after(bar))
+> attr fn baz() { ... }
+> 
+> @foo
+> @bar
+> @baz
+> struct A;
+> ```
+> the evaluation order, as defined by `baz`, will become
+> ```
+> @baz
+> @bar
+> @foo
+> struct A;
+> ```
 
-In addition to any of hte special types, if `Hygiene` info is provided, the meta-functin is _partially hygienic_`.
-Only the data specified in the hygiene info will be visible outside of the macro invocation, which may still cause some values to be shadowed.
-In this case, the same `meta_shadow` lint will be used.
+### Limitations [↵](#evaluating-meta-functionsattributes-)
 
-To ensure that variable names generated within not to conflict with any name that could be passed into the generated code, the `make_unique_name()` function can be used.
-This is accessible from the context provided into the meta function.
+Whenever a meta-function/attribute is evaluated, it is done within a sandbox, which provides the following limitations:
+- access to the file system is restricted to the root folder of the project
+- no access to the network
+- no shared state between different invocations (with the exception of multi-stage meta-functions)
+
+In addition, for any other system interactions, e.g. retrieving a time-stamp or RNG source, it is limited to the functionality provided by the context.
 
 
 
-[attribute]:          ./attributes.md
-[`derive` attribute]: ./attributes.md#derive-
-[block]:              ./expressions/block-expressions.md
-[expression]:         ./expressions.md
-[expressions]:        ./expressions.md
-[path]:               ./identifiers-paths.md#paths-
-[item]:               ./items.md
-[items]:              ./items.md
-[token]:              ./lexical-structure.md
-[name]:               ./lexical-structure/names.md
-[literals]:           ./literals.md
-[pattern]:            ./patterns.md
-[patterns]:           ./patterns.md
-[statement]:          ./statements.md
-[statements]:         ./statements.md
-[type]:               ./type-system/types.md
-[types]:              ./type-system/types.md
-[visibility]:         ./visibility.md
+[attribute]:        ./attributes.md
+[`derive`]:         ./attributes/derive.md
+[expression]:       ./expressions.md
+[block]:            ./expressions/block-expressions.md
+[key-value pair]:   ./expressions/key-value-expressions.md
+[identifier]:       ./identifiers-paths.md#identifiers-
+[path]:             ./identifiers-paths.md#paths-
+[implicit context]: ./implicit-context.md
+[item]:             ./items.md
+[method]:           ./items/functions.md#methods-
+[field property]:   ./items/properties.md#field-property-
+[lit]:              ./literals.md
+[lexical token]:    ./lexical-structure.md
+[pattern]:          ./patterns.md
+[statement]:        ./statements.md
+[type]:             ./type-system/types.md
+[1-ary tuple]:      ./type-system/types/composite-types/tuple-types.md
+[vis]:              ./visibility.md
+
+[`#parse_pattern`]: ./metaprogramming/meta-utilities.md "Todo: fix up link"
+[`#match_pattern`]: ./metaprogramming/meta-utilities.md "Todo: fix up link"
+[`@attr_param`]:    #meta-attributes- "Todo: fix up link"
+[`@meta_order`]:    #evaluation-order- "Todo: fix up link"
+[`@meta_stages`]: #mutli-stage-method-functions- "Todo: Fix up link"
