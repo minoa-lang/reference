@@ -10,10 +10,13 @@
                    | <path-expr>
                    | <unit-expr>
                    | <underscore-expr>
+                   | <unsafe-expr>
                    | <operator-expr>
                    | <type-cast-expr>
                    | <type-check-expr>
                    | <construct-expr>
+                   | <key-value-expr>
+                   | <list-comprehension-expr>
                    | <index-expr>
                    | <tuple-index-expr>
                    | <call-expr>
