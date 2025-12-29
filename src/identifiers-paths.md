@@ -137,13 +137,13 @@ It can only be used inside of the any supportred meta function.
 
 When used in a [use item], it is equivalent to: `$package:$lib`.
 
-#### `<...>.` [↵](#path-start-)
+#### `(:...:).` [↵](#path-start-)
 
-The `<type>.` path start indicates a path that is relative to a specific type.
+The `(:type:).` path start indicates a path that is relative to a specific type.
 This syntax allows unnamed types to be used as the start of a path where they would normally not be able to be used.
 
 ```
-<^T>.foo(); // Calls `^T`'s foo
+(:^T:).foo(); // Calls `^T`'s foo
 ```
 
 #### `Self.` [↵](#path-start-)
@@ -332,7 +332,7 @@ mod no { // :.no
 [extended name]:      ./lexical-structure/names.md#extended-names-
 [metafunctions]:      ./metaprogramming.md
 [meta function]:      ./metaprogramming.md
-[meta block]:         ./metaprogramming/meta-utilities.md#meta-blocks-
+[meta blocks]:        ./metaprogramming/meta-utilities.md#meta-blocks-
 [composite types]:    ./type-system/types/composite-types.md
 [type inferred]:      ./type-system/types/inferred-types.md
 [`Self` type]:        ./type-system/types/self-type.md
