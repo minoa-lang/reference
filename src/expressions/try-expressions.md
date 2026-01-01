@@ -5,7 +5,7 @@
 
 The `try` expressions has 3 different variants:
 - `try`: will check the returned value, if a value is an erroneous value, it will re-[`throw`] the error
-- `try?`: the propagating try, if a value is erroneous, it will be the evualuated value of the expression
+- `try?`: the propagating try, if a value is erroneous, it will be the evaluated value of the expression
 - `try!`: the unwrapping try, if a value is an erroneous value, it will panic
 
 The expressions work differently depending on whether they are applied to a simple or chained expression.
@@ -18,15 +18,18 @@ try expression | corresponding expression | operation
 `try? expr`    | `expr`                   | propagates the value of the inner expression
 `try! expr`    | `expr!`                  | [`!` or unwrap operator]
 
-However, when applied to a chained expression, its will insert additional check on any expression which contains a type that supports erroneous values
+However, when applied to a chained expression, its will insert additional check on any expression which contains a type that supports erroneous values:
 
-try expression | operation on every sub-expression returning an erroneous type
----------------|-------------------------------------------------------------------
-`try expr`     | applies the [`?` or try operator]
-`try? expr`    | applies optional chaining, coercing to the common erroneous value
-`try! expr`    | applies the [`!` or unwrap operator]
+- `try expr`: applies the [`?` or try operator]
+- `try? expr`: applies optional chaining, coercing to the common erroneous value
+- `try! expr`: applies the [`!` or unwrap operator]
 
 These are done, unless the expression using them indicates the values expect the erroneous value supporting type
+
+The try expressions additionally have an associated trait for each variant:
+- `try expr`: [`Try`]
+- `try? expr`: [`TryChain`]
+- `try! expr`: [`TryUnwrap`]
 
 > _Example_
 > ```
@@ -132,6 +135,11 @@ Additionally, when the `try` sub-expression were to return a multiple different 
 
 [`throw`]:                 ./throw-expressions.md
 [`catch` expression]:      ./catch-expressions.md
-[`?` or try operator]:     ../operators/special-operators.md#try-operator-
+[`?` or try operator]:     ../operators/special-operators.md#try-
 [`!` or unwrap operator]:  ../operators/special-operators.md#unwrapping-try-
 [optional type]:           ../type-system/types/abstract-types/optional-types.md
+
+
+[`Try`]:       #try-expressions "Todo: link to docs"
+[`TryChain`]:  #try-expressions "Todo: link to docs"
+[`TryUnwrap`]: #try-expressions "Todo: link to docs"
