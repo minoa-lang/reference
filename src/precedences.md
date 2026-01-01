@@ -1,110 +1,148 @@
 # Precedences
 
-Precedence defines the order in which expressions are evaluated, and is used to decide the order when multiple.
-It is used to define which expressions have a higher priority than others, and those expression will be applied first.
-Parentheses can be used to explictl change the order, as they have the highest precedence.
+Precedences are used to define how operator expressions are evaluated relative to each other.
+These recedences can only be used for [infix operators].
 
-Another feature of precendence is the associativity.
-When multiple expressions are chained, associativity defines which side has the higher 'precedence', i.e. how expressions are grouped together.
+Each precedence controls 2 different things:
+- the order in which operators are evaluated
+- when chained, which side should be evaluated first
 
-For example, the expression `a + b + c` can be written as either `(a + b) + c` or `a + (b + c)`.
-While this doesn't always have an impact on the result generated, it should be assumed that the order can have an impact.
-Each order could not only result in an actual difference in value, but even in type the expression will result, or in worse cases, fail to compile the underlying code.
+The order is defined in terms of higher and lower precedences, i.e. before and after which other operators it should be evaluated.
 
-For limitation on the naming, check the [precedence scoping and use](#153-precedence-scoping-and-use) section.
+The side to evaluate first on the other hand, is defined by the associativity of the precedence.
 
-## Built-in precedences [↵](#precedences)
-                       
-The built-in precendences can be found in the table below, with the strongest at the to, and the weakest as the botton:
+> _Example_
+> 
+> The expression `a + b + c` could be written as either `(a + b) + c` or `a + (b + c)`.
+> 
+> While this might not always impact the eventual result, certain operation are not communitative, which would result in different result depending on the order that is used.
+> In addition, the order can also have an impact on the type, where changing the order might result in a commpilation error.
 
-expressions                    | Associativity | Name          | After 
--------------------------------|---------------|---------------|--------
-Parenthesized expressions      |               |               |
-Path and literal expressions   |               |               |
-Method call                    |               |               |
-Field access                   |               |               |
-Funtion calls                  |               |               |
-Indexing                       |               |               |
-Unary postfix operators        |               |               |
-Unary prefix operators         |               |               |
-Highest user-defined (no expr) |               | `Highest`     | n/a
-Type cast/check                | left to right | `Typed`       | `Highest`
-Power/Repetition               | left to rigth | `PowRep`      | `Typed`
-Multiply/divide/remainder      | left to right | `MulDivRem`   | `PowRep`
-Addition/Subtraction           | left to right | `AddSub`      | `MulDivRem`
-Shift and rotate               | left to right | `ShiftRot`    | `AddSub`
-Bitwise AND operations         | left to right | `BitAnd`      | `ShiftRot`
-Bitwise XOR operations         | left to right | `BitXor`      | `BitAnd`
-Bitwise OR operations          | left to right | `BitOr `      | `BitXor`
-Or-else/err-coalesce           | left to right | `Select`      | `BitOr`
-Comparison                     | left to right | `Compare`     | `Select`
-Lazy boolean AND operators     | left to right | `LazyAnd`     | `Compare`
-Lazy boolean OR operators      | left to right | `LazyOr`      | `LazyAnd`
-range expression               | left to right | `Range`       | `LazyOr`
-pipe operators                 | left to right | `Pipe`        | `Range`
-Lowest user-defined (no expr)  |               | `Lowest`      | `Pipe`
-Assingment expression          | right to left |
+> _Note_: This section only specifies precedences when it comes to operators, all other expressions's precedences are defined within the [expression's section].
 
-## User-defined precedence [↵](#precedences)
-
+## Precedence items [↵](#precedences)
 ```
-<precedence-item> := 'precedence' <name> '{' { <precedence-member> }* '}'
-<precedence-member> := 'higher_than' ':' <name>
-                     | 'lower_than' ':' <name>
-                     | 'associativity' ':' ( 'left' | 'right` | 'none' )
+<precedence>        := 'precedence' <name> '{' ? { <precedence-member> }* , each element must be unique ? '}'
+<precedence-member> := `higher_than` ':' <name> { ',' <name> }* ';'
+                     | `lower_than` ':' <name> { ',' <name> }* ';'
+                     | `associativity ':' ( 'left' | 'right' | 'none' ) ';'
 ```
 
-A precedence item can be used to define a custom precedence of user-defined operators.
+Precedence items are used to define a new precedence.
 
-### Precendence order [↵](#user-defined-precedence-)
+### Precedence order [↵](#precedence-items-)
 
-The item can decide which precedences must come before and after the new precedence, this can be defined by the `higher_than` and `lower_than` fields and refer to the name of other precendences.
-The value given to `higher_than` must have a lower precedence than the item given to `lower_than`, and may not be the same.
+Each item can define its order relative to other precedences using the `higher_than` and `lower_than` members.
+These 2 members are given a list of other precedences to which they must be relative to.
 
-It is allowed to have precedences form a non-linear precedence relation, but if 2 operators of different precendences that don't have a linear relation are used, they must be explicitly parenthesized, or this will result in a compilation error.
+All precedences passed to `higher_than` must be of a lowr precedence than those defined in `lower_than`.
+Additionally, they must not result in a cyclical dependency on each other.
 
-For example, if the precedences would result in the following relation
+If no explicit `higher_than` or `lower_than` is provided, and no other precedence links to it, these values will be assigned as `Lowest` and `Highest` repectively.
+
+It is possible for 2 precedences to not have a linear relation to each other, meaning that one does not link to the other in the resulting precedence graph (ignoring `Lowest` and `Highest`).
+In this case, when both are used within an expression, parentheses must be used to explicitly define the order in which they need to be resolved.
+
+> _Example_
+> using the following relation between precedences
+> ```
+> Highest
+>  / \
+> A   |
+> |   C
+> B   |
+>  \ /
+> Lowest
+> ```
+> The operators with precedence `A` or `B` cannot be used with one of precedence `C`, unless explicit parentheses are used.
+> 
+> Meaning that `v0 A v1 B v1` is allowed, but both `v0 A v1 C v1` or `v0 C v1 B v1` are not.
+> 
+> These need be be explicitly written as either `(v0 A v1) C v1` or `v0 A (v1 C v1)`, and `(v0 C v1) B v1`  or `v0 C (v1 B v1)`
+
+### Associativity [↵](#precedence-items-)
+
+The associativity of the precedence is define using the `associativity` member.
+
+This member may be one of the following values:
+- `left`: the operators will be evaluated from left to right
+- `right`: the operators will be evaluated from right to left
+- `none`: the operators need explicit parentheses when chained
+
+In no explicit associativity is set, it will default to `none`.
+
+> _Example_
+> 
+> Assuming the expression `a op b op c`, the expression will result in the following depending on the associativity:
+> - `left`: `(a op b) op c`
+> - `right`: `a op (b op c)`
+> - `none`: requires explicit parentheses or will produce an error
+
+## Core precedences [↵](#precedences)
+
+The core precedences are a set of precedences which are provided by the `core` library, which form the basis of all other user-defined precedences.
+
+Below is a table of the provided core precedences, their properties, and the operators they apply to
+
+precedence  | lower than  | associativity | associated operators
+------------|-------------|---------------|------------------------------------------------------------------------
+`Highest`   | n/a         | n/a           | none, this indicates the highest precedence in the precedence hierachy
+`PowRep`    | `Highest`   | left to right | `**` ([power/repetition])
+`MulDivRem` | `PowRep`    | left to right | `*` ([multiply]), `/` ([division]), and `%` ([remainder])
+`AddSub`    | `MulDivRem` | left to right | `+` ([addition]) and `-` ([subtraction])
+`ShiftRot`  | `AddSub`    | left to right | `<<` & `>>` ([bitwise shift]), and `<<*` & `>>*` ([bitwise rotate])
+`BitAnd`    | `ShiftRot`  | left to right | `&` ([bitwise AND])
+`BitXor`    | `BitAnd`    | left to right | `~` ([bitwise XOR])
+`BitOr`     | `BitXor`    | left to right | `\|` ([bitwise OR])
+`Select`    | `BitOr`     | left to right | `?:` ([or-else]) and `??` ([catch])
+`Compare`   | `Select`    | left to right | `==`, `!=`, etc ([comparison])
+`Contains`  | `Compare`   | left to rifht | `in` and `!in` ([contains])
+`LogicAnd`  | `Compare`   | left to right | `&&` ([logical AND])
+`LogicOr`   | `LazyAnd`   | left to right | `\|\|` ([logical OR])
+`Range`     | `LogicOr`   | left to right | `..` & `..=` ([range])
+`Pipe`      | `Range`     | left to right | `<\|` & `\|>` ([pipe])
+`Lowest`    | `Pipe`      | n/a           | none, this indicates the lowest precedence in the precedence hierachy
+
+## Precedence scoping and use
 ```
-  A
- / \
-B   |
-|   D
-C   |
- \ /
-  E
-```
-operators of precendence `B` or `C` may not be used together with those of `D` without explicit parentheses, meaning that `v0 B v1 C v2` and `v0 B (v1 D v2)` are allowed, but not `v0 B v1 D v2` (where `B`, `C`, and `D` represent operators with those precendeces).
-
-### Associativity [↵](#user-defined-precedence-)
-
-The associativity can also be defined, and can be set to `left`, `right`, or `none`.
-This defines the resulting order of the expressions using these.
-By default the value is set to `none`.
-
-Associativity only comes into play when both operators have the same precedence, if they differ, they follow the rules defined above.
-
-If the associativity is `left`, the expression will have a left-to-right order of evaluation.
-For example, the expression `a + b + c` is represented as `(a + b) + c`.
-
-If the associativity is `right`, the expression will have a right-to-left order of evaluation.
-For example, if `+` would have had `right` associativity, the expression `a + b + c` is represented as `a + (b + c)`.
-
-The `none` associativity requires explicit parentheses to be used.
-For example, if `+` would have had `none` associativity, the expressions `(a + b) + c` and `a + (b + c)` would be valid, but `a + b + c` would be ambiguous and needs explicit parentheses.
-
-Unary expression ignore associativity and go solely based on their precedence order.
-
-## Precedence scoping and use [↵](#precedences)
-
-```
-<precedence-use> := 'precedence' 'use' <use-root> [ '.' '{' <name> { ',' <name> }* [ <name> ] '}' ] ';'
+<precedence-use>  := 'precedence' 'use' <use-root> [ <precedence-path> ] ';' 
+<precedence-path> := '.' <name>
+                   | '.' { <name> { ',' <name> }* [ ',' ] }
 ```
 
-Precedences have some special scoping rules, as they are not scoped relative to the module that contains them, but they are exclusivly at the top level of a library.
-This means that a library may not contain 2 precedences with the same name, no matter if they are in a nested module or not.
+Predences have different scoping rules to other symbols, as they are not relative to any module or item, but are only relative to the [main module].
+Meaning that all precedences are located into a single namespace.
 
-Precedences also are not imported from other files using a standard use declaration, but are instead imported by a special 'precedence use'.
-Precedence uses declare a use root defining where the precedences are located, followed by an optional list of specific precedences to include.
-Unlike precedence items which can be defined within a nested module, precedence uses are required to be within the main file of the library, i.e. in either the `main.mn` or `lib.mn` root, and must not be nested within a module in tht file.
+This also requires precedences to be imported using a special variant of the [use item].
+This variant may either import all precedences from a given library, or specify individual precedences to import.
+This variant in only allowed to be located within the [main module], and may not be located in any other item.
 
-When a precedence is imported, its name may not conflict with those of any other precedence declared within the library or imported from an external library.
+This is done to ensure the use of a given precedence stays consistent across an entire library.
+
+The `core` precedences are imported by default via the `core`'s prelude.
+
+
+
+[expression's section]: ./expressions.md#expression-precedence--operator-evaluation-
+[use item]:             ./items/use.md
+[power/repetition]:     ./operators/core-operators.md#arithmetic-
+[multiply]:             ./operators/core-operators.md#arithmetic-
+[division]:             ./operators/core-operators.md#arithmetic-
+[remainder]:            ./operators/core-operators.md#arithmetic- 
+[addition]:             ./operators/core-operators.md#arithmetic-
+[subtraction]:          ./operators/core-operators.md#arithmetic-
+[bitwise AND]:          ./operators/core-operators.md#bitwise-
+[bitwise XOR]:          ./operators/core-operators.md#bitwise-
+[bitwise OR]:           ./operators/core-operators.md#bitwise-
+[bitwise shift]:        ./operators/core-operators.md#bitwise-
+[bitwise rotate]:       ./operators/core-operators.md#bitwise-
+[or-else]:              ./operators/core-operators.md#or-else-
+[catch]:                ./operators/special-operators.md#catch-
+[comparison]:           ./operators/special-operators.md#comparison-
+[contains]:             ./operators/special-operators.md#contains-
+[logical AND]:          ./operators/special-operators.md#logical-and-
+[logical OR]:           ./operators/special-operators.md#logical-or-
+[range]:                ./operators/core-operators.md#core-operators
+[pipe]:                 ./operators/core-operators.md#core-operators
+[infix operators]:      ./operators.md#operator-kinds-
+[main module]:          ./package-structure.md#main-module-

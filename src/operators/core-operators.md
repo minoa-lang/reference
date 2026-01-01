@@ -1,275 +1,317 @@
 # Core operators
-
-Core operators have no special meaning, but are defined within the core library and have a use for builtin types
-
-## Comparison operators [↵](#core-operators)
-
 ```
-<comparison-op> := <eq-op> | <iden-op> | <ord-op> | <total-ord-op>
-<eq-op>        := '==' | '!='
-<iden-op>      := '===' | '!=='
-<ord-op>       := '<' | '<=' | '>' | '>=' | '<=>?'
-<total-ord-op> := '<=>'
-```
-
-Comparison operators are infix operators.
-Parentheses are required to chain comparisons, e.g. `a == b == c` is invalid, but `(a == b) == c` is valid (when the type are compatible).
-
-Unlike most infix operators, the traits to overload these operators are used more generally to indicate when a type may be compared and will likely be assumed to define actual comparisons by functions that use these are trait bounds.
-Code can then use these assupmptions when using the operators.
-
-Comparison operator are [`by_ref`]
-Unlike most binary operators, these operators implicitly take a shared borrow of their operands, evaluating them as place expressions.
-
-The following operators and their respective trait functions are
-
-Operator | Meaning                          | Trait method
----------|----------------------------------|----------------------
-`==`     | Equal                            | `Equality::eq`
-`!=`†    | Not equal                        | `Equality::ne`
-`===`    | Identical                        | `Identity::identical`
-`!==`‡   | Not Identical                    | N/A
-`<`*     | Less than                        | `Ord::lt`
-`<=`*    | Less than or equal to            | `Ord::le`
-`>`*     | Greater than                     | `Ord::gt`
-`>=`*    | Greater than or equal to         | `Ord::ge`
-`<?`*    | Partial less than                | `Ord::partial_lt`
-`<=?`*   | Partial less than or equal to    | `Ord::partial_le`
-`>?`*    | Partial greater than             | `Ord::partial_gt`
-`>=?`*   | Partial greater than or equal to | `Ord::partial_ge`
-`<=>?`   | Partial order comparison         | `Ord::partial_cmp`
-`<`*     | Total less than                  | `TotalOrd::lt`
-`<=`*    | Total less than or equal to      | `TotalOrd::le`
-`>`*     | Total greater than               | `TotalOrd::gt`
-`>=`*    | Total greater than or equal to   | `TotalOrd::ge`
-`<=>`    | Total order comparison           | `TotalOrd::cmp` 
-
-† By default implemented in terms of `!(a == b)`
-
-‡ Always implemented as `!(a === b)`
-
-\* By default implemented based on `partial_cmp`
-
-\** By default implemented based on `cmp`
-
-The operators have the `Compare` precedence.
-
-Below is an explenation of these traits:
-
-> _Note_: This might be replaces with a simpler explanation, and have its definition moved into the `core` and `std` library
-
-#### `Equality`
-
-`Equality` is a trait that defines what types can be compared to each other, i.e. which are equal to each other.
-
-This trait defines the `==` and `!=` operators.
-
-Values implementing this can be compared to each other.
-
-Equality does not neccesarily imply that a value is equal to itself, for example `f32::NAN != f32::NAN`
-
-Equality has the following properties:
-- reflexitivy, i.e. `x == x` is always true
-- symmetry or communitativity, i.e. `a == b` implies `b == a`
-- transitive, i.e. `a == b` and `b == c` implies `a == c`
-
-There is no guarantee that a value is equal to itself.
-
-When 2 values are compared, they might still have distinct bitpattern underlying the 
-
-#### `Identity`
-
-`Identity` is a trait is similar to `Equality`, but with some additional guarantees:
-
-This trait defines the `===` and `!==` operators.
-
-values implementing this can be used to check if 2 values are identical.
-
-While identity technically has the same properties to equality, it has 1 major distinction that makes this point a bit moot.
-Since identity is used to check if 2 values are exactly equal, there can only 1 value that is equal to a value, i.e. the value itself.
-
-> _Note_: The identity operator does **not** imply that 2 values have the same memory location
-
-> _Note_: While most implementation are a memcmp, some types, such as smart pointers, might change this definition to "pointing to the same address"
-
-> _Note_: If `Identity` is implemented and `Equality` is not implemented (either derived or explicitly implemented), an implementation based on `Identity` will be added
-
-#### `Ord`
-
-`Ord` is a trait that defines what types can be ordered relative to each other, to be specific, a partial order.
-
-This trait defines the following operators, which are split up in 3 categories:
-- `<`, `<=`, `>` `>=`: comparison operators
-- `<?`, `<=?`, `>?` `>=?`: partial-comparisom operator, similar to comparison operators, but may also indicate an 'undefined' comparison
-- `<=>?`: Partial ordering, the main operator, of which the other operators, by default, derive their implementation from
-
-`Ord` has  `Equality` as a super-trait.
-
-Values implementing this be compared to each other and have an order between them.
-
-Ordering has the following properties:
-- communitativity, i.e. `a < b` implies `a > b`
-- transitive, i.e. `a < b` and `b < c` implies `a < c`
-
-#### `TotalOrd`
-
-`TotalOrd` is a trait that defines what types can be ordered relative to each other using total ordering.
-
-`TotalOrd` has `Equality` as a super-trait.
-
-Total ordering defined the following operators:
-- `<!`, `<=!`, `>!`, `>=!`: total-comparison operator
-- `<=>`: total-ordering operator, the main operator, of which the other operators, by default, derive their implementation from
-
-An example of how total ordering and partial ordering differ, `-0.0 == 0.0` in partial ordering, but `-0.0 < 0.0` in total ordering.
-
-> _Todo_: Add 'identical' operators, i.e. === and !==, useful for thing like references without implicitly dereferning the parameter before hand
-
-> _Note_: If `TotalOrd` is implemented and `Ord` is not implemented (either derived or explicitly implemented), an implementation based on `TotalOrd` will be added
-
-## Range operators [↵](#core-operators)
-
-```
-<range-op> := '..' | '..='
+<core-ops> := <arith-ops>
+            | <arith-assign-ops>
+            | <bitwise-ops>
+            | <bitwise-assign-ops>
+            | <concat-op>
+            | <repetition-op>
+            | <range-ops>
+            | <or-else-op>
+            | <pipe-ops>
 ```
 
-Range operators can be prefix, infix, or postfix.
+Core operators consist of all operators which are provided by the `core` library, but are not [special operators].
+Meaning that core operators act like any operator which can be defined by a developers, except that they are always available and don't need to be explicitly imported, as they are part of the `core` prelude.
 
-The range operators, like their name implies are used to generate a range between 2 values.
-
-The following operators, their respecitive trait methods, resultant types, and ranges are
-
-Operator     | Syntax        | Trait Method                     | Type               | Range
--------------|---------------|----------------------------------|--------------------|--------------------
-Infix `..`   | `start..end`  | `Range::range`                   | `Range`            | start <= x < end
-Postfix `..` | `start..`     | `RangeFrom::range_from`          | `RangeFrom`        | start <= x
-Prefix `..`  | `..end`       | `RangeTo::range_to`              | `RangeTo`          | x <= end
-Infix `..=`  | `start..=end` | `RangeInclusive::range_inc`      | `RangeInclusive`   | start <= x <= end
-Prefix `..=` | `..=end`      | `RangeToInclusive::range_to_inc` | `RangeToInclusive` | x <= end
-
-## Contains operator [↵](#core-operators)
-
+## Arithmetic [↵](#core-operators)
 ```
-<contains-op> := 'in' | '!in'
+<arith-ops>        := '+' | '+%' | '+|' | '+?'
+                    | '-' | '-%' | '-|' | '-?'
+                    | '*' | '*%' | '*|' | '*?'
+                    | '/' | '/?'
+                    | '%' | '%%'
+<arith-assign-ops> := '+=' | '+%=' | '+|=' | '+?='
+                    | '-=' | '-%=' | '-|=' | '-?='
+                    | '*=' | '*%=' | '*|=' | '*?='
+                    | '/=' | '/?='
+                    | '%=' | '%%='
 ```
 
-Contains operators are infix operators.p
-A contains operator can be used to check if a value is contained within another value, e.g. if a value is contained by a range or collection.
-There is both a positive and negated version.
+Arithmetic operators are prefix and infix operators, which can apply an arithmetic operation on numeric values.
 
-This operator differs from other operators, by the fact that it can be a combination of a non-alphanumeric and alphanumeric characters.
+Below is a table of prefix arithmetic operators
 
-The following operators and their respective trait functons are:
+operator | trait         | meaning                                             | example
+---------|---------------|-----------------------------------------------------|-------------------------------
+`+`      | `Pos`         | passed the input value back to the output           | `+1 == 1`
+`-`      | `Neg`         | produces the negative version of a given value      | `-1 + 1 == 0` or `-(-1) == 1`
 
-Operator | Meaning          | Trait method
----------|------------------|--------------------------
-`in`     | Contains         | `Contains::contains`
-`!in`†   | Does not contain | `Contains::not_contains`
+The `-` operator will panic if an under/overflow were to occur, for this reason, the `-%` provides a wrapping version, which will wrap the value if this were to happen.
+This operator has the associated trait `WrappedNeg`.
 
-† By default implemented in terms of `!(a in b)`
+> _Example_
+> ```
+> a: u8 = -128;
+> 
+> // will panic
+> b := -a;
+> 
+> // will wrap, returning a value of 1
+> b := -%a;
+> ```
 
-The operator has the `Contains` precedence.
 
-## Or-else operator [↵](#core-operators)
+And below is table of infix arithmetic operators:
 
+operator | trait      | precedence  | meaning                                                                                                            | example
+---------|------------|-------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------
+`+`      | `Add`      | `AddSub`    | Adds the left- and right-hand operands                                                                             | `1 + 2 == 3`
+`-`      | `Sub`      | `AddSub`    | Subtracts the right-hand operand from the left-hand operand                                                        | `3 - 2 == 1`
+`*`      | `Mul`      | `MulDivRem` | Multiplies the left- and right-hand operand                                                                        | `2 * 3 == 6`
+`/`      | `Div`      | `MulDivRem` | Divides the left-hand operand by the right-hand operand                                                            | `6 / 2 == 3`
+`%`      | `Rem`      | `MulDivRem` | Calculate the remainder of dividing the left-hand operand by the right-hand operand (same sign as dividend)        | `7 % 3 == 1`, `-7 % 3 == -1`, `7 % -3 == 1`, and `-7 % -3 == -1`
+`%%`     | `RemFloor` | `MulDivRem` | Calculate the floored remainder of dividing the left-hand operand by the right-hand operand (same sign as divisor) | `7 %% 3 == 1`, `-7 %% 3 == 1`, `7 %% -3 == -1`, and `-7 %% -3 == -1`
+`**`     | `Repeat`   | `MulDivRem` | Exponentiates the left-hand operand to the right hand operand (common operator with the [repetition] operator)     | `3 ** 4 == 81`
+
+All operations can be applied to numeric types, but follow their own semantics:
+- [integer] types follow their semantics, meaning that any operation may result in an under/overflow, in addition to:
+  - division by, or taking the remainder with an divisor of `0` will result in a panic
+- [floating point] types follow the rules defined by IEEE-754, meaning they may result in special values instead of panic, depending on the current [float settings] and [safety checks]
+
+> _Note_: `uptr` and `iptr` do not support all these operators, see the section below for more info
+
+Similarly to a `-` prefix expression, these expressions will panic if an under/overflow were to occur, for this reason, there are 3 possible variants an operator may have.
+These are:
+- `Wrapped`: will wrap the value if an under/overflow were to occur
+- `Saturate`: Will saturate the value of its minimum or maximum value if an under/overflow were to occur, respectively
+- `Try`: returns an [optional] value, which will be `null` if an under/overflow were to occur, or when another panic were to occur normally
+
+These operators are limited to operations on integers, where under/overflow may occur and are not defined.
+
+The below table provides the variants for each operator:
+
+base op | wrapped op | wrapped example         | saturate op | saturate example           | try op | try example
+--------|------------|-------------------------|-------------|----------------------------|--------|-------------------------
+`+`     | `+%`       | `254u8 +% 7u8 == 5u8`   | `+\|`       | `254u8 +\| 7u8 == 255u8`   | `+?`   | `254u8 +? 7u8 == null`
+`-`     | `-%`       | `-126i8 -% 7i8 == -5u8` | `-\|`       | `-126i8 -\| 7i8 == -128i8` | `-?`   | `-126i8 -? 7i8 == null`
+`*`     | `*%`       | `64u8 *% 5u8 == 65u8`   | `*\|`       | `64u8 *\| 5u8 == 255u8`    | `*?`   | `64u8 * 4u8 == null`
+`/`     | n/a        | n/a                     | n/a         | n/a                        | `/?`   | `42 /? 0 == null`
+
+
+Additionally, a set of assign operators exists as a variant on the infix operators.
+The differences between these are:
+- operators are suffixed with a `=`, i.e. infix `+` becomes assign `+=`
+- trait is suffixed with `Assign`, i.e. infix `Add` becomes assign `AddAssign`
+- function is suffixed with `_assign`, i.e. infix `add` becomes assign `add_assign`
+
+### Pointer arithmetic [↵](#arithmetic-)
+
+Pointer arithmetic (including `uptr` and `iptr`) supports only a limited set of operators, although they use the same semantics as integer types
+
+These are define in the following table:
+
+operator | lhs type | rhs type                    | result type | meaning                       | example
+---------|----------|-----------------------------|-------------|-------------------------------|-----------------------------------------------------------------
+`+`      | `^T`     | `iptr`, `usize`, or `isize` | `^T`        | pointer offset                | `a_ptr + ab_dist == b_ptr`
+`+?`     | `^T`     | `iptr`, `usize`, or `isize` | `^T`        | try pointer offset            | `a_ptr +? max_offset == null`
+`+`      | `uptr`   | `iptr`                      | `uptr`      | `uptr` offset                 | `a_uptr + ab_dist == b_uptr`
+`+?`     | `uptr`   | `iptr`                      | `uptr`      | try `uptr` offset             | `a_uptr +? max_offset == null`
+`-`      | `^T`     | `iptr`                      | `^T`        | pointer offset                | `b_ptr - ab_dist == a_ptr`
+`-`      | `uptr`   | `uptr`                      | `iptr`      | `uptr` difference             | `a_uptr - b_uptr = ab_dist`
+`*`      | `iptr`   | `usize` or `isize`          | `iptr`      | offset multiplication         | `ab_dist * 3 == ac_dist`
+`*?`     | `iptr`   | `usize` or `isize`          | `iptr`      | try offset multiplication     | `ab_dist * usize.MAX == null`
+`/`      | `iptr`   | `usize` or `isize`          | `iptr`      | offset division               | `ac_dist / 3 == ab_dist`
+`/?`     | `iptr`   | `usize` or `isize`          | `iptr`      | try offset division           | `ac_dist /? 5 == null`, where `ac_dist` is not a multiple of 5
+
+where `^T` represents any pointer type
+
+Offset division may only happen when the offset is a multiple of the divisor.
+
+## Bitwise [↵](#core-operators)
 ```
-<or-else-op> := '?:'
+<bitwise-op>        := '|' | '!|'
+                     | '&' | '!&' | '&!'
+                     | '~' | '!~'
+                     | '<<' | '<<|'
+                     | '>>' | '>>-' | '>>+'
+                     | '*<<' | '>>*'
+<bitwise-assign-op> := '|=' | '!|='
+                     | '&=' | '!&=' | '&!='
+                     | '~=' | '!~='
+                     | '<<=' | '<<|='
+                     | '>>=' | '>>-=' | '>>+='
+                     | '*<<=' | '>>*='
 ```
 
-Or-else operators an infix operators.
+Binary operators are prefix and infix operators, which can apply an bit-wise operation on [integer] and [boolean] values.
 
-The or-else works based on the value of the left-hand operand.
-If the left-hand operand evaluates to a 'thruthy' value, the left hand operand is returned.
-Otherwise if it evaluates to a non-'truthy' value, the right operand is evaluated.
+These operators include 1 prefix operator: the NOT (`!`) operator.
+It work on both integer and boolean types, with a slight difference in behavior:
+- boolean: it negates the boolean, meaning that only the lower bit is affected, all other bits stay the same
+- integer: it negates all bits within the value
 
-'Truthy' can imply more than explicitly `false` or 'none' operations, i.e. `0` is not a 'thruthy' value. 
+> _Example_
+> ```
+> // boolean
+> assert(!false == true);
+> assert(!true == false);
+> 
+> // integer
+> assert(!0b01010101u8 == 0b10101010u8);
+> ```
 
-The associated trait is `OrElse`
+The associated trait for the NOT operator is [`Not`].
 
-The operator has the `Select` precedence.
 
-## Pipe operators [↵](#core-operators)
+Below is a table of all infix operators provided, these work on integer values
 
+operator | trait         | function       | precedence | meaning                                                          | default impl    | example
+---------|---------------|----------------|------------|------------------------------------------------------------------|-----------------|----------------------------------------------------------------------------
+`\|`     | `BinOr`       | `bin_or`       | `BinOr`    | bitwise OR                                                       | n/a             | `0b0101 | 0b0011 == 0b0111`
+`!\|`    | `BinOr`       | `bin_nor`      | `BinOr`    | bitwise NOR                                                      | `!(lhs \| rhs)` | `0b0101 !| 0b0011 == 0b1101`
+`&`      | `BinAnd`      | `bin_and`      | `BinAnd`   | bitwise AND                                                      | n/a             | `0b0101 & 0b0011 == 0b0001`
+`!&`     | `BinAnd`      | `bin_nand`     | `BinAnd`   | bitwise NAND                                                     | `!(lhs & rhs)`  | `0b0101 !& 0b0011 == 0b1110`
+`&!`     | `BinAnd`      | `bin_mask_out` | `BinAnd`   | Bitwise masking out of provided bits                             | `lhs & !rhs`    | `0b0101 &! 0b0011 == 0b0100`
+`~`      | `BinXor`      | `bin_xor`      | `BinXor`   | bitwise XOR                                                      | n/a             | `0b0101 ~ 0b0011 == 0b0110`
+`!~`     | `BinXor`      | `bin_xnor`     | `BinXOr`   | bitwise XNOR                                                     | `!(lhs ~ rhs)`  | `0b0101 !~ 0b0011 == 0b1001`
+`<<`     | `Shl`         | `shl`          | `ShiftRot` | bitwise shift left                                               | n/a             | `0b101 << 3 == 0b101000`
+`<<|`    | `SaturateShl` | `saturate_shl` | `ShiftRot` | saturating shift left (max value if 1 is shifted past first bit) | n/a             | `0b101u8 <<| 5 == 0b11111111u8`
+`>>`     | `Shr`         | `shr`          | `ShiftRot` | bitwise shift right (shra when signed, shrl when unsigned)       | n/a             | `0b10101010i8 >> 3 == 0b11110101i8` or `0b10101010u8 >> 3 == 0b00010101u8`
+`>>-`    | `Shra`        | `shra`         | `ShiftRot` | bitwise arithmetic shift left (shifts in sign bit)               | n/a             | `0b10101010u8 >>- 3 == 0b11110101u8`
+`>>+`    | `Shrl`        | `shrl`         | `ShiftRot` | bitwise logical shift left (shifts in 0)                         | n/a             | `0b10101010u8 >>+ 3 == 0b00010101u8`
+`*<<`    | `Rotl`        | `rotl`         | `ShiftRot` | bitwise rotate left                                              | n/a             | `0b11001010u8 *<< 3 == 0b01010110u8`
+`>>*`    | `Rotr`        | `rotr`         | `ShiftRot` | bitwise rotate right                                             | n/a             | `0b11001010u8 >>* 3 == 0b01011001u8`
+
+Some special semantics for operators are:
+- shift and rotate instructions will shift by only the lower bits of the provided value, i.e `0b01010101 << 12` is equivalent to `0b01010101 << 4`, as it will do `0b01010101 << (12 & 0x7)`
+
+> _Todo_: Check whether semantics are correct
+
+Additionally, a set of assign operators exists as a variant on the infix operators.
+The differences between these are:
+- operators are suffixed with a `=`, i.e. infix `+` becomes assign `+=`
+- trait is suffixed with `Assign`, i.e. infix `Add` becomes assign `AddAssign`
+- function is suffixed with `_assign`, i.e. infix `add` becomes assign `add_assign`
+
+
+[`Not`]: #bitwise- "Todo: link to docs"
+
+
+## Concatination [↵](#core-operators)
 ```
-<pipe-op> := '|>' | '<|'
+<concat-op> := '++' | `++=`
 ```
 
-Pipe operators are infix operators.
+The concatination operator is an infix operator, which concatinates 2 values.
 
-Pipe operators are used to pipe a value into another expresion, this can be done in 2 ways:
-- chaining: where the left-hand operator is moved int the right-hand operand
-- comsuming: the results of the right-hand operand is moved into the left-hand operand
+The core only has 2 compile-time implemenations of this, these are:
+- concatinating 2 string slices/arrays
+- concatinating 2 arrays
 
-When it comes to the operands of the chaining an consuming operator, they follow their respective `chain` and `consume` operator modifier's behaviors.
+The associated trait is `Concat`.
 
-The associated traits for this operators are:
-- `|>`: `PipeChain`
-- `<|`: `PipeConsume`
+> _Example_
+> ```
+> assert("hello " ++ "world!" == "Hello world!");
+> assert([1, 2, 3] ++ [4, 5, 6] == [1, 2, 3, 4, 5, 6]);
+> ```
 
-The operator has the `Pipe` precedence.
+Additionally, an assign operator exists as a variant of the infix operator.
+This uses the `ConcatAssign` trait.
 
-## Other operators [↵](#core-operators)
+This is not supported by the provided implementation listed above, as it may produce a different type.
 
-The following section contains a list of other prefix, postfix and infix operators that weren't mentioned in their own individual sections
+## Repetition [↵](#core-operators)
+```
+<repetition-op> := '**' | `**=`
+```
 
-Prefix operators:
+The repetition operator is an infix operator, which allows for the repetition of a value.
+Additionally, this is also used to do [exponentiation] of numeric values.
 
-Operator | type                  | Trait | precedence | meaning                                        | Example
----------|-----------------------|-------|------------|------------------------------------------------|----------------------------------------
-`+`      | numeric               | `Pos` | `Unary`    | unit operators, return the same value as given | `+a == a`
-`-`      | signed/floating point | `Neg` | `Unary`    | negation                                       | `-a != -1 if a == 1` and `-(-a) == a`
-`-%`     | signed/floating point | `Neg` | `Unary`    | wrapping negation                              | `-%128 == -128`
-`!`      | bool                  | `Not` | `Unary`    | Logical not                                    | `!false == true`
-`!`      | integer               | `Not` | `Unary`    | Bitwise not                                    | `!0 == usize::MAX` 
+The core only has 2 compile-time implemenations of this, these are:
+- repeat a string slice/array `N` times
+- repeat an array `N` times
+
+The associated trait is `Repeat`
+
+_Example_
+```
+assert("hi! " ** 3 == "hi! hi! hi! ");
+assert([1, 2] ** 3 == [1, 2, 1, 2, 1, 2]);
+```
+
+Additionally, an assign operator exists as a variant of the infix operator.
+This uses the `RepeatAssign` trait.
+
+This is not supported by the provided implementation listed above, as it may produce a different type.
+
+## Range [↵](#core-operators)
+```
+<range-ops> := '..' | '..='
+```
+
+Range operators are a set of pre-, post- and infix operators, which are used to create a range from a lower and/or upper bound.
+
+operator     | syntax        | Trait                | type               | range (all values of x for)
+-------------|---------------|----------------------|--------------------|-----------------------------
+prefix `..`  | `..end`       | `OpRangeTo`          | `RangeTo`          | `x < end`
+infix `..`   | `start..end`  | `OpRange`            | `Range`            | `start <= x < end`
+postfix `..` | `start..`     | `OpRangeFrom`        | `RangeFrom`        | `start <= x`
+prefix `..=` | `..=end`      | `OpRangeInclusive`   | `RangeInclusive`   | `start <= x <= end`
+infix `..=`  | `start..=end` | `OpRangeToInclusive` | `RangeToInclusive` | `x <= end`
+
+> _Note_: The operator traits are prefixed with `Op`, to ensure distinct names between them and the corresponding range types when imported within the same scope.
+
+These infix operators have a precedence of `Range`.
+
+## Or-else [↵](#core-operators)
+```
+<or-else-op> := '?:' | '?='
+```
+
+The or-else operator, also known as the elvis operator, is an infix operator, which can select a value based on wether the left-hand operand has a 'thruthy' value.
+
+Unlike the [catch operator], this operator does not work on erroneous types, but on any type which may indicate a 'thruthy' value.
+
+A 'truthy' value is a type, which may represent a `true` or `false` value, e.g. `0` is a 'truthy' value for numeric types.
+Which values represent a `true` of `false` value is dependent on its implementation.
+
+> _Example_
+> ```
+> a := 0;
+> 
+> assert(a ?: 1 == 1);
+> ```
+
+The operator is a `lazy` operator.
+
+The associated trait is `OrElse`.
+
+The operator has a precedence of `Select`.
+
+Additionally, an assign operator exists as a variant of the infix operator
+This will assign a value to the assignee, only if it does not have a 'truthy' value.
+
+This uses the `OrElseAssign` trait.
+
+## Pipe [↵](#core-operators)
+```
+<pipe-ops> := '|>' | '<|'
+```
+
+The pipe opeartors are infix operators, which allow values to be piped from one operation into another.
+
+The pipe operator consist of 2 slightly different operators, as defined in the table below.
+
+operator | trait         | op kind
+---------|---------------|-----------
+`\|>`    | `PipeChain`   | `chain`
+`<\|`    | `PipeConsume` | `consume`
+
+Both pipe operators are the pipe equivalent version of their operator kind.
+
+These operators have a precedence of `Pipe`.
 
 
-Infix/binary operators:
-
-Operator | type                  | Trait          | precedence  | meaning                                                         | Example
----------|-----------------------|----------------|-------------|-----------------------------------------------------------------|----------------------------------------
-`+`      | numeric               | `Add`          | `AddSub`    | Addition, panics on overflow (in debug)                         | `1 + 2 == 3`
-`+%`     | integer               | `WrappedAdd`   | `AddSub`    | Addition, wraps on overflow                                     | `u32.MAX +% 1 == 0`
-`+\|`    | integer               | `SaturateAdd`  | `AddSub`    | Addition, saturates on overflow                                 | `u32.MAX +\| 1 == u8.MAX`
-`+?`     | integer               | `TryAdd`       | `AddSub`    | Addition, returns Some, or None on overflow                     | `1 +? 2 == Some(3)` or `u32.MAX +? 1 == None`
-`-`      | numeric               | `Sub`          | `AddSub`    | Subtraction, panics on underflow (in debug)                     | `3 - 2 == 1`
-`-%`     | integer               | `WrappedSub`   | `AddSub`    | Subtraction, wraps on underflow                                 | `0 -% 1 == u32.MAX`
-`-\|`    | integer               | `SaturateSub`  | `AddSub`    | Subtraction, saturates on underflow                             | `0 -\| 1 == 0`
-`-?`     | integer               | `TrySub`       | `AddSub`    | Subtraction, returns Some, or None on overflow                  | `1 -? 2 == Some(3)` or `0:u32 -? 1 == None`
-`*`      | integer               | `Mul`          | `MulDivRem` | Multiplication, panics on overflow (in debug)                   | `2 * 3 == 6`
-`*`      | floating point        | `Mul`          | `MulDivRem` | Multiplication, according IEEE-754-2008                         | `1.5 * 2.0 == 3.0`
-`*%`     | integer               | `WrappedMul`   | `MulDivRem` | Multiplication, wraps on overflow                               | `128'u8 *% 3 == 128'u8`
-`*\|`    | integer               | `SaturateMul`  | `MulDivRem` | Multiplication, saturates on overflow                           | `128'u8 *\| 3 == 255'u8`
-`*?`     | integer               | `TryMul`       | `MulDivRem `| Multiplication, returns Some, or None on overflow               | `64'u8 *? 2 == Some(128)` or `128'u8 *? 2 == None`
-`/`      | integer               | `Div`          | `MulDivRem` | Division, panics on divide by 0 (traps in non-debug)            | `6 / 2 == 3`
-`/`      | floating point        | `Div`          | `MulDivRem` | Division, according IEEE-754-2008                               | `3.0 / 1.5 == 2.0`
-`/?`     | integer               | `TryDiv`       | `MulDivRem `| Multiplication, returns Some, or None on divide by 0            | `128'u8 /? 2 == Some(2)` or `128'u8 /? 0 == None`
-`%`      | numeric               | `Rem`          | `MulDivRem` | Remainder*, panics on divide by 0 (traps in non-debug)          | `5 % 2 == 2` or `7.0 % 1.5 == 1.0`
-`%%`     | numeric               | `RemFloored`   | `MulDivRem` | Floored remainder**, panics on divide by 0 (traps in non-debug) | `5 % 2 == 2` or `7.0 % 1.5 == 1.0`
-`\|`     | integer               | `Or`           | `BitOr`     | Bitwise or                                                      | `0x1010  \| 0x1100 == 0x1110`
-`!\|`    | integer               | `Nor`          | `BitOr`     | Bitwise not-or                                                  | `0x1010 !\| 0x1100 == 0x0001`
-`&`      | integer               | `And`          | `BitAnd`    | Bitwise and                                                     | `0x1010  & 0x1100 == 0x1000`
-`!&`     | integer               | `Nand`         | `BitAnd`    | Bitwise not-and                                                 | `0x1010 !& 0x1100 == 0x0111`
-`&!`     | integer               | `Mask`         | `BitAnd`    | Bitwise masking (and if inverse of `b`)                         | `0x1010 &! 0x1100 == 0x0010`
-`~`      | integer               | `Xor`          | `BitXor`    | Bitwise xor                                                     | `0x1010  ~ 0x1100 == 0x0110`
-`!~`     | integer               | `Xnor`         | `BitXor`    | Bitwise not-xor                                                 | `0x1010 !~ 0x1100 == 0x1001`
-`<<`     | integer               | `Shl`          | `ShiftRot`  | Bit-shift left                                                  | `0x101 << 3 == 0x101000`
-`<<\|`   | integer               | `SaturateShl`  | `ShiftRot`  | Bit-shift left, saturates if 1 bit is shifted out               | `0x1'u8 <<\| 8 == 0xFF`
-`>>`     | signed                | `Shr`          | `ShiftRot`  | Bit-shift right (implicitly arithmetic shift)                   | `0x10..01  >> 3 == 0x11110..00`
-`>>`     | unsigned              | `Shr`          | `ShiftRot`  | Bit-shift right (implicitly logical shift)                      | `0x10..01  >> 3 == 0x00010..00`
-`>>-`    | integer               | `Shra`         | `ShiftRot`  | Explicit arithmetic bit-shift right                             | `0x10..01 >>- 3 == 0x11110..00`
-`>>+`    | integer               | `Shrl`         | `ShiftRot`  | Explicit logical bit-shift right                                | `0x10..01 >>+ 3 == 0x00010..00`
-`*<<`    | integer               | `Rotl`         | `ShiftRot`  | Bitwise rotate left                                             | `0x1010..1010 *<< 3 == 0x0..1010101`
-`>>*`    | integer               | `Rotr`         | `ShiftRot`  | Bitwise rotate right                                            | `0x1010..1010 >>* 3 == 0x0101010..1`
-`++`     | str/array             | `Concat`       | `AddSub`    | Concatinate 2 arrays (sizes must be known at compile time)      | `[1, 2, 3, 4] ++ [5, 6, 7, 8] == [1, 2, 3, 4, 5, 6, 7, 8]` or `"hello" ++ " " ++ "world" == "hello world"`
-`**`     | numeric               | `Repetition`   | `MulDivRem` | Raise number to the power of `n`                                | `3 ** 4 = 81`
-`**`     | str/array <-> integer | `Repetition`   | `MulDivRem` | Repeat an array N times (size must be known at compile time)    | `[1, 2] ** 3 == [1, 2, 1, 2, 1, 2]` or `"ab" ** 3 == "ababab"`
-
-\* Uses truncating division, meaning `remainder = dividend % divisor` will return a value with the same sign as the dividend.
-
-** Uses floored division, maning `remainder = dividend % divisor` will return a value with the same sign as the divisor.
-
-> _Note_ When reading the above table in plain text, any occurance of `\|` is actually just `|`, but requires the `\` as it is otherwise interpreted as a the next value in the table
-
-
-
-[`by_ref`]: ../operators.md#by_ref-
+[exponentiation]:    #arithmetic-
+[repetition]:        #repetition-
+[float settings]:    ../attributes.md "Todo: fix up link"
+[safety checks]:     ../attributes.md "Todo: fix up link"
+[special operators]: ./special-operators.md
+[catch operator]:    ./special-operators.md#catch-
+[optional]:          ../type-system/types/abstract-types/optional-types.md
+[boolean]:           ../type-system/types/builtin-types/boolean-types.md
+[integer]:           ../type-system/types/builtin-types/integer-types.md
+[floating point]:    ../type-system/types/builtin-types/floating-point-types.md

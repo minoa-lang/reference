@@ -218,7 +218,7 @@ A list of weak keywords can be found below (in alphabetic order):
 [hygiene info]:                    ../metaprogramming.md#hygiene-info-at-the-declaration-site-
 [operator]:                        ../operators.md#operator-items-
 [literal operator]:                ../operators/literal-operators.md
-[raw pointer value]:               ../operators/special-operators.md#raw-borrow-operators-
+[raw pointer value]:               ../operators/special-operators.md#pointer-borrowing-
 [precedence]:                      ../precedences.md#user-defined-precedence-
 [sparse array type]:               ../type-system/types/array-types.md
 [bitfield]:                        ../type-system/types/bitfield-types.md

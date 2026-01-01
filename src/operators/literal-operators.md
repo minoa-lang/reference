@@ -1,78 +1,99 @@
 # Literal operators
 
-Literal operators are special pseudo-operator that work on literals, and not values.
+Literal operators are special operators which are directly applied at the end of a literal.
+It allows a literal to be given an explicit type, in addition to producing more complex values or types.
 
-When calling an operator label on a literal, there may be no space on either side of the `:`.
+The literal operator is written as an identifier which directly attaches to a type.
 
-### Literal operator item [↵](#literal-operators-)
+> _Example_
+> ```
+> // the type of `a` is f32
+> a := 1.0f32;
+> 
+> // creates a runtime string
+> text := "Hello world!"s;
+> ```
+
+## Literal operator declaration
+
 ```
-<literal-operator-item> := 'literal' 'trait' <name> '(' <type> ')' '->' <type> ';'
+<literal-fn-item> := { <attribute> }* [ <vis> ] [ 'const' [ '!' ] ] 'literal' 'fn' <name> '(' <name> ':' <type> ')' '->' 'LiteralError' '!' <type> <block>
+
+<literal-item> := { <attribute> }* [ <vis> ] 'literal' <name> '[' <type> ']' '{' { <struct-elements> } '}'
 ```
 
-A literal operator items, as their name implies, declares a new literal operator which can be used to convert a literal to a given value.
+A literal items is an item which may only appear within a [module].
 
-These are simpler to declare than an operator set, as they contain fixed functionality and only require the types it operators on to be declared.
-It is declared as a special trait using the `literal` weak keyword, which is then proceeded by the name of the trait defining the literal operator.
+The literal item defines a literal operator with the same name as the item.
+Additionally, it declares the type of a literal to which the operator can be applied to.
 
-Between the parentheses, the type of the literal is passed, these are limited to:
-- `core:.DecLiteral`
-- `core:.DecFloatLiteral`
-- `core:.BinLiteral`
-- `core:.OctLiteral`
-- `core:.HexLiteral`
-- `core:.HexFloatLiteral`
-- `core:.CharLiteral`
-- `core:.StringLiteral`
+The types on which the literal operator can be applied to must be one of the following `core` types:
+- `DecLiteral`
+- `DecFloatLiteral`
+- `BinLiteral`
+- `OctLiteral`
+- `HexLiteral`
+- `HexFloatLiteral`
+- `CharLiteral`
+- `StringLiteral`
+- `InterpStringLiteral`
 
-Corresponding to the type of the available literals.
-Finally, the return type of the literal operator is defined.
+Each type corresponds to a given literal, as defined in the [literal section].
 
-Using this info, the literal operator will internally create the following trait that is associated with this item:
+The item itself must contain 2 function, which adhere to the following template
 ```
-pub trait <name>(<lit-type>) {
-    use core:.{Result, CompileError};
+literal <name>[<lit-type>] {
+    const fn check(<name> : <lit-type>) -> LiteralError!() { ... }
 
-    const fn check(lit: <lit-type>) -> Result((), CompileError);
-    fn lit_op(lit: <lit-type>) -> <ret-type>;
+    fn evaluate(<name> : <lit-type>) -> <ret-type> { ... }
 }
 ```
+where:
+- `<name>` is any identifiers, the names may differ between the 3 locations
+- `<lit-type>` is a supported literal type
+- `<ret-type>` is the type produced by the literal operator
 
-Where `<name>`, `<lit-type>`, and `<ret-type>` are replaced by the value they are respective by.
+The functionality of the required functions is the following:
+- `check`: Checks wether the literal contains a valid value for the type it is returning, emitting an error if the literal is invalid for the current representation.
+           This is always run at compile time.
+- `evaluate`: produces the literal value from the literal, by default at runtime.
+              This may also be declared as `const`, which will run the function at compile-time and creates a constant.
 
-The `check` function is a compile-time function that will run for every use of the literal operator and is required to report any invalid data within the literal.
+## Core literal operators
 
-The `lit_op` function is used to convert the literal type to the return type and is expected to convert the type without any issue.
-If this function is run at compile time, it is allowed to panic.
+Core literal operators are any literal operators that are provided by the `core` library.
 
-### Builtin literal operators [↵](#literal-operators)
+literal operator | literal type    | resulting type | Info                                   | restrictions
+-----------------|-----------------|----------------|----------------------------------------|--------------
+`i8`             | Integral        | i8             | 8-bit signed integer literal           | n/a
+`i16`            | Integral        | i16            | 16-bit signed integer literal          | n/a
+`i32`            | Integral        | i32            | 16-bit signed integer literal          | n/a
+`i64`            | Integral        | i64            | 16-bit signed integer literal          | n/a
+`i128`           | Integral        | i128           | 128-bit signed integer literal         | n/a
+`isize`          | Integral        | isize          | machine-sized signed integer literal   | n/a
+`u8`             | Integral        | u8             | 8-bit unsigned integer literal         | n/a
+`u16`            | Integral        | u16            | 16-bit unsigned integer literal        | n/a
+`u32`            | Integral        | u32            | 16-bit unsigned integer literal        | n/a
+`u64`            | Integral        | u64            | 16-bit unsigned integer literal        | n/a
+`u128`           | Integral        | u128           | 128-bit unsigned integer literal       | n/a
+`usize`          | Integral        | usize          | machine-sized unsigned integer literal | n/a
+`f16`            | Float           | f16            | 16-bit floating point literal          | n/a
+`f32`            | Float           | f32            | 32-bit floating point literal          | n/a
+`f64`            | Float           | f64            | 64-bit floating point literal          | n/a
+`f128`           | Float           | f128           | 128-bit floating point literal         | n/a
+`b`              | `CharLiteral`   | u8             | Byte character literal                 | n/a
+`b`              | `StringLiteral` | &[u8]          | Byte string literal                    | n/a
+`c`              | `StringLiteral` | cstr           | C-string literal (null-terminated)     | all characters are required to have a codpoint of <=0x7F
+`ansi`           | `StringLiteral` | str8           | ANSI string literal                    | all characters are required to have a codpoint of <=0x7F
+`utf7`           | `StringLiteral` | str16          | UTF-7 string literal                   | all characters are required to have a codpoint of <=0x7F
+`utf16`          | `StringLiteral` | str16          | UTF-16 string literal                  | n/a
+`utf32`          | `StringLiteral` | str32          | UTF-32 string literal                  | n/a
 
-Below is a list of the builtin literal operators:
+In the above table, the kinds represent the following literal types
+- Integral: `DecLiteral`, `BinLiteral`, `OctLiteral`, `HexLiteral`
+- Float: `DecFloatLiteral`, `HexFloatLiteral`
 
-literal operator | literal kind | resulting type | Info                                   | restrictions
------------------|--------------|----------------|----------------------------------------|--------------
-i8               | Integral     | i8             | 8-bit signed integer literal           | n/a
-i16              | Integral     | i16            | 16-bit signed integer literal          | n/a
-i32              | Integral     | i32            | 16-bit signed integer literal          | n/a
-i64              | Integral     | i64            | 16-bit signed integer literal          | n/a
-i128             | Integral     | i128           | 128-bit signed integer literal         | n/a
-isize            | Integral     | isize          | machine-sized signed integer literal   | n/a
-u8               | Integral     | u8             | 8-bit unsigned integer literal         | n/a
-u16              | Integral     | u16            | 16-bit unsigned integer literal        | n/a
-u32              | Integral     | u32            | 16-bit unsigned integer literal        | n/a
-u64              | Integral     | u64            | 16-bit unsigned integer literal        | n/a
-u128             | Integral     | u128           | 128-bit unsigned integer literal       | n/a
-usize            | Integral     | usize          | machine-sized unsigned integer literal | n/a
-f16              | Float        | f16            | 16-bit floating point literal          | n/a
-f32              | Float        | f32            | 32-bit floating point literal          | n/a
-f64              | Float        | f64            | 64-bit floating point literal          | n/a
-f128             | Float        | f128           | 128-bit floating point literal         | n/a
-b                | Character    | u8             | Byte character literal                 | n/a
-b                | String       | &[u8]          | Byte string literal                    | n/a
-c                | String       | cstr           | C-string literal (null-terminated)     | all characters are required to have a codpoint of <=0x7F
-ansi             | String       | str8           | ANSI string literal                    | all characters are required to have a codpoint of <=0x7F
-utf7             | String       | str16          | UTF-7 string literal                   | all characters are required to have a codpoint of <=0x7F
-utf16            | String       | str16          | UTF-16 string literal                  | n/a
-utf32            | String       | str32          | UTF-32 string literal                  | n/a
 
-> _Note_: `Integral` means any of the following: DecLiteral, BinLiteral, OctLiteral or HexLiteral, and
->         `Float` means any of the following: DecFloatLiteral or HexFloatLiteral
+
+[module]:          ../items/modules.md
+[literal section]: ../literals.md
