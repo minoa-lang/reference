@@ -66,12 +66,15 @@ method calls                                                               | no
 field accesses                                                             | no
 function calls, indexing, constructing                                     | no
 type casts, type checks                                                    | no
-`try`, `catch`, `await`                                                    | no
-comma expression operands of operators                                     | yes, see [chaining operators]
-operators                                                                  | yes, see [operator precedences]
-comma expressions                                                          | no
+postfix unary operators                                                    | no
+prefix unary operators                                                     | no
+`try`, `catch`, `await`, `unsafe`, `with`                                  | no
+comma expression operands of operators (intermixed with below)             | yes, see [chaining operators]
+operators (intermixed with above)                                          | yes, see [operator precedences]
+comma and key-value expressions                                            | no
 assignment expressions                                                     | no
 `return`, `break`, `continue`, `fallthrough`, `throw`, `yield`, closures   | no
+meta variables (with subsequent expressin)                                 | no
 
 In general, all operands of the expression will be evaluated before any side-effects will be applied, and they are evaluated from left-to-right.
 If an expression deviates from this, it will defined if and in which order their expressions are evaluated.
