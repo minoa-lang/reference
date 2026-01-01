@@ -41,6 +41,6 @@ For a version of this expression that does not capture the error value, the [`??
 
 [`try` expression]: ./try-expressions.md
 [here]:             ./try-expressions.md#interaction-with-catch-expressions-
-[`??` operator]:    ../operators/special-operators.md#catch-operator-
+[`??` operator]:    ../operators/special-operators.md#catch-
 
 [`Catch`]:          #catch-expressions "Todo: link to docs"
