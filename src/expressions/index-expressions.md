@@ -42,8 +42,8 @@ This will not re-borrow the value, but will ensure the dereference does not happ
 > assert(&arr[4..6] == &[5, 6]);
 > 
 > // index relative to the end of the array, i.e. index at arr.len() - idx
-> assert(arr[^3] == 7);
-> assert(&arr[4..^3] == &[5, 6])
+> assert(arr[^-3] == 7);
+> assert(&arr[4..^-3] == &[5, 6])
 > 
 > // Index outside of range with an optional indexing operation
 > assert(arr[?11] == null);
