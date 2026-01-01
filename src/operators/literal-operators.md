@@ -28,15 +28,15 @@ The literal item defines a literal operator with the same name as the item.
 Additionally, it declares the type of a literal to which the operator can be applied to.
 
 The types on which the literal operator can be applied to must be one of the following `core` types:
-- `DecLiteral`
-- `DecFloatLiteral`
-- `BinLiteral`
-- `OctLiteral`
-- `HexLiteral`
-- `HexFloatLiteral`
-- `CharLiteral`
-- `StringLiteral`
-- `InterpStringLiteral`
+- [`DecLiteral`]
+- [`DecFloatLiteral`]
+- [`BinLiteral`]
+- [`OctLiteral`]
+- [`HexLiteral`]
+- [`HexFloatLiteral`]
+- [`CharLiteral`]
+- [`StringLiteral`]
+- [`InterpStringLiteral`]
 
 Each type corresponds to a given literal, as defined in the [literal section].
 
@@ -95,5 +95,15 @@ In the above table, the kinds represent the following literal types
 
 
 
-[module]:          ../items/modules.md
-[literal section]: ../literals.md
+[module]:                ../items/modules.md
+[literal section]:       ../literals.md
+
+[`DecLiteral`]:          #literal-operators "Todo: link to docs"
+[`DecFloatLiteral`]:     #literal-operators "Todo: link to docs"
+[`BinLiteral`]:          #literal-operators "Todo: link to docs"
+[`OctLiteral`]:          #literal-operators "Todo: link to docs"
+[`HexLiteral`]:          #literal-operators "Todo: link to docs"
+[`HexFloatLiteral`]:     #literal-operators "Todo: link to docs"
+[`CharLiteral`]:         #literal-operators "Todo: link to docs"
+[`StringLiteral`]:       #literal-operators "Todo: link to docs"
+[`InterpStringLiteral`]: #literal-operators "Todo: link to docs"

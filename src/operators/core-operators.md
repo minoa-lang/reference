@@ -54,15 +54,15 @@ This operator has the associated trait `WrappedNeg`.
 
 And below is table of infix arithmetic operators:
 
-operator | trait      | precedence  | meaning                                                                                                            | example
----------|------------|-------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------
-`+`      | `Add`      | `AddSub`    | Adds the left- and right-hand operands                                                                             | `1 + 2 == 3`
-`-`      | `Sub`      | `AddSub`    | Subtracts the right-hand operand from the left-hand operand                                                        | `3 - 2 == 1`
-`*`      | `Mul`      | `MulDivRem` | Multiplies the left- and right-hand operand                                                                        | `2 * 3 == 6`
-`/`      | `Div`      | `MulDivRem` | Divides the left-hand operand by the right-hand operand                                                            | `6 / 2 == 3`
-`%`      | `Rem`      | `MulDivRem` | Calculate the remainder of dividing the left-hand operand by the right-hand operand (same sign as dividend)        | `7 % 3 == 1`, `-7 % 3 == -1`, `7 % -3 == 1`, and `-7 % -3 == -1`
-`%%`     | `RemFloor` | `MulDivRem` | Calculate the floored remainder of dividing the left-hand operand by the right-hand operand (same sign as divisor) | `7 %% 3 == 1`, `-7 %% 3 == 1`, `7 %% -3 == -1`, and `-7 %% -3 == -1`
-`**`     | `Repeat`   | `MulDivRem` | Exponentiates the left-hand operand to the right hand operand (common operator with the [repetition] operator)     | `3 ** 4 == 81`
+operator | trait        | precedence  | meaning                                                                                                            | example
+---------|--------------|-------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------
+`+`      | [`Add`]      | `AddSub`    | Adds the left- and right-hand operands                                                                             | `1 + 2 == 3`
+`-`      | [`Sub`]      | `AddSub`    | Subtracts the right-hand operand from the left-hand operand                                                        | `3 - 2 == 1`
+`*`      | [`Mul`]      | `MulDivRem` | Multiplies the left- and right-hand operand                                                                        | `2 * 3 == 6`
+`/`      | [`Div`]      | `MulDivRem` | Divides the left-hand operand by the right-hand operand                                                            | `6 / 2 == 3`
+`%`      | [`Rem`]      | `MulDivRem` | Calculate the remainder of dividing the left-hand operand by the right-hand operand (same sign as dividend)        | `7 % 3 == 1`, `-7 % 3 == -1`, `7 % -3 == 1`, and `-7 % -3 == -1`
+`%%`     | [`RemFloor`] | `MulDivRem` | Calculate the floored remainder of dividing the left-hand operand by the right-hand operand (same sign as divisor) | `7 %% 3 == 1`, `-7 %% 3 == 1`, `7 %% -3 == -1`, and `-7 %% -3 == -1`
+`**`     | [`Repeat`]   | `MulDivRem` | Exponentiates the left-hand operand to the right hand operand (common operator with the [repetition] operator)     | `3 ** 4 == 81`
 
 All operations can be applied to numeric types, but follow their own semantics:
 - [integer] types follow their semantics, meaning that any operation may result in an under/overflow, in addition to:
@@ -158,20 +158,20 @@ Below is a table of all infix operators provided, these work on integer values
 
 operator | trait         | function       | precedence | meaning                                                          | default impl    | example
 ---------|---------------|----------------|------------|------------------------------------------------------------------|-----------------|----------------------------------------------------------------------------
-`\|`     | `BinOr`       | `bin_or`       | `BinOr`    | bitwise OR                                                       | n/a             | `0b0101 | 0b0011 == 0b0111`
-`!\|`    | `BinOr`       | `bin_nor`      | `BinOr`    | bitwise NOR                                                      | `!(lhs \| rhs)` | `0b0101 !| 0b0011 == 0b1101`
-`&`      | `BinAnd`      | `bin_and`      | `BinAnd`   | bitwise AND                                                      | n/a             | `0b0101 & 0b0011 == 0b0001`
-`!&`     | `BinAnd`      | `bin_nand`     | `BinAnd`   | bitwise NAND                                                     | `!(lhs & rhs)`  | `0b0101 !& 0b0011 == 0b1110`
-`&!`     | `BinAnd`      | `bin_mask_out` | `BinAnd`   | Bitwise masking out of provided bits                             | `lhs & !rhs`    | `0b0101 &! 0b0011 == 0b0100`
-`~`      | `BinXor`      | `bin_xor`      | `BinXor`   | bitwise XOR                                                      | n/a             | `0b0101 ~ 0b0011 == 0b0110`
-`!~`     | `BinXor`      | `bin_xnor`     | `BinXOr`   | bitwise XNOR                                                     | `!(lhs ~ rhs)`  | `0b0101 !~ 0b0011 == 0b1001`
-`<<`     | `Shl`         | `shl`          | `ShiftRot` | bitwise shift left                                               | n/a             | `0b101 << 3 == 0b101000`
-`<<|`    | `SaturateShl` | `saturate_shl` | `ShiftRot` | saturating shift left (max value if 1 is shifted past first bit) | n/a             | `0b101u8 <<| 5 == 0b11111111u8`
-`>>`     | `Shr`         | `shr`          | `ShiftRot` | bitwise shift right (shra when signed, shrl when unsigned)       | n/a             | `0b10101010i8 >> 3 == 0b11110101i8` or `0b10101010u8 >> 3 == 0b00010101u8`
-`>>-`    | `Shra`        | `shra`         | `ShiftRot` | bitwise arithmetic shift left (shifts in sign bit)               | n/a             | `0b10101010u8 >>- 3 == 0b11110101u8`
-`>>+`    | `Shrl`        | `shrl`         | `ShiftRot` | bitwise logical shift left (shifts in 0)                         | n/a             | `0b10101010u8 >>+ 3 == 0b00010101u8`
-`*<<`    | `Rotl`        | `rotl`         | `ShiftRot` | bitwise rotate left                                              | n/a             | `0b11001010u8 *<< 3 == 0b01010110u8`
-`>>*`    | `Rotr`        | `rotr`         | `ShiftRot` | bitwise rotate right                                             | n/a             | `0b11001010u8 >>* 3 == 0b01011001u8`
+`\|`     | [`BinOr`]       | `bin_or`       | `BinOr`    | bitwise OR                                                       | n/a             | `0b0101 | 0b0011 == 0b0111`
+`!\|`    | [`BinOr`]       | `bin_nor`      | `BinOr`    | bitwise NOR                                                      | `!(lhs \| rhs)` | `0b0101 !| 0b0011 == 0b1101`
+`&`      | [`BinAnd`]      | `bin_and`      | `BinAnd`   | bitwise AND                                                      | n/a             | `0b0101 & 0b0011 == 0b0001`
+`!&`     | [`BinAnd`]      | `bin_nand`     | `BinAnd`   | bitwise NAND                                                     | `!(lhs & rhs)`  | `0b0101 !& 0b0011 == 0b1110`
+`&!`     | [`BinAnd`]      | `bin_mask_out` | `BinAnd`   | Bitwise masking out of provided bits                             | `lhs & !rhs`    | `0b0101 &! 0b0011 == 0b0100`
+`~`      | [`BinXor`]      | `bin_xor`      | `BinXor`   | bitwise XOR                                                      | n/a             | `0b0101 ~ 0b0011 == 0b0110`
+`!~`     | [`BinXor`]      | `bin_xnor`     | `BinXOr`   | bitwise XNOR                                                     | `!(lhs ~ rhs)`  | `0b0101 !~ 0b0011 == 0b1001`
+`<<`     | [`Shl`]         | `shl`          | `ShiftRot` | bitwise shift left                                               | n/a             | `0b101 << 3 == 0b101000`
+`<<|`    | [`SaturateShl`] | `saturate_shl` | `ShiftRot` | saturating shift left (max value if 1 is shifted past first bit) | n/a             | `0b101u8 <<| 5 == 0b11111111u8`
+`>>`     | [`Shr`]         | `shr`          | `ShiftRot` | bitwise shift right (shra when signed, shrl when unsigned)       | n/a             | `0b10101010i8 >> 3 == 0b11110101i8` or `0b10101010u8 >> 3 == 0b00010101u8`
+`>>-`    | [`Shra`]        | `shra`         | `ShiftRot` | bitwise arithmetic shift left (shifts in sign bit)               | n/a             | `0b10101010u8 >>- 3 == 0b11110101u8`
+`>>+`    | [`Shrl`]        | `shrl`         | `ShiftRot` | bitwise logical shift left (shifts in 0)                         | n/a             | `0b10101010u8 >>+ 3 == 0b00010101u8`
+`*<<`    | [`Rotl`]        | `rotl`         | `ShiftRot` | bitwise rotate left                                              | n/a             | `0b11001010u8 *<< 3 == 0b01010110u8`
+`>>*`    | [`Rotr`]        | `rotr`         | `ShiftRot` | bitwise rotate right                                             | n/a             | `0b11001010u8 >>* 3 == 0b01011001u8`
 
 Some special semantics for operators are:
 - shift and rotate instructions will shift by only the lower bits of the provided value, i.e `0b01010101 << 12` is equivalent to `0b01010101 << 4`, as it will do `0b01010101 << (12 & 0x7)`
@@ -199,7 +199,7 @@ The core only has 2 compile-time implemenations of this, these are:
 - concatinating 2 string slices/arrays
 - concatinating 2 arrays
 
-The associated trait is `Concat`.
+The associated trait is [`Concat`].
 
 > _Example_
 > ```
@@ -208,7 +208,7 @@ The associated trait is `Concat`.
 > ```
 
 Additionally, an assign operator exists as a variant of the infix operator.
-This uses the `ConcatAssign` trait.
+This uses the [`ConcatAssign`] trait.
 
 This is not supported by the provided implementation listed above, as it may produce a different type.
 
@@ -224,7 +224,7 @@ The core only has 2 compile-time implemenations of this, these are:
 - repeat a string slice/array `N` times
 - repeat an array `N` times
 
-The associated trait is `Repeat`
+The associated trait is [`Repeat`].
 
 _Example_
 ```
@@ -233,7 +233,7 @@ assert([1, 2] ** 3 == [1, 2, 1, 2, 1, 2]);
 ```
 
 Additionally, an assign operator exists as a variant of the infix operator.
-This uses the `RepeatAssign` trait.
+This uses the [`RepeatAssign`] trait.
 
 This is not supported by the provided implementation listed above, as it may produce a different type.
 
@@ -277,14 +277,14 @@ Which values represent a `true` of `false` value is dependent on its implementat
 
 The operator is a `lazy` operator.
 
-The associated trait is `OrElse`.
+The associated trait is [`OrElse`].
 
 The operator has a precedence of `Select`.
 
 Additionally, an assign operator exists as a variant of the infix operator
 This will assign a value to the assignee, only if it does not have a 'truthy' value.
 
-This uses the `OrElseAssign` trait.
+This uses the [`OrElseAssign`] trait.
 
 ## Pipe [↵](#core-operators)
 ```
@@ -295,10 +295,10 @@ The pipe opeartors are infix operators, which allow values to be piped from one 
 
 The pipe operator consist of 2 slightly different operators, as defined in the table below.
 
-operator | trait         | op kind
----------|---------------|-----------
-`\|>`    | `PipeChain`   | `chain`
-`<\|`    | `PipeConsume` | `consume`
+operator | trait           | op kind
+---------|-----------------|-----------
+`\|>`    | [`PipeChain`]   | `chain`
+`<\|`    | [`PipeConsume`] | `consume`
 
 Both pipe operators are the pipe equivalent version of their operator kind.
 
@@ -315,3 +315,29 @@ These operators have a precedence of `Pipe`.
 [boolean]:           ../type-system/types/builtin-types/boolean-types.md
 [integer]:           ../type-system/types/builtin-types/integer-types.md
 [floating point]:    ../type-system/types/builtin-types/floating-point-types.md
+
+[`Add`]:             #arithmetic- "Todo: link to docs"
+[`Div`]:             #arithmetic- "Todo: link to docs"
+[`Mul`]:             #arithmetic- "Todo: link to docs"
+[`Rem`]:             #arithmetic- "Todo: link to docs"
+[`RemFloor`]:        #arithmetic- "Todo: link to docs"
+[`Repeat`]:          #arithmetic- "Todo: link to docs"
+[`Sub`]:             #arithmetic- "Todo: link to docs"
+[`BinAnd`]:          #bitwise- "Todo: link to docs"
+[`BinOr`]:           #bitwise- "Todo: link to docs"
+[`BinXor`]:          #bitwise- "Todo: link to docs"
+[`SaturateShl`]:     #bitwise- "Todo: link to docs"
+[`Shl`]:             #bitwise- "Todo: link to docs"
+[`Shr`]:             #bitwise- "Todo: link to docs"
+[`Shra`]:            #bitwise- "Todo: link to docs"
+[`Shrl`]:            #bitwise- "Todo: link to docs"
+[`Rotl`]:            #bitwise- "Todo: link to docs"
+[`Rotr`]:            #bitwise- "Todo: link to docs"
+[`Concat`]:          #concatination- "Todo: link to docs"
+[`ConcatAssign`]:    #concatination- "Todo: link to docs"
+[`PipeChain`]:       #pipe- "Todo: link to docs"
+[`PipeConsume`]:     #pipe- "Todo: link to docs"
+[`Repeat`]:          #repetition- "Todo: link to docs"
+[`RepeatAssign`]:    #repetition- "Todo: link to docs"
+[`OrElse`]:          #or-else- "Todo: link to docs"
+[`OrElseAssign`]:    #or-else- "Todo: link to docs"
