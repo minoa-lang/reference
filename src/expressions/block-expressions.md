@@ -1,7 +1,7 @@
 # Block expressions
 ```
-<block-expr> := [ <block-~specifier> ] <block>
-<block>      := '{' { <stmt> }* [ <expr> ] '}'
+<block-expr>      := { <attribute> }* [ <block-~specifier> ] <block>
+<block>           := '{' { <stmt> }* [ <expr> ] '}'
 <block-specifier> := 'const'
                    | 'async' [ 'gen' ] [ 'move' ]
 ```
