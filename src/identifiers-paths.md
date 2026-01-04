@@ -224,13 +224,14 @@ mod a {
 ### Simple paths [↵](#paths-)
 
 ```
-<simple-path>             := [<simple-path-start>] <simple-path-no-start>
-<simple-path-no-start>    := <simple-path-segment> { '.' <ext-simple-path-segment> }*
+<simple-path>             := [<simple-path-start>] <ext-simple-path-segment> [ <simple-path-no-start> ]
+                           | <simple-path-segment> [ <simple-path-no-start> ]
+<simple-path-tail>        := { '.' <ext-simple-path-segment> }*
 <simple-path-segment>     := <name>
 <ext-simple-path-segment> := <name> | <ext-name>
 ```
 
-Simple path are used for [visitility], [attributes], [metafunctions], and [use items].
+Simple path are used for [visibility], [attributes], [metafunctions], and [use items].
 
 When used within a [visibility] or [use item], a path may start with an additional path start.
 
