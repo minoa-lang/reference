@@ -325,7 +325,7 @@ Unlike a meta-fuction, and like methods, a meta-method must be defined as an ass
 <meta-invocation-expr>   := '#' <meta-invoke-root> <meta-call-args>
 <meta-method-invocation> := <expr> [ '?' ] '.' '#' <ext-name> <meta-call-args>
 <meta-invoke-root>       := '#' <ext-name>
-                          | '#' <path>
+                          | '#' <simple-path>
 <meta-call-args>         := '(' <meta-args> ')'
                           | '[' <meta-args> ']'
                           | '{' <meta-args> '}'
