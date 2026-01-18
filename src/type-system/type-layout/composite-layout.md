@@ -253,20 +253,16 @@ Fieldless enums have the same size and alignment as their disriminant type.
 > _Note_ The enum representation in C is implementation defined, meaning that unless the discriminant is explicitly specified, a "best guess" is used to define the discriminant.
 >        This may result in the discriminant's type not matching up with what is expected within `C`, which will lead to undefined behavior.
 >        It is therefore always recommended to explicilty define the discriminant type on an extern enum.
-
-#### `extern`
-
-## `soa` representation [↵](#layout-representation)
-
+> 
 ## `transparent` representation [↵](#layout-representation)
 
 The transparent representation is only supported for structures and enums with only 1 variant, which adhere to the following:
 - any number of non uniquely addressed 0-sized types and an alignment of 1
-- at moost 1 other field with a non-zero size
+- at most 1 other field with a non-zero size
 
 Types using this representation use the same layout as the single non-zero field, or it is a unit otherwise.
 
-Becaise this layout inherits the layout of a different type, it cannot be used in conjunction of `extern`.
+Because this layout inherits the layout of a different type, it cannot be used in conjunction of `extern`.
 
 
 
