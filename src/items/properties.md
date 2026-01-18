@@ -150,7 +150,7 @@ If a value should be moved out for a `did_set` observer, the implicit `$1` value
 Observer allow code to act upon the changing of a value, both before and after the value has been set.
 This does however incur additional cost, as it needs to take a copy of the old and new value to be able to correctly pass them to the observer.
 
-Observers are only allowed when the property contains a setter.
+Observers are only allowed on direct-bind and field properties.
 
 If the setter manually moves the old value into the temporary value for the `did_set` observer, the [destructor] will be delayed until after the assignment.
 
@@ -347,7 +347,7 @@ When this is done, only the property that shadows the field can access the origi
 
 > _Note_: While properties may be shadow a field, they must still be uniquely named relative to all other associated items.
 
-## Field property
+## Field property [↵](#properties)
 ```
 <field-propety> := [ <vis> ] [ 'const' ] [ 'unsafe' ] 'field' 'prop' <ext-name> ':' <type> <prop-body> [ '=' <field-defs> ] [ <field-tag> ]
 ```
@@ -423,7 +423,7 @@ Observers are solely up to the implementation, meaning the trait cannot require 
 
 > _Todo_: Allow for `prop name : ty;`, which will have all accessors
 
-## Constaint [↵](#properties)
+## Constaint properties [↵](#properties)
 ```
 <constraint-property>           := [ 'const' ] 'prop' <ext-name> ':' <type> <constraint-property-accessors>
 <constraint-property-accessors> := '{' ? { <constraint-propery-accessor> }*, sub-elements need to be unique ? '}'

@@ -42,15 +42,15 @@ Optional parameters get a `?` prepended to them, and variadic parameters will be
 
 ## Parameters [↵](#functions)
 ```
-<fn-params>            := <fn-param> { ',' <fn-param> }*
-<fn-param>             := <fn-req-param>
-                        | <fn-opt-param>
-                        | <fn-variadic-param>
-<fn-req-param>         := [ <fn-param-label> ] { <attribute> }* <fn-param-name>  ':' [ <fn-param-specifiers> ] ( <type> | <raw-closure-type> )
-<fn-param-name>        := <name> { ',' [ <fn-param-label> ] <name> }
-                        | <pattern-top-no-alt>
-<fn-param-type>        := <type> 
-                        | <type-bound>
+<fn-params>     := <fn-param> { ',' <fn-param> }*
+<fn-param>      := <fn-req-param>
+                 | <fn-opt-param>
+                 | <fn-variadic-param>
+<fn-req-param>  := [ <fn-param-label> ] { <attribute> }* <fn-param-name>  ':' [ <fn-param-specifiers> ] ( <type> | <raw-closure-type> )
+<fn-param-name> := <name> { ',' [ <fn-param-label> ] <name> }
+                 | <pattern-top-no-alt>
+<fn-param-type> := <type> 
+                 | <type-bound>
 ```
 
 A function parameter represents one or more values that can be passed to a function.

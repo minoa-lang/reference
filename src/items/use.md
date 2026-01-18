@@ -2,7 +2,7 @@
 
 ```
 <use-item>       := 'use' <use-root> [ '.' <use-path> ] ';' 
-                  | `use` <use-path> ';'
+                  | 'use' <use-path> ';'
 ```
 
 A `use` item creates onr or more local name bindings associated with a given path.
