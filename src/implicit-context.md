@@ -37,6 +37,17 @@ The context may be accessed using the `#ctx` meta-variable.
 Each member of the implicit context is lazily stored, meaning that it cannot be accessed before it is explicitly set from code.
 Each member may only be assigned once, any subsequent assignments will result in a panic, unless explicitly dropped.
 
+> _Example_
+> ```
+> // `#ctx.foo` does not exists yet at this point
+> 
+> // Setting `foo`
+> #ctx.foo = Foo{};
+> 
+> // Setting `foo` once again results in a panic, as we can only set it once
+> #ctx.foo = Foo{};
+> ```
+
 ## Dropping members [↵](#implicit-context)
 
 The implicit context is the only value which is implicitly dropped at the end of the program, without requiring the user to explicitly drop it.
@@ -52,7 +63,16 @@ It is also possible to drop the entire context manually using [`drop_ctx`].
 
 If a member has been dropped, the member may be reassigned once more.
 
-## Defining context members [↵](#implicit-context)
+_Example_
+```
+// Takes a key-path to the member to drop, and updates the internal state of the implicit context
+unsafe drop_ctx_member(\.foo);
+
+// Drops the entirety of the current context
+unsafe drop_ctx();
+```
+
+## Defining members [↵](#implicit-context)
 
 It is possible for any artifact to define its own values into the implicit context.
 
@@ -60,7 +80,11 @@ Each member that is added to a context must be unique, meaning that if 2 differe
 
 A member can be defined using the builtin [`#add_ctx_member`] and  meta-functions.
 
-## Accessing context members [↵](#implicit-context)
+_Example_
+```
+```
+
+## Accessing members [↵](#implicit-context)
 
 Context members are exposed to the user as [properties], and are made available via both a reference getter and an optional reference getter.
 While directly access on any of its member is allowed, this will result in a panic if the value has never been set.
@@ -107,5 +131,5 @@ This is done by check if a member is set by comparing it to `null`.
 [`Sync`]:                #implicit-context "Todo: link to docs"
 [`drop_from_ctx`]:       #dropping-members- "Todo: link to docs"
 [`drop_ctx`]:            #dropping-members- "Todo: link to docs"
-[`#add_ctx_member`]:     #defining-context-members- "Todo: link to docs"
-[`#add_ctx_tls_member`]: #defining-context-members- "Todo: link to docs"
+[`#add_ctx_member`]:     #defining-members- "Todo: link to docs"
+[`#add_ctx_tls_member`]: #defining-members- "Todo: link to docs"
