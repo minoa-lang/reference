@@ -101,6 +101,14 @@ Module path   | `c`'s file location | `c`'s module path
 `src/main.mn` | `src/foo.mn`        | `:.c`
 `src/a.mn`    | `src/a/foo.mn`      | `:.a.c`
 
+It is also allowed for the path attribute to contain multiple path, this results in the module being split up into multiple files.
+
+> _Example_
+> ```
+> @path("./foo_0.mn", "./foo_1.mn")
+> mod foo;
+> ```
+
 For a `path` attribute inside an inline module, the relative location of the file path depends on the kind of source file the `path` attribute is located in.
 The path would take into account which sub-directories the inline modules would be located in, if they were to have been file modules.
 This path is relative to either:
@@ -124,16 +132,17 @@ Module path   | `inner`'s file location | `inner`'s module path
 A path attribute may also be defined on an inline item, this changes the name of the sub folder that the module would have corresponded to.
 When applied to an inline module, the file extension can be left out
 
-For the followin code
-```
-@path("foo")
-mod inline {
-    @path("bar.rs")
-    mod inner;
-}
-```
-`inner` would now be located within `foo/bar.rs`.
-
+> _Example_
+> 
+> For the following code
+> ```
+> @path("foo")
+> mod inline {
+>     @path("bar.rs")
+>     mod inner;
+> }
+> ```
+> `inner` would now be located within `foo/bar.rs`.
 
 
 [namespace]:   ../namespaces-scopes.md#namespaces
