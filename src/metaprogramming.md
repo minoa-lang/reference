@@ -381,7 +381,7 @@ The variable and the subsequent fragment will then be replaced by the output of 
 
 ## Meta attributes [↵](#metaprogramming)
 ```
-<meta-attribute> := { <attribute> }* 'attr' [ '(' <meta-attr-role> [ ',' <meta-hygiene-info> ] ')' ] <ext-name> <meta-signature> [ '->' <type> ] <block>
+<meta-attribute> := { <attribute> }* [ 'unsafe' ] 'attr' [ '(' <meta-attr-role> [ ',' <meta-hygiene-info> ] ')' ] <ext-name> <meta-signature> [ '->' <type> ] <block>
 <meta-attr-role> := 'full'
                   | 'peer'
                   | 'member'
@@ -410,6 +410,9 @@ This parameter will contain the fragment on which it is applied.
 > // this meta-attribute will result in only a single variant being allowed of its role
 > // attr fn foo(val: meta.fragment.Ast) {}
 > ```
+
+Meta attributes may be marked as `unsafe`, this means they will need to be applied via the [`unsafe` attribute].
+These attributes are meant to allow attributes to indicate that what they provide is not guaranteed and relies on the developer to ensure that an fragment it is applied to must adhere to any guarantees that will be provided by the attribute.
 
 ### Attribute roles [↵](#meta-attributes-)
 
@@ -672,7 +675,7 @@ Since attribute may take in a set of nested values, each meta-attribute may take
 This can be done in 2 ways:
 - via a second param with type `meta.AttrMetaArgs`
 - as list of parameters, with the expected types.
-  Unlike functions, while labelless parameter need to be in the same order as in the signature, any optional parameters may be provided in any order after the labelless parameters.d
+  Unlike functions, while labelless parameter need to be in the same order as in the signature, any optional parameters may be provided in any order after the labelless parameters.
 
 > _Example_
 > ```
@@ -689,11 +692,13 @@ This can be done in 2 ways:
 > ```
 
 Nested values can be done by taking in parameters with a struct type, which has the [`@attr_param`] attribute.
+Additionally, the `@attr_param_value` attribute may indicate which value will be assigned when a regular value is passed
 
 > _Example_
 > ```
 > @attr_param
 > struct Bar {
+>     @attr_param_value
 >     a: i32,
 >     b: f32,
 > }
@@ -707,7 +712,8 @@ Nested values can be done by taking in parameters with a struct type, which has 
 > 
 > attr fn foo(ast: meta.Ast, bar: Bar, baz: Baz) {}
 > 
-> @foo(bar(a = 1, b = 2), baz(b = 3, c = true))
+> //       v- will be passed to `bar.a`
+> @foo(bar(1, b = 2), baz(b = 3, c = true))
 > struct Struct;
 > ```
 
@@ -743,9 +749,13 @@ Name only arguments are also supported, this is done by passing a value with one
 > struct Struct;
 > ```
 
+When an attribute takes in a parameter, the parameter may not include any comma, unless it is either it is nested in either a pair of `()`, `[]` or `{}`.
+
+Additionally, a pattern may appear within the last parameter, which also allows the parameter to be unlabelled, even when other labels exists, but does require the parameter to always be passed as the last argument to the attribute.
+
 ## Meta alias [↵](#metaprogramming)
 ```
-<meta-alias> := ( 'meta' | ( 'attr' [ '(' <meta-attr-role> ')' ] ) ) 'fn' <ext-name> <meta-signature> '=' ( <meta-invocation> | ( <meta-invocation-expr> ';' ) )
+<meta-alias> := ( 'meta' | ( [ 'unsafe' ] 'attr' [ '(' <meta-attr-role> ')' ] ) ) 'fn' <ext-name> <meta-signature> '=' ( <meta-invocation> | ( <meta-invocation-expr> ';' ) )
 ```
 
 Meta-functions/aliases may be aliased by assigning instead of requiring it to have a return type and body, it instead gets assigned a meta-invocation.
