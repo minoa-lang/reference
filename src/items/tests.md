@@ -52,6 +52,7 @@ For example, a test could only be run when on a specific OS.
 > ```
 
 Within the test, [asserts] are used to determine if the expected behavior is fulfilled, in this way, it is similar to [contracts].
+If a test is run, the contract's default group will be replaced by the `testing.TestContractGroup`.
 
 > _Example_
 > ```

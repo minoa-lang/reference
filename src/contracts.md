@@ -1,85 +1,204 @@
 # Contracts
-
-Contracts are used to find certain conditions that code needs to adhere to, these are generally split up in 2 main types.
-
-Constracts evaluation happens in the following order:
-1. Check if the contract group is active, if not, stop.
-2. Check if the contract group has a predicate, and if it evaluates to `false`, stop.
-3. Check the condition inside of the contract, if it evaluates to `false`, stop.
-4. Finally report the validation via the contract group.
-
-> _Note_: The exact API of contract groups still needs to be determined
-
-> _Todo_: Add support for invariant contract items within type to ensure certain relation, during for example, struct initialization
-
-## Function contracts [↵](#contracts-)
-
 ```
-<fn-contract>             := <pre-contract> | <post-contract> | <invar-contract>
-<pre-contract>            := 'pre' [ <contract-group-and-pred> ] '(' <expr> ')'
-<post-contract>           := 'post' [ <contract-group-and-pred> ] '(' [ <name> '=>' ]  <expr> ')'
-<invar-contract>          := 'invar' [ <contract-group-and-pred> ] '(' <expr> ')'
-<contract-group-and-pred> := '[' <expr> [ 'if' <expr> ] ']'
-                           | '[' 'if' <expr> ']'
+<fn-contract>             := <pre-contract>
+                           | <post-contract>
+                           | <invar-contract>
+<contract-body>           := '(' <expr> ')'
+                           | <block>
+<contract-group-and-pred> := '[' <contract-group> [ <contract-pred> ] ']'
+                           | '[' <contract-pred> ']'
 ```
 
-Function contracts are composed out of 3 different kinds:
-- preconditions
+Contracts represent a collection of condition to which a piece of code needs to adhere.
+Contracts can be split into a couple groups:
+- pre & post contracts
+- invariant contracts
+- free contracts, also known as asserts
+
+A contracts body may can have 2 forms:
+- a expression within parentheses
+- a block, which must return a boolean value.
+  It may additionally [`yield`] additional boolean values prior to exiting the block, allowing for more complex contract checks.
+
+Contracts are evaluated in the following order:
+1. if contracts are disabled using a compile-time switch, nothing happens and no contract will have been inserted
+2. check if the contract group is active, if it is not active, stop
+3. check if the predicate returns a `true` value, otherwise stop
+4. evaluate the body of the contract, if no `false` value is returned, stop
+5. report any contract violation to the contract group
+
+Each step before 5. provided the contract to be stopped, allowing code execution to happen.
+
+Certain contracts may make use of the [contract capture operator] to capture the value of a given expression as if it were evaluated at the start of the function, specifically:
 - postconditions
-- Invariant conditions
+- invariant contracts
 
-A preconditions is used to define what values may be passed into a function.
-Preconditions are evaluated before the function body gets executed.
-For example what range an integer value should be in.
-
-A postconditions is used to to check if the resulting state at the end of the function.
-Postconditions may access unnamed return values by prepending the condition with `name =>`.
-Postconditions are evaluated at after the function body, but before the function returns.
-For example, checking if an a value was set to a value in a given range.
-
-Postconditions also allow use of the contract capture operator to capture a value at the start of a function to use in the contract.
-
-An invariant conditions is used to check the invariance of certain conditions, meaning that they cannot change the result of this condition over the functions lifetime.
-Invariant conditions are evaluated when pre- or postconditions are evaluated.
-
-Contracts may make use of the [contract capture operator]
-
-## Asserts [↵](#contracts-)
-
+## Pre & post contracts [↵](#contracts)
 ```
-<assert> := [ 'const' ] 'assert' [ <contract-group-and-pred> ] '(' <expr> { ',' <expr> }* ')' ';'
+<pre-contract>  := 'pre' [<contract-control>] <contract-body>
+<post-contract> := 'post' [<contract-control>] [ <name> '=>' ] <post-body>
+
+<post-body>     := '(' [ <name> '=>' ] <expr> ')'
+                 | <block>
+```
+Pre and post contracts are also known as pre-conditions and post-conditions respectively.
+These can only be applied to [functions].
+
+A prejcondition is applied to any of the parameters to a function, allowing it to check for any condition on the incoming data.
+Preconditions get evaluated prior to entering the function body.
+
+A post-condition on the other hand are used to check the state of values being returned from the function, in addition to any parameters to which the function has mutable access, including a [method receiver].
+Preconditons get evualuated after the body has returned, but prior exiting the function.
+
+A post-condition may also capture the resulting value and bind it to a given name.
+This can only be done when the post condition does not directly have a block as its body.
+
+Postconditions may make use of the [contract capture operator].
+
+> _Example_
+> ```
+> fn foo(input: i32) -> i32
+>     pre(input < 10)
+>     post(val => val > 10)
+> {
+>     ...
+> }
+> ```
+ 
+## Invariant contracts [↵](#contracts)
+```
+<invar-contract>       := 'invar' [<contract-control>] <contract-body>
+<assoc-invar-contract> := <invar-contract> ';'
 ```
 
-An assert is a special condition which may be used at any moment in code to check if a value adheres to given conditions.
-They can be evaluated both at runtime or compiletime.
+Invariant contracts are used to check the invariancy of certain states within the code.
+They can therefore be applied to:
+- [functions]
+- [types]
 
-## Contract groups [↵](#contracts-)
+When applied to a function, the contract will check the condition when both pre- and post-conditions are evaluated, ensuring the function does not invalidate any of these conditions.
 
-Contract groups are used to manage the evaluation of a contracts.
-The allow entire contracts to be disable, under which conditions they need to be evaluated, and how they should report an error.
+Otherwise, when applied to a type, it will ensure the conditions on any value of the type at the start and end of any functions.
+However, the compiler will try to avoid checking these conditions if the operation on the type is guaranteed to:
+- not modify the type, or
+- have been checked by a function call which modifies the type.
 
-Contract groups can be specified between `[` and `]` in an assert.
-If no contract group is specified, the default contract groups is used, which has the following state:
-- Only active when assertions are enabled via the assert configuration option
-- Has no predicate, i.e. will always be checked
-- Panics on a contract violation
+In any function to which an invariant contract applies, either directly or one applied on a type, the invariant contract will be evaluated:
+- after any pre-conditions, but prior to entering the function body
+- ater the body has returned, but prior to any post-conditions
 
-> _Note_: The exact API of contract groups still needs to be determined.
-> It also still needs to be determined how to override the default contract group.
+Invariant contracts may make use of the [contract capture operator].
 
-## Constact predicates
+> _Perf_: Applying an invariant condition to a type alias or a composite type may incur a noticable overhead when used.
 
-In addition to declaring a contract group, each individual contract and assert may also have a predicate that needs to result in a `true` value to be able to run.
-These are compile time expressions.
+> _Example_
+> ```
+> struct Foo {
+>     a:       i32,
+>     not_one: i32,
+> 
+>     invar (self.not_one != 1);
+> }
+> 
+> fn bar(val: &mut i32)
+>     invar(*val in 0..12)
+> {
+>     if val == 0 {
+>         *val = 2;
+>     }
+> }
+> ```
 
-The are located together with a contract group, but are set after an `if`.
+## Asserts [↵](#contracts)
+```
+<assert>      := [ 'const' ] 'assert' <assert-body>
+<assert-body> := '(' <expr> ')' ';'
+                 | <block>
+<assert-item> := <assert> ';'
+```
 
-## Testing
+An assert is a free-standing contract, can check if a piece of code adheres to its implied condition, and has both an item and expression form.
+It may be executed at compile time when:
+- the assert is located where only an item is allowed
+- the assert is prefixed with a `const`
 
-Contract groups are also used for testing and are hooked into by the testing framework.
+> _Example_
+> ```
+> fn foo() {
+>     val := get_val();
+> 
+>     assert(val == 1);
+> }
+> 
+> struct Foo(i32);
+> 
+> assert(size_of(Foo) == size_of(i32));
+> ```
 
-> _Note_: The testing framework has not entirely been figured out yet
+## Groups [↵](#contracts)
+```
+<contract-group> := <name>
+```
+
+Contract groups manage the evaluation of contracts in the following ways:
+- defines how to respond in case an assert fails
+- allows disabling/enabling of all contracts using the group
+
+For a contract group to be used, it must first be registered to the application using [`#register_assert_group`], and must implement the [`ContractGroup`] trait.
+
+If no contract group is specified, the default group is used, which responds in the following way:
+- only active when assertions are enabled via command line argument, or when in a debug mode
+- panics on a contract violation
+
+The default group can be overriden by assigning a value to [`#set_def_assert_group`].
+
+> _Note_: Contract groups are only available in location that have access to the [implicit context].
+>         If the implicit context is used, the default group will be used, as this is handled differently compared to other user-defined contract groups
+
+> _Example_
+> ```
+> struct CustomContractGroup {
+>     impl as ContractGroup {
+>         // Todo: Add implemenation here after trait is finalized
+>         ...
+>     }
+> }
+> 
+> #register_contract_group(CustomContractGroup as custom);
+> 
+> fn foo() {
+>     // Uses the `custom` contract group defined above
+>     assert[custom](1 + 1 == 2);
+> 
+>     // uses a custom contract group
+>     assert(2 + 2 == 4);
+> }
+> ```
+
+## Predicates [↵](#contracts)
+```
+<contract-pred>           := 'if' <expr>
+```
+
+A contract may be provided with a predicate which determines whether or not the contract should be evaluated.
+This is an expression resulting in a boolean value, where `true` indicates the contract will be run.
+
+The expression must be a compile-time expression.
+
+> _Example_
+> ```
+> // Only run this assert if the `target_os` is windows
+> assert[if #target_os == .windows](1 + 1 == 2);
+> ```
 
 
 
-[contract capture operator]: ./operators/special-operators.md#contract-capture-operator-
+[implicit context]:          ./implicit-context.md
+[functions]:                 ./items/functions.md
+[method receiver]:           ./items/functions.md#methods-
+[contract capture operator]: ./operators/special-operators.md#contract-capture-
+[types]:                     ./type-system/types.md
+
+[`#register_assert_group`]:  #groups- "Todo: link to docs"
+[`#set_def_assert_group`]:   #groups- "Todo: link to docs"
+[`ContractGroup`]:           #groups- "Todo: link to docs"
