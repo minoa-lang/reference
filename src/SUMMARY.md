@@ -178,7 +178,7 @@
 - [Configuration options](./configuration-options.md)
   - [x86/64 features](./configuration-options/x86-64-features.md)
   - [arm features](./configuration-options/arm-features.md)
-  - [risc-v features](./configuration-options/riscv-features.m)
+  - [risc-v features](./configuration-options/riscv-features.md)
 - [Langauge items](./langauge-items.md)
 - [Preludes](./preludes.md)
 - [Panic](./panic.md)
