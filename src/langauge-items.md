@@ -1,320 +1,174 @@
 # Language items
 
-A language builtins, also known as language items, are special items that the compiler understands as having a special meaning.
-All these types are implemented in the `core` library.
+A language builtin, also known as a langauge item, are special items which have additional meaning which the compiler understands.
+All of these types are implemented within the `core` library.
 
-These are define either by `@builtin(...)` attribute or as builtin metafunctions.
+These are defined using a `@builtin(...)` attribute on the item.
 
-Each langauge builtin has a corresponding builtin name.
+## Traits [↵](#language-items)
+
+Builtin traits provide additional info to the types that implement them, and are required for those types to be used in certain kinds of expressions.
+
+More detailed info about each item can be found in the relavent interface's documentation
+
+trait               | language item           | description
+--------------------|-------------------------|----------------------------------------------------------------------------------------------------------
+[`Clone`]           | `clone`                 | Supertrait of `Copy` and used in the generation of record types
+[`Copy`]            | `copy`                  | The type may be copied using a byte-wise memcpy and used in the generation of record types
+[`Eq`]              | `equality`              | see [comparison operators]
+[`Iden`]            | `identity`              | see [comparison operators]
+[`Ord`]             | `ord`                   | see [comparison operators]
+[`TotalOrd`]        | `total_ord`             | see [comparison operators]
+[`StructEq`]        | `structural_equality`   | The type may be used as a constant in [pattern matching], utilizing `Eq`
+[`StructIden`]      | `structural_identity`   | The type may be used as a constant in [pattern matching], utilizing `Iden`
+[`OptAccess`]       | `optional_access`       | The type may be used with [optional chaining]
+[`DispatchFromDyn`] | `dispatch_from_dynamic` | The type may be used to wrap a [receiver]
+[`From`]            | `from`                  | The type may be used as the result of [`as`]
+[`TryFrom`]         | `try_from`              | The type may be used as the result of [`as?`]
+[`UnwrapFrom`]      | `unwrap_from`           | The type may be used as the result of [`as!`]
+[`Default`]         | `default`               | Allows a type to define a default (runtime created) value and indicates that it may be used with [default initialization].
+[`Index`]           | `index`                 | The type may be used in an [index expression]
+[`IndexMut`]        | `index_mut`             | The type may be used in a mutable [index expression]
+[`TryIndex`]        | `try_index`             | The type may be used in a try [index expression]
+[`TryIndexMut`]     | `try_index_mut`         | The type may be used in a mutable try [index expression]
+[`Fn`]              | `fn`                    | The type may be called like a function by immutable reference, see [function traits]
+[`FnMut`]           | `fn_mut`                | The type may be called like a function by mutable reference, see [function traits]
+[`FnOnce`]          | `fn_once`               | The type may be called like a function by move, see [function traits]
+[`IntoIterator`]    | `into_iterator`         | Can produce an iterator and allows it to be used in a [`for` loop]
+[`Iterator`]        | `iterator`              | The type may be used as an iterator
+[`Try`]             | `try`                   | The type may be used in a [`try` expression]
+[`TryUnwrap`]       | `try_unwrap`            | The type may be used in a [`try!` expression]
+[`Catch`]           | `catch`                 | The type may be used in a [`catch` expression]
+[`Hash`]            | `hash`                  | Allows the type to be hashed and is used in the generation of record types
+[`Sized`]           | `sized`                 | Indicates a type is sized
+[`Unsize`]          | `unsize`                | The type may be coerced to an unsized type
+[`CoerceUnsized`]   | `coerce_unsized`        | The type can contain an `Unsize` type and be coerced to a type contains the usized version, i.e. `T[U is Unsize[V]]` -> `T[V]`
+[`Drop`]            | `drop`                  | Defines how a type should be dropped at the end of the scope
+[`Borrow`]          | `borrow`                | The type may be borrowed as a reference to another type
+[`BorrowMut`]       | `borrow_mut`            | The type may be borrowed as a mutable reference to another type
+[`Deref`]           | `deref`                 | The type may be dereferenced
+[`DerefMut`]        | `deref_mut`             | The type may be dereferenced mutable
+[`DerefMove`]       | `deref_move`            | The type may be dereferenced and move a value out
+
+## Types [↵](#language-items)
+
+Builtin type provides types which the compiler handles differently compared to all other types.
+
+type                    | language item                | description
+------------------------|------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------
+[`Option`]              | `option`                     | Underlying type for [optional types]
+[`Result`]              | `result`                     | Underlying type for [result types]
+[`KeyValue`]            | `key_value`                  | Type produces by a [key-value expression]
+[`KeyPath`]             | `key_path`                   | Type produces by a [key-path expression]
+[`ManuallyDrop`]        | `manually_drop`              | The contained type will not be automatically dropped by the compiler
+[`MaybeUninit`]         | `maybe_uninit`               | The contained type may be in an uninitialized state, but can be used in such a state, without invoking [IB]. It is not automatically dropped
+[`DecLiteral`]          | `decimal_literal`            | Type produced by a [decimal literal]
+[`DecFloatLiteral`]     | `decimal_float_literal`      | Type produced by a [decimal float literal]
+[`BinLiteral`]          | `binary_literal`             | Type produced by a [binary literal]
+[`OctLiteral`]          | `octal_literal`              | Type produced by a [octal literal]
+[`HexLiteral`]          | `hexadecimal_literal`        | Type produced by a [hexadecimal literal]
+[`HexFloatLiteral`]     | `hexadecimal_float_literal`  | Type produced by a [hexadecimal float literal]
+[`BoolLiteral`]         | `bool_literal`               | Type produced by a [boolean literal]
+[`CharLiteral`]         | `character_literal`          | Type produced by a [character literal]
+[`StringLiteral`]       | `string_literal`             | Type produced by a [string literal]
+[`InterpStringLiteral`] | `intepolated_string_literal` | Type produced by a [interpolated string literal]
+
+## Precedences [↵](#language-items)
+
+There are 2 builtin precedences: `highest_precedence` and `lowest_precedence`.
+As their names imply, they represent the highest and lowest precedence an operator can have, respectively.
+
+More info can be found in the [precedences section].
+
+
+[pattern matching]:            ./expressions/match-expressions.md
+[optional chaining]:           ./expressions/field-access-expressions.md#optional-chaining-
+[index expression]:            ./expressions/index-expressions.md
+[`as`]:                        ./expressions/type-cast-expressions.md
+[`as?`]:                       ./expressions/type-cast-expressions.md
+[`as!`]:                       ./expressions/type-cast-expressions.md
+[`catch` expression]:          ./expressions/catch-expressions.md
+[key-value expression]:        ./expressions/key-value-expressions.md
+[key-path expression]:         ./expressions/key-path-expressions.md
+[`for` loop]:                  ./expressions/loop-expressions/for-expressions.md
+[`try` expression]:            ./expressions/try-expressions.md
+[`try!` expression]:           ./expressions/try-expressions.md
+[IB]:                          ./illegal-behavior.md
+[receiver]:                    ./items/functions.md#methods-
+[default initialization]:      ./items/initializers.md#default-initialization-
+[decimal literal]:             ./literals.md#decimal-literal-
+[decimal float literal]:       ./literals.md#floating-point-literals-
+[binary literal]:              ./literals.md#binary-literals-
+[octal literal]:               ./literals.md#octal-literals-
+[hexadecimal literal]:         ./literals.md#hexadecimal-floating-point-literals-
+[hexadecimal float literal]:   ./literals.md#hexadecimal-integer-literals-
+[boolean literal]:             ./literals.md#boolean-literals-
+[character literal]:           ./literals.md#character-literals-
+[string literal]:              ./literals.md#string-literals-
+[interpolated string literal]: ./literals.md#string-interpolation-
+[comparison operators]:        ./operators/special-operators.md#comparison-
+[precedences section]:         ./precedences.md
+[function traits]:             ./type-system/types/function-like-types/closure-types.md#call-traits-and-coercions-
+[optional types]:              ./type-system/types/abstract-types/optional-types.md
+[result types]:                ./type-system/types/abstract-types/result-types.md
+
+[`Clone`]:                     #traits- "Todo: link to docs"
+[`Copy`]:                      #traits- "Todo: link to docs"
+[`Eq`]:                        #traits- "Todo: link to docs"
+[`Iden`]:                      #traits- "Todo: link to docs"
+[`Ord`]:                       #traits- "Todo: link to docs"
+[`TotalOrd`]:                  #traits- "Todo: link to docs"
+[`StructEq`]:                  #traits- "Todo: link to docs"
+[`StructIden`]:                #traits- "Todo: link to docs"
+[`OptAccess`]:                 #traits- "Todo: link to docs"
+[`DispatchFromDyn`]:           #traits- "Todo: link to docs"
+[`From`]:                      #traits- "Todo: link to docs"
+[`TryFrom`]:                   #traits- "Todo: link to docs"
+[`UnwrapFrom`]:                #traits- "Todo: link to docs"
+[`Default`]:                   #traits- "Todo: link to docs"
+[`Index`]:                     #traits- "Todo: link to docs"
+[`IndexMut`]:                  #traits- "Todo: link to docs"
+[`TryIndex`]:                  #traits- "Todo: link to docs"
+[`TryIndexMut`]:               #traits- "Todo: link to docs"
+[`Fn`]:                        #traits- "Todo: link to docs"
+[`FnMut`]:                     #traits- "Todo: link to docs"
+[`FnOnce`]:                    #traits- "Todo: link to docs"
+[`IntoIterator`]:              #traits- "Todo: link to docs"
+[`Iterator`]:                  #traits- "Todo: link to docs"
+[`Try`]:                       #traits- "Todo: link to docs"
+[`TryUnwrap`]:                 #traits- "Todo: link to docs"
+[`Catch`]:                     #traits- "Todo: link to docs"
+[`Hash`]:                      #traits- "Todo: link to docs"
+[`Sized`]:                     #traits- "Todo: link to docs"
+[`Unsize`]:                    #traits- "Todo: link to docs"
+[`CoerceUnsized`]:             #traits- "Todo: link to docs"
+[`Drop`]:                      #traits- "Todo: link to docs"
+[`Borrow`]:                    #traits- "Todo: link to docs"
+[`BorrowMut`]:                 #traits- "Todo: link to docs"
+[`Deref`]:                     #traits- "Todo: link to docs"
+[`DerefMut`]:                  #traits- "Todo: link to docs"
+[`DerefMove`]:                 #traits- "Todo: link to docs"
+[`Option`]:                    #types- "Todo: link to docs"
+[`Result`]:                    #types- "Todo: link to docs"
+[`KeyValue`]:                  #types- "Todo: link to docs"
+[`KeyPath`]:                   #types- "Todo: link to docs"
+[`ManuallyDrop`]:              #types- "Todo: link to docs"
+[`MaybeUninit`]:               #types- "Todo: link to docs"
+[`DecLiteral`]:                #types- "Todo: link to docs"
+[`DecFloatLiteral`]:           #types- "Todo: link to docs"
+[`BinLiteral`]:                #types- "Todo: link to docs"
+[`OctLiteral`]:                #types- "Todo: link to docs"
+[`HexLiteral`]:                #types- "Todo: link to docs"
+[`HexFloatLiteral`]:           #types- "Todo: link to docs"
+[`BoolLiteral`]:               #types- "Todo: link to docs"
+[`CharLiteral`]:               #types- "Todo: link to docs"
+[`StringLiteral`]:             #types- "Todo: link to docs"
+[`InterpStringLiteral`]:       #types- "Todo: link to docs"
+
+
+# Old
 
 ## Traits [↵](#language-builtins-)
-
-### `Clone` [↵](#traits-)
-
-The corresponding builtin name is: `clone`
-
-`Clone` is a supertrait for `Copy`
-
-`Clone` is also used in the generation of record.
-
-### `Copy` [↵](#traits-)
-
-The corresponding builtin name is `copy`
-This has `Clone` as a supertrait.
-
-`Copy` indicates to the compiler that the type may be copies using a byte-wise memcpy.
-
-`Copy` is only allowed to be implemented when the type:
-- implements its supertrait [`Clone`](#clone-)
-- does not manually implement [`Clone`](#clone-)
-- All its fields/elements implement `Copy`
-
-`Copy` is also used in the generation of record types.
-
-### `Equality` [↵](#traits-)
-
-The corrsponding builtin name is `equality`.
-
-For more info, see [comparison operators].
-
-### `Identity` [↵](#traits-)
-
-The corresponding builtin name is `identity`.
-
-For more info, see [comparison operators].
-
-### `Ord` [↵](#traits-)
-
-The corresponding builtin name is `ord`.
-
-For more info, see [comparison operators].
-
-###  `TotalOrd` [↵](#traits-)
-
-The corresponding builtin name is `total_ord`.
-
-For more info, see [comparison operators].
-
-###  `StructuralEquality` [↵](#traits-)
-
-The corresponding builtin name is `structural_equality`.
-This has `Equality` as a super trait.
-
-This is an `unsafe` trait.
-
-It is used to indicate to pattern matching that a constant of the implementing type can be used as a constant in pattern matching.
-When a constant of this type is encountered, it will use `Equality::eq` to compare if the values are the same.
-
-`StructuralEquality` indicates a struct is compared as follows:
-- All fields are individually checked
-
-This trait is mutually exclusive with `StructuralIdentity`.
-
-It requires that `Equality` is implemented as `const`, i.e. it can run its functions at compile-time.
-
-###  `StructuralIdentity` [↵](#traits-)
-
-The corresponding builtin name is `structural_identity`
-This has `Identity` as a super trait.
-
-This is an `unsafe` trait.
-
-It is used to indicate to pattern matching that a constant of the implementing type can be used as a constant in pattern matching.
-When a constant of this type is encountered, it will use `Identity::identity` to compare if the values are the same.
-
-This trait is mutually exclusive with `StructuralEquality`.
-
-It requires that `Identity` is implemented as `const`, i.e. it can run its functions at compile-time.
-
-###  `OptAccess` [↵](#traits-)
-
-The corresponding builtin name is `opt_access`.
-
-This is used to indicate that any null-propagating expression may be performed on the type.
-
-###  `DispatchFromDyn` [↵](#traits-)
-
-The corresponding builin name is `dispatch_from_dyn`.
-
-This trait indicates that the type may be used to wrap a reciever.
-
-This differs between implementing a `Deref`-style interface, as it only allows it to be called when the specific type `U` wraps the implementing type `T`.
-This requires that `U` implements `DispatchFromDyn(T)`.
-
-###  `From` [↵](#traits-)
-
-The corresponding builtin name is `from`.
-
-This trait corresponds to a call to `as`.
-
-It works in tandem with the `To` trait, only one of them may be manually implemented.
-Implementing either trait will implicitly implement the other.
-
-###  `TryFrom` [↵](#traits-)
-
-The corresponding builtin name is `try_from`.
-
-This trait corresponds to a call to `as?`.
-
-It works in tandem with the `TryTo` trait, only one of them may be manually implemented.
-Implementing either trait will implicitly implement the other.
-
-###  `UnwrapFrom` [↵](#traits-)
-
-The corresponding builtin name is `try_err_from`.
-
-This trait corresponds to a call to `as!`.
-
-It works in tandem with the `UnwrapTo` trait, only one of them may be manually implemented.
-Implementing either trait will implicitly implement the other.
-
-
-###  `Default` [↵](#traits-)
-
-The corresponding builtin name is `default`.
-
-This trait indicates a default value for a type.
-Unlike default fields, it can use runtime code.
-
-###  `Index` [↵](#traits-)
-
-The corresponding builtin name is `index`.
-
-This trait defines the index expression operator, i.e. `a[b]`, taking in `&self`, and returning `T`..
-
-###  `IndexMut` [↵](#traits-)
-
-The corresponding builtin name is `index_mut`.
-
-This trait defines the mutable index expression operator, i.e. `a[b]`, taking in `&mut self`, and returning `T`..
-
-###  `OptIndex` [↵](#traits-)
-
-The corresponding builtin name is `opt_index`.
-
-This trait defines the optional index expression operator, i.e. `a[?b]`, taking in `&self`, and returning `?T`..
-
-###  `OptIndexMut` [↵](#traits-)
-
-The corresponding builtin name is `opt_index_mut`.
-
-This trait defines the mutable index expression operator, i.e. `a[?b]`, taking in `&mut self`, and returning `?T`.
-
-###  `RevIndex` [↵](#traits-)
-
-The corresponding builtin name is `rev_index`.
-
-This trait defines the index expression operator, i.e. `a[^b]`, taking in `&self`, and returning `T`..
-
-###  `RevIndexMut` [↵](#traits-)
-
-The corresponding builtin name is `rev_index_mut`.
-
-This trait defines the mutable index expression operator, i.e. `a[^b]`, taking in `&mut self`, and returning `T`..
-
-###  `RevOptIndex` [↵](#traits-)
-
-The corresponding builtin name is `rev_opt_index`.
-
-This trait defines the optional index expression operator, i.e. `a[?^b]`, taking in `&self`, and returning `?T`..
-
-###  `RevOptIndexMut` [↵](#traits-)
-
-The corresponding builtin name is `rev_opt_index_mut`.
-
-This trait defines the mutable index expression operator, i.e. `a[?^b]`, taking in `&mut self`, and returning `?T`.
-
-###  `Fn` [↵](#traits-)
-
-The corresponding builtin name is `fn`.
-
-This trait indicates that a type may be called as a function.
-The type is accessed as `&self`, and may thus not modify its own state.
-
-###  `FnMut` [↵](#traits-)
-
-The corresponding builtin name is `fn_mut`.
-
-This trait indicates that a type may be called as a function.
-The type is accessed as `&mut self`, and may thus modify its own state.
-
-###  `FnOnce` [↵](#traits-)
-
-The corresponding builtin name is `fn_once`.
-
-This trait indicates that a type may be called as a function.
-The type is accessed as `self`, and is therefore moved.
-
-###  `IntoIterator` [↵](#traits-)
-
-The corresponding builtin name is `into_iterator`.
-
-This trait indicates that a type which can be converted into an iterator to be able to be used in a [`for` expression].
-
-###  `Iterator` [↵](#traits-)
-
-The corresponding builtin name is `into_iterator`.
-
-This trait indicates that a type is iterable and can be used inside of a 
-
-###  `Try` [↵](#traits-)
-
-The corresponding builtin name is `try`.
-
-This trait allows for a type to have a [`try` expression].
-This also defines the postfix `?` (try) operator.
-
-###  `TryUnwrap` [↵](#traits-)
-
-The corresponding builtin name is `try_unwrap`.
-
-This trait allows for a type to have a [`try!` expression] be called on it.
-This also defines the postfix `!` (unwrap) operator.
-
-###  `Catch` [↵](#traits-)
-
-The corresponding builtin name is `catch`.
-
-This trait is used to check for an erronous value when calling a catch expression on it.
-It is also defines the `??` operator.
-
-###  `Hash` [↵](#traits-)
-
-The corresponding builtin name is `hash`.
-
-This builtin only exists to allow the compiler to automatically generate a hashing function for structural types.
-
-###  `Sized` [↵](#traits-)
-
-The corresponding builtin name is `sized`.
-
-This trait marks all types that have a known size.
-
-###  `Unsize` [↵](#traits-)
-
-The corresponding builtin name is `unsize`.
-
-This trait indicates if a type may be coerced to which unsized types.
-It is used in tandem with [`CoerceUnsized`].
-
-###  `CoerceUnsized` [↵](#traits-)
-
-The corresponding builtin name is `coerce_unsized`.
-
-This trait allows types that contain an `Unsize` type to be coerced into a type containing its unsized version, i.e. `T(U is Unsize(V))` -> `T(V)`
-
-###  `Drop` [↵](#traits-)
-
-The corresponding builtin name is `drop`.
-
-This trait defines how a type should be dropped when going out of scope.
-
-###  `Borrow` [↵](#traits-)
-
-The corresponding builitn name is `borrow`
-
-This trait defines the `&` operator, but also indicates to the compiler that the value has had a shared borrow taken.
-
-###  `BorrowMut` [↵](#traits-)
-
-The corresponding builitn name is `borrow_mut`
-
-This trait defines the `&mut` operator, but also indicates to the compiler that the value has had a shared borrow taken.
-
-###  `Deref` [↵](#types-)
-
-The corresponding builtin name is `deref`.
-
-This trait implements the dereference operator.
-It is also used by the compiler to keep track of borrowing.
-
-###  `DerefMut` [↵](#types-)
-
-The corresponding builtin name is `deref_mut`.
-
-This trait implements the dereference operator.
-It is also used by the compiler to keep track of borrowing.
-
-###  `DerefMove` [↵](#types-)
-
-The corresponding builtin name is `deref_move`.
-
-This trait implements the dereference operator.
-It is also used by the compiler to keep track of borrowing.
-
-###  `LogicalAnd` [↵](#traits-)
-
-The correspodning builtin name is `logical_and`
-
-This trait implements the `&&` opeator.
-It also is used to manage let-binding chains.
-
-###  `LogicalOr` [↵](#traits-)
-
-The correspodning builtin name is `logical_and`
-
-This trait implements the `&&` opeator.
-It also is used to manage let-binding chains.
 
 ###  `ResultBuilder` [↵](#traits-)
 
@@ -324,248 +178,3 @@ Result builder allow types to be constructed in a much more ergonomic way.
 It allows a closure with a comma seperated end-expression to be converted into code using the result builder.
 
 The closures using a result builder are annotated using an attribute with the result builder's type as their name.
-
-## 24.2. Types [↵](#language-builtins-)
-
-###  `Option` [↵](#types-)
-
-The corresponding builtin name is `option`.
-
-This represents the desugared [nullable type], which wraps another type and allows it to be `.None`
-
-###  `Result` [↵](#types-)
-
-The corresponding builtin name is `result`.
-
-This represents the desugared [result type], allowing a value to be valid or have an error value
-
-###  `KeyValue` [↵](#types-)
-
-The corresponding builtin name is `key_value`
-
-This type stored key-value pairs generated by key-value array list expressions or array comprehensions.
-
-###  `KeyPath` [↵](#types-)
-
-The corresponding builtin name is `key_path`.
-
-This types stores the value created by a [key-path expression].
-
-###  `ManuallyDrop` [↵](#types-)
-
-The corresponding builtin name is `manually_drop`.
-
-This type can wrap another type and prevent its `Drop.drop()` function from being called when it goes out of scope.
-
-###  `MaybeUninit` [↵](#types-)
-
-The corresponding builtin name is `maybe_uninit`.
-
-This types wraps any type and allows it to be in an uninitialized state.
-This is not illegal behavior, as the compiler knows that the underlying data is in an invalid state.
-
-To be able to use the value wrapped by `MaybeUninit`, it needs to explicitly be declared as fully initialized.
-
-Like `ManuallyDrop`, any value wrapped within this type is **not** automatically dropped.
-
-> _Todo_: There might be compiler checks in the future that ensures all member are initialized.
-
-###  `InterplatedString` [↵](#types-)
-
-The corresponding builtin name is `interpolated_string`.
-
-This type is used to represent any string which contains interpolations, where the expressions provided will be treated as lazy values.
-
-###  `meta.TokenStream` [↵](#types-)
-
-The corresponding builtin name is `meta_token_stream`.
-
-This type represents a compiler provided token stream used by meta-functions to receive and return arbitrary code.
-
-###  `meta.FragmentStream` [↵](#types-)
-
-The corresponding builtin name is `meta_fragment_stream`.
-
-This type represents the input for pattern parse and pattern match functions.
-
-###  `meta.Ast` [↵](#types-)
-
-The corresponding builtin name is `meta_ast`.
-
-This type represents an AST sub-tree used by meta-functions to receive and return arbitrary code.
-
-###  `meta.AttribData` [↵](#types-)
-
-The corresponding builtin name is `meta_attrib_data`.
-
-## 24.3. Precedences [↵](#language-builtins-)
-
-The langauge knows about 2 precedences: `lowest_precedence` and `highest_precedence`.
-These define both the highest and lowest precedence and are used to order any user defined precedences.
-
-More info can be found [here](./precedences.md).
-
-## 24.4. Meta-functions [↵](#language-builtins-)
-
-Meta builtins, unlike other builtins are not located within the `core` library, but in the `meta` library.
-The represent special meta-functions which need additional compiler support to fully work.
-
-> _Note_: Some of these may move to fully being standalone meta-functions once the required infrastrucure needed has been finalized, like the self-hosted compiler API.
->         This is indicated for each function
-
-###  `line` [↵](#meta-functions-)
-
-The corresponding builtin name is `line`.
-
-This meta-variable returns the line on which the meta-attribute is invoked.
-
-###  `column` [↵](#meta-functions-)
-
-The corresponding builtin name is `column`.
-
-This meta-variable returns the column on which the meta-attribute is invoked.
-
-###  `group` [↵](#meta-functions-)
-
-The corresponding builtin name is `group`.
-
-The meta-variable returns the group name that the current package is in, or `None` if there in no group name.
-
-###  `package` [↵](#meta-functions-)
-
-The corresponding builtin name is `package`.
-
-The meta-variable returns the current package name.
-
-###  `library` [↵](#meta-functions-)
-
-The corresponding builtin name is `library`.
-
-The meta-variable returns the current library name.
-
-###  `file` [↵](#meta-functions-)
-
-The corersponding builtin name is `file`
-
-The meta-function gets the file name.
-
-> _Todo_: Add in docs: It can return the name, relative path to ..., and full path
-
-###  `context` [↵](#meta-functions-)
-
-The corresponding builtin name is `context`.
-
-The meta-variable gives access to the implicit context.
-
-###  `embed` [↵](#meta-functions-)
-
-The corresponding builtin name is `embed`.
-
-The meta-function allows external data to be directly included within code.
-
-This is the only meta-function that has access to the file system, but solely relative to the project's root.
-
-###  `asm` [↵](#meta-functions-)
-
-The corresponding builtin name is `asm`
-
-This meta-function allows for inline assembly directly within code
-
-See its documentation for more info.
-
-###  `tokenize` [↵](#meta-functions-)
-
-The corresponding builtin name is `meta_tokenize`.
-
-This meta-function is used to generate tokens from a given input.
-It is also used to let the compiler know which tokenize meta-function to use for [meta-blocks].
-
-See [`#tokenize`].
-
-> _Note_: In the future, the sole purpose of this builtin is to indicate the tokenize function for meta-blocks and will have an independent implementation
-
-###  `partiah_synth` [↵](#meta-functions-)
-
-The corresponding builtin name is `partiah_synth`.
-
-This meta-function is used to generate a fragment stream from a given input.
-It is also used to let the compiler know which synthesize meta-function to use for [meta-blocks].
- 
-See [`#synthesize`.
-
-###  `synthesize` [↵](#meta-functions-)
-
-The corresponding builtin name is `meta_synthesize`.
-
-This meta-function is used to generate an ast from a given input.
-It is also used to let the compiler know which synthesize meta-function to use for [meta-blocks].
- 
-See [`#synthesize`].
-
-> _Note_: In the future, the sole purpose of this builtin is to indicate the tokenize function for meta-blocks and will have an independent implementation
-
-###  `pattern_parse` [↵](#meta-functions-)
-
-The corresponding builtin name is `meta_pattern_parse`.
-
-This meta-function is used to parse a given token input into a partial AST.
-
-See [`#pattern_parse`](#1382-pattern_parse-)
-
-> _Note_: In the future, this will be a standalone meta-function
-
-###  `pattern_match` [↵](#meta-functions-)
-
-The corresponding builtin name is `meta_pattern_match`.
-
-This meta-function is used to match an input to one of the provided patterns or a wildcard, and execute that branch.
-
-See [`#pattern_match`](#1383-pattern_match-)
-
-> _Note_: In the future, this will be a standalone meta-function
-
-###  `invoke_repr` [↵](#meta-functions-)
-
-The corresponding builtin name is `invoke_repr`.
-
-The meta-function allows the program to get the representation of a value at its invocation site.
-
-See [`#invoke_rep`](#1384-invoke_repr-)
-
-###  `meta.library` [↵](#meta-functions-)
-
-The corresponding builtin name is `meta_library`.
-
-Not to be confused with the core [`library`](./package-structure.md) meta-function.
-This meta-variable is used to generate paths within a meta-attribute relative to the library the meta-function is defined in.
-
-See [`#library`](./metaprogramming/meta-utilities.md#library--package-)
-
-###  `meta.package` [↵](#meta-functions-)
-
-The corresponding builtin name is `meta_package`.
-
-Not to be confused with the core [`package`](./package-structure.md) meta-function.
-This meta-variable is used to generate paths within a meta-attribute relative to the library the meta-function is defined in.
-
-See [`#library`](./metaprogramming/meta-utilities.md#library--package-)
-
-
-
-[`CoerceUnsized`]:      #coerceunsized-
-[key-path expression]:  ./expressions/key-path-expressions.md
-[`for` expression]:     ./expressions/loop-expressions.md#for-expression-
-[`try` expression]:     ./expressions/try-expressions.md
-[`try!` expression]:    ./expressions/try-expressions.md
-[`#library`]:           ./metaprogramming/meta-utilities.md#library--package-
-[`#package`]:           ./metaprogramming/meta-utilities.md#library--package-
-[meta-blocks]:          ./metaprogramming/meta-utilities.md#meta-blocks-
-[`#invoked_rep`]:       ./metaprogramming/meta-utilities.md#invoked_repr-
-[`#pattern_match`]:     ./metaprogramming/meta-utilities.md#pattern_match-
-[`#pattern_parse`]:     ./metaprogramming/meta-utilities.md#pattern_parse-
-[`#tokenize`]:          ./metaprogramming/meta-utilities.md#tokenize-partial_synth--synthesize-
-[`#partiah_synth`]:     ./metaprogramming/meta-utilities.md#tokenize-partial_synth--synthesize-
-[`#synthesize`]:        ./metaprogramming/meta-utilities.md#tokenize-partial_synth--synthesize-
-[comparison operators]: ./operators/core-operators.md#comparison-operators-
-[nullable type]:        ./type-system/types/opaque-types.md
-[result type]:          ./type-system/types/result-types.md
