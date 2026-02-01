@@ -1,181 +1,281 @@
 # Configuration options
 
-Configuration options can be used inside [conditional compilation attributes] and the [`when` expressions](./expressions/when-expressions.md).
+Configuration options are special values provided by the compiler which can be used to:
+- configures what code is included when building a certain configuration, via:
+  - [`when` item] or any of its variants
+  - [conditional compilation attributes]
+- be used in expression via their [meta-variable] variants
 
-The possible configuration options are generated per-project and may be extended past the built-in values by compilation set extensions (_TODO: link to compiler docs_).
+The possible configuration options are generated per-project, but will always include a fixed set of builtin configurarion values.
+Additinally the available values may be extended via [compilation set extensions].
 
-> _Note_: This section contains the currently supported and planned values, some may not be supported yet
+## Attribute predicates [↵](#configuration-options)
 
-## `target_arch` [↵](#configuration-options-)
+[Conditional compilation attributes] allow the configuration to be defined in multiple different ways, any mix of these can be used:
+- using helpers to control the predicate:
+  - `not`: requires the supplied condition to not be `true`, i.e. `!cond`
+  - `all`: requires all supplied condition to be `true`, i.e. `a && b && ...`
+  - `any`: requires any supplied condition to be `true`, i.e. `a || b || ...`
+- using an expression returning a `bool` to check for certain conditions, i.e. `a == b && c == d`
 
-This value defines which architecture the code is being compiled for.
+Checking for features may be done in 2 ways:
+- using their name directly, or
+- by checking if they have the value of `.available`, i.e. `feature_name == .available`, or include any of their own sub-features, i.e. `feature_name == .subfeature`
 
-Architecture | Description
--------------|-------------
-`.interp`    | interpreter
-`.x64`       | x86_64
-`.aarch64`   | 64-bit arm (currently unsupported)
-`.riscv`     | riscv (currently unsupported)
+> _Note_ Additional ways of using features may be added in the future
 
-## `target_feature` [↵](#configuration-options-)
+## Builtin configuration values [↵](#configuration-options)
 
-Defines the features available on the current architecture.
-If a feature for a differen architecture is used then is allowed in the current scope, an error will be returned.
+A fixed set of configuration values will always be provided, regardless of build configuration.
 
-Tools should generally only show the target features of architectures a that are available within the scope
+> _Note_: This section contains an incomplete set of values of which not all variants are supported yet.
 
-### x86/x64 (x86_64) [↵](#target_feature-)
+> _Note_: In the future, all tables will be generated from compiler data, so to be consistent with supported targets
 
-Feature               | Implicit features | Description
-----------------------|-------------------|-------------
-`.adx`                |                   | [ADX](https://en.wikipedia.org/wiki/Intel_ADX) - multi-precision ADd-carry instruction eXtensions
-`.aes`                | `.sse2`           | [AES](https://en.wikipedia.org/wiki/AES_instruction_set) - Advanced Encryption Standard
-`.avx`                | `.sse4_2`         | [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) - Advanced Vector eXtensions
-`.avx2`               | `.avx`            | [AVX2](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#AVX2) - Advanced Vector eXtensions 2
-`.avx512f`            | `.avx2`           | [AVX512F](https://en.wikipedia.org/wiki/AVX-512) - Advanced Vector eXtensions 512 - Foundation
-`.avx512cd`           | `.avx512f`        | [AVX512CD](https://en.wikipedia.org/wiki/AVX-512#Conflict_detection) - Advanced Vector eXtensions 512 - 
-`.avx512er`           | `.avx512f`        | [AVX512ER](https://en.wikipedia.org/wiki/AVX-512#Exponential_and_reciprocal) - Advanced Vector eXtensions 512 - 
-`.avx512pf`           | `.avx512f`        | [AVX512PF](https://en.wikipedia.org/wiki/AVX-512#Prefetch) - Advanced Vector eXtensions 512 - 
-`.avx512vl`           | `.avx512f`        | [AVX512VL](https://en.wikipedia.org/wiki/AVX-512) - Advanced Vector eXtensions 512 - Vector Length
-`.avx512dq`           | `.avx512f`        | [AVX512DQ](https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI) - Advanced Vector eXtensions 512 - Doubleword and Quadword
-`.avx512bw`           | `.avx512f`        | [AVX512BW](https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI) - Advanced Vector eXtensions 512 - Byte and Word
-`.avx512ifma`         | `.avx512f`        | [AVX512IFMA](https://en.wikipedia.org/wiki/AVX-512#IFMA) - Advanced Vector eXtensions 512 - Integer Fused Multiply Add
-`.avx512vbmi`         | `.avx512f`        | [AVX512VBMI](https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI) - Advanced Vector eXtensions 512 - Vector Byte Manipulation Instructions
-`.avx512_4vnni`       | `.avx512f`        | [AVX512_4VNNI](https://en.wikipedia.org/wiki/AVX-512#4FMAPS_and_4VNNIW) - Advanced Vector eXtensions 512 - Vector Neural Network Instrauction Word variable precision
-`.avx512_4fmaps`      | `.avx512f`        | [AVX512_4FMAPS](https://en.wikipedia.org/wiki/AVX-512#4FMAPS_and_4VNNIW) - Advanced Vector eXtensions 512 - Fused Multiply Add packed single precision
-`.avx512vpopcntdq`    | `.avx512f`        | [AVX512VPOPCNTDQ](https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG) - Advanced Vector eXtensions 512 - Vector POPulation CouNT
-`.avx512vnni`         | `.avx512f`        | [AVX512VNNI](https://en.wikipedia.org/wiki/AVX-512#VNNI) - Advanced Vector eXtensions 512 - Vector Neural Network Instructions
-`.avx512vbmi2`        | `.avx512f`        | [AVX512VBMI2](https://en.wikipedia.org/wiki/AVX-512#VBMI2) - Advanced Vector eXtensions 512 - Vector Byte Manipulation Instructions 2
-`.avx512bitalg`       | `.avx512f`        | [AVX512BITALG](https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG) - Advanced Vector eXtensions 512 - BIT ALGorithms
-`.avx512vp2intersect` | `.avx512f`        | [AVX512VP2INTERSECT](https://en.wikipedia.org/wiki/AVX-512#VP2INTERSECT) - Advanced Vector eXtensions 512 - 
-`.avx512gfni`         | `.avx512f`        | [AVX512GFNI](https://en.wikipedia.org/wiki/AVX-512#GFNI) - Advanced Vector eXtensions 512 - Galois Field New Instructions
-`.avx512vpclmulqdq`   | `.avx512f`        | [AVX512VPCLMULQDQ](https://en.wikipedia.org/wiki/AVX-512#VPCLMULQDQ) - Advanced Vector eXtensions 512 - Vector Carry-Less Multiply Quadword
-`.avx512veas`         | `.avx512f`        | [AVX512VEAS](https://en.wikipedia.org/wiki/AVX-512#VAES) - Advanced Vector eXtensions 512 - Vector AES instructions
-`.avx512BF16`         | `.avx512f`        | [AVX512BF16](https://en.wikipedia.org/wiki/AVX-512#BF16) - Advanced Vector eXtensions 512 - BFloat16
-`.avx512FP61`         | `.avx512f`        | [AVX512FP16](https://en.wikipedia.org/wiki/AVX-512#FP16) - Advanced Vector eXtensions 512 - Half-Precision floating point
-`.bmi1`               |                   | [BMI1](https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set#BMI1) - Bit Manipulation Instructions set 1
-`.bmi2`               |                   | [BMI2](https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set#BMI2) - Bit Manipulation Instructions set 2
-`.cmpxchg16`          |                   | [cmpxchg16](https://www.felixcloutier.com/x86/cmpxchg8b:cmpxchg16b) CoMPare and eXCHange 16 Bytes (128-bits) of data atomically
-`.f16c`               | `.avx`            | [F16C](https://en.wikipedia.org/wiki/F16C) - 16-bit Floating point Conversion instructions
-`.fma`                | `.avx`            | [FMA3](https://en.wikipedia.org/wiki/FMA_instruction_set) - 3-operand Fused Multiply-Add
-`.fxsr`               |                   | [fxsave](https://www.felixcloutier.com/x86/fxsave) and [fxrstor](https://www.felixcloutier.com/x86/fxrstor) - Save and restore x87 FPU, MMX technology and SSE state
-`.lzcnt`              |                   | [lzcnt](https://www.felixcloutier.com/x86/lzcnt) - Leading Zero CouNT
-`.movbe`              |                   | [movbe](https://www.felixcloutier.com/x86/movbe) - MOVe data after swapping bytes
-`.pclmulqdq`          | `.sse2`           | [pclmulqdq](https://www.felixcloutier.com/x86/pclmulqdq) - Packed Carry-Less Multiply Quadword
-`.popcnt`             |                   | [popcnt](https://www.felixcloutier.com/x86/popcnt) - POPulation CouNT
-`.rdrand`             |                   | [rdrand](https://en.wikipedia.org/wiki/RDRAND) - ReaD RANDom number
-`.rdseed`             |                   | [rdseed](https://en.wikipedia.org/wiki/RDRAND) - ReaD random SEED
-`.sha`                | `.sse2`           | [SHA](https://en.wikipedia.org/wiki/Intel_SHA_extensions) - Secure Hash Algorith
-`.sse`                |                   | [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions) - Streaming SIMD Extensions
-`.sse2`               | `.sse`            | [SSE2](https://en.wikipedia.org/wiki/SSE2) - Streaming SIMD Extensions 2
-`.sse3`               | `.sse2`           | [SSE3](https://en.wikipedia.org/wiki/SSE3) - Streaming SIMD Extensions 3
-`.sse4_1`             | `.ssse3`          | [SSE4.1](https://en.wikipedia.org/wiki/SSE4#SSE4.1) - Streaming SIMD Extensions 4.1
-`.sse4_2`             | `.sse4_2`         | [SSE4.2](https://en.wikipedia.org/wiki/SSE4#SSE4.2) - Streaming SIMD Extensions 4.2
-`.ssse3`              | `.sse3`           | [SSSE3](https://en.wikipedia.org/wiki/SSSE3) - Supplemental Streaming SIMD Extensions 3
-`.xsave`              |                   | [xsave](https://www.felixcloutier.com/x86/xsave) - SAVE processor eXtended state
-`.xsavec`             |                   | [xsavec](https://www.felixcloutier.com/x86/xsavec) - SAVE processor eXtended states with Compaction
-`.xsaveopt`           |                   | [xsaveopt](https://www.felixcloutier.com/x86/xsaveopt) - SAVE processor eXtended state OPTimized
-`.xsaves`             |                   | [xsaves](https://www.felixcloutier.com/x86/xsaves) - SAVE processor eXtended sate Supervisor
+### `target_arch` [↵](#builtin-configuration-values-)
 
+The `target_arch` value defines the current target architecture.
+This value often lines up with the first value in a platform's target triplet.
 
-> _Note_: this list may be incomplete
+architecture  | Description
+--------------|------------------------------------------------
+`interp`      | interpreter
+`x86`         | any x86 architecture
+`i686`        | 32-bit x86, also known as i386, i686, or IA-32
+`x64`         | 64-bit x86, also known as x86_64 or AMD64
+`arm`         | any ARM architecture
+`arm_thumb`   | any ARM architecture with Thumb support
+`aarch32`     | 32-bit ARMv8 and above & Thumb-2
+`aarch64`     | 64-bit ARMv8 and above
+`armv7`       | 32-bit ARMv7
+`riscv64`     | 64-bit RISC-V
 
-### arm/aarch64 [↵](#target_feature-)
+> _Note_: Additional architectures will be supported in the future
 
-_TODO_
+### `target_feature` [↵](#builtin-configuration-values-)
 
-### riscv [↵](#target_feature-)
+The `target_feature` value defines the features of the current target architecture.
+When multiple architectures are provided, the `target_feature`s must be specified for the specific architectures.
 
-_TODO_
+> _Note_: Later on, these sub-sections will be generated from compiler provided data
 
-## `target_os` [↵](#configuration-options-)
+> _Todo_: Support for versioned features
 
-This value defines the operating system the code is being compiled for:
-- `.windows`
-- `.linux`
+> _Todo_: Move entire sub-sections into their own file, once generation from compiler data is figures out
 
-## `target_endianness` [↵](#configuration-options-)
+#### x86/64 (x86_64) [↵](#target_feature-)
 
-This value defines the endianness of the target:
-- `.little`
-- `.big`
+Features specific to any `x86` architecture.
+When used as a sub value when multiple architectures are present, it is used as `target_feature(x86 = ...)`.
 
-## `target_pointer_width` [↵](#configuration-options-)
+The compiler assumes that by default, the minimum supported cpu adheres to `x86-64-v1`.
+For any older configuration, with the exceptions of certain features such as `.sse`, similar functionality can be provided via a compiler extension.
 
-This value defines the pointer width on the target:
+Features that are not specified below may be accessed via [cpuid].
+
+All currently supported [x86/64 features] can be found on their respective page.
+
+In addition, the following feature groups are available
+
+Group | Features
+------|---------------------------------------------------------------------------
+`v1`  | `mmx`, `fxsr`, `sse`, `sse2`
+`v2`  | `cmpxchg16`, `lahf_sahf`, `popcnt`, `sse3`, `sse4_1`, `sse4_2`, `ssse3`
+`v3`  | `avx`, `avx2`, `bmi1`, `bmi2`, `f16c`, `fma`, `lzcnt`, `movbe`, `osxsave`
+`v4`  | `avx512f`, `avx512bw`, `avx512cd`, `avx512dq`, `avx512vl`
+
+## ARM [↵](#target_feature-)
+
+Features specific to AArch32/AArch64 architectures.
+When used as4 a sub value when multiple architectures are present, it is used as `target_feature(arm = ...)`.
+
+All currently supported [arm features] can be found on their respective page.
+
+In addition, the following feature groups are available
+
+Group  | Features
+-------|--------------------------------------
+`v8_1` | `crc32`, `lor`, `lse`, `pan`,
+`v8_2` | `dpb`, `pan2`, `ras`
+`v8_3` | `rcpc`, `pauth_*`
+`v8_4` | `dit`, `flagm`, `rcpc2`
+`v8_5` | `bti`, `sbe`
+`v8_6` | `i8mm`
+`v8_8` | `hbc`
+`v9_0` | `v8_5`
+`v9_6` | `cmpbr`
+
+## RISC-V [↵](#target_feature-)
+
+Features specifc to RISC-V architectures.
+When used as a sub value when multiple architectures are present, it is used as `target_feature(riscv = ...)`.
+
+All currently supported [risc-v features] can be found on their respective pave.
+
+In addition, the following feature groups are available
+
+Group    | Features
+---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+`g`      | `m`, `a`, `f`, `d`, `zicsr`, `zifencei`
+`sha`    | `h`, `ssstateen`, `shcounterenw`, `shvstvala`, `schtvala`, `shvsatpa`, `shgatpa`
+`rva20u` | `m`, `a`, `f`, `d`, `c`, `zicsr`, `zicntr`, `ziccif`, `ziccrse`, `ziccamoa`, `za128rs`, `zicclsm`
+`rva20s` | `rva20u`, `zifencei`, `svbare`, `sv39`, `svade`, `ssccptr`, `sstvecd`, `sstvala`
+`rva22u` | `m`, `a`, `f`, `d`, `c`, `zicsr`, `zicntr`, `zihpm`, `ziccif`, `ziccrse`, `ziccamoa`, `zicclsm`, `za64rs`, `zihintpause`, `zba`, `zbb`, `, zbs`, `zic64`, `zicbom`, `zicbop`, `zicboz`, `zfhmin`, `zkt`
+`rva22s` | `rva22u`, `zifencei`, `svbare`, `sv39`, `svade`, `ssccptr`, `sstvecd`, `sstvala`, `sscounterenw`, `svpbmt`, `svinval`
+`rva23u` | `rva22u`, `b`, `v`, `zvfhmin`, `zvbb`, `zvkt`, `zihintntl`, `zicond`, `zimop`, `zcmap`, `zcb`, `zfa`, `Supm`
+`rva23s` | `rva23u`, `zifencei`, `svbare`, `sv39`, `svade`, `ssccptr`, `sstvecd`, `sstvala`, `sscounterenw`, `svnapot`, `sstc`, `sscofpmf`, `ssnpm`, `ssu64xl`, `sha`
+`rvb23u` | `m`, `a`, `f`, `d`, `c`, `b`, `zicsr`, `zicntr`, `zihpm`, `ziccif`, `ziccrse`, `zicclsm`, `za64rs`, `zihintpause`, `zic64b`, `zicbom`, `zixbop`, `zicbop`, `zicboz`, `zkt`, `v`, `zvfhmin`, `zvbb`, `zvkt`, `zihintntl`, `zicond`, `zimop`, `zcmop`, `zcb`, `zfa`, `zawrs`, `supm`
+`rvb23u` | `rvb23u`, `zifencei`, `svbare`, `ssccptr`, `sstvecd`, `sstvala`, `svpbmt`, `svinval`, `svnapot`, `sstc`, `sscofpmf` `ssnpmu`, `ssu64xl`, `sha`
+
+## `target_os` [↵](#builtin-configuration-values-)
+
+The `target_os` value defines the OS the current target.
+This value often lines up with the third value in a platform's target triplet.
+
+- `window`
+- `linux`
+- `macos`
+- `android`
+- `ios`
+- `freebsd`
+- `openbsd`
+- `netbsd`
+- `none`
+
+Each target OS can have their own sub-versioning:
+
+## `target_family` [↵](#builtin-configuration-values-)
+
+The `target_family` value defines which 'family' the current target.
+A `family` often represents a set of related OS or architectures.
+
+family    | description
+----------|------------------------------------------
+`windows` | any NT-kernel OS
+`unix`    | any unix-compatible OS (posix compliant)
+`wasm`    | any WASM based environment
+
+> _Note_: Certain families may be combined, e.g. `unix` + `wasm`
+
+## `target_env` [↵](#builtin-configuration-values-)
+
+The `target_env` value defines additional disambiguating info about the current environment of the current target.
+For example, it can represent which `libc` variant is being used.
+
+By default, this value is set to `null`, unless it is explicitly required to avoid any ambiguity.
+
+env      | description
+---------|--------------------------------------
+`null`   | no explicit libc
+`gnu`    | GNU libc
+`msvc`   | msvc crt
+`musl`   | musl libc
+`sgx`    | Intel Software Guard eXtensions libc
+`sim`    | ios simulator
+`macabi` | macos libc
+`none`   | explicitly not dependents on libc
+
+## `target_abi`  [↵](#builtin-configuration-values-)
+
+The `target_abi` value defines the ABI of the current target.
+
+By default, this value is set to `null`, unless it is explicitly required to avoid any ambiguity.
+
+abi      | description
+---------|---------------------------------
+`llvm`   | LLVM IR compatible platform abi
+`eabihf` | ARM eabi
+`abi64`  | x64 abi
+
+## `target_endian`  [↵](#builtin-configuration-values-)
+
+The `target_endian` value defines the endianess of the current target.
+
+- `little`
+- `big`
+- `mixed`
+
+## `target_pointer_width`  [↵](#builtin-configuration-values-)
+
+The `target_pointer_width` value defines the bit-width of a pointer of the current target.
+
+- `16`
 - `32`
 - `64`
 
-## `compilation_mode` [↵](#configuration-options-)
+## `target_vendor`  [↵](#builtin-configuration-values-)
 
-This value defines the compilation mode:
-- `.debug`
-- `.release`
+The `target_vendor` value defines the vendor of the current target.
 
-> _Note_: Additional values can be provided to the compiler
+- `apple`
+- `fortranix`
+- `pc`: any generic PC vendor
+- `unknown`
 
-## `assertions` [↵](#configuration-options-)
+## `target_has_atomic`  [↵](#builtin-configuration-values-)
 
-This value defines whether assertions are enabled:
-- `.on`
-- `.off`
+The `target_has_atomic` value defines the maximum supported size of atomic operations on the current target.
 
-## `panic` [↵](#configuration-options-)
+- `8`
+- `16`
+- `32`
+- `64`
+- `128`
+- `ptr`
 
-This value defined the panic mode
-- `.unwind`
-- `.abort`
+## `contracts`  [↵](#builtin-configuration-values-)
+
+The `contracts` value defines which kind of contracts are current enabled
+
+value        | description
+-------------|---------------------------------
+`none`       | no contracts are enabled
+`all`        | all contracts are enabled
+`assert`     | assertions are enabled
+`pre`        | preconditions are enabled
+`post`       | postconditions are enabled
+`invar`      | all invariants are enabled
+`invar_fn`   | function invariants are enabled
+`invar_type` | type invariants are enabled
+
+## `test`  [↵](#builtin-configuration-values-)
+
+The `test` value defined which kind of tests are currently being run
+
+test    | description
+--------|--------------------------
+`unit`  | unittest are being run
+`bench` | benchmarks are being run
+`none`  | no tests are being run
+
+## `panic`  [↵](#builtin-configuration-values-)
+
+The `panic` value defines what happens when a panic occurs
+
+- `abort`
+
+> _Note_: Only `abort` is currently supported, as unwinding has not been figured out
+
+## `profile`  [↵](#builtin-configuration-values-)
+
+The `profile` value defines the current profile being compiled.
+A profile is a collection of configuration value.
+
+This value can be either of the default profiles, or one defined by the user
+
+default profile | description
+----------------|---------------------------------------------------------
+`debug`         | full debug information, safety checks, no optimizations
+`hardened`      | fully optimized, but retaining all safety checks
+`release`       | fully optimized
 
 
 
-[conditional compilation attributes]: ./attributes.md#conditional-compilation-attributes-
-[`when` expressions]:                 ./expressions/when-expressions.md)
-[ADX]:                                https://en.wikipedia.org/wiki/Intel_ADX
-[AES]:                                https://en.wikipedia.org/wiki/AES_instruction_set
-[AVX]:                                https://en.wikipedia.org/wiki/Advanced_Vector_Extensions
-[AVX2]:                               https://en.wikipedia.org/wiki/Advanced_Vector_Extensions#AVX2
-[AVX512F]:                            https://en.wikipedia.org/wiki/AVX-512
-[AVX512CD]:                           https://en.wikipedia.org/wiki/AVX-512#Conflict_detection
-[AVX512ER]:                           https://en.wikipedia.org/wiki/AVX-512#Exponential_and_reciprocal
-[AVX512PF]:                           https://en.wikipedia.org/wiki/AVX-512#Prefetch
-[AVX512VL]:                           https://en.wikipedia.org/wiki/AVX-512
-[AVX512DQ]:                           https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI
-[AVX512BW]:                           https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI
-[AVX512IFMA]:                         https://en.wikipedia.org/wiki/AVX-512#IFMA
-[AVX512VBMI]:                         https://en.wikipedia.org/wiki/AVX-512#BW,_DQ_and_VBMI
-[AVX512_4VNNI]:                       https://en.wikipedia.org/wiki/AVX-512#4FMAPS_and_4VNNIW
-[AVX512_4FMAPS]:                      https://en.wikipedia.org/wiki/AVX-512#4FMAPS_and_4VNNIW
-[AVX512VPOPCNTDQ]:                    https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG
-[AVX512VNNI]:                         https://en.wikipedia.org/wiki/AVX-512#VNNI
-[AVX512VBMI2]:                        https://en.wikipedia.org/wiki/AVX-512#VBMI2
-[AVX512BITALG]:                       https://en.wikipedia.org/wiki/AVX-512#VPOPCNTDQ_and_BITALG
-[AVX512VP2INTERSECT]:                 https://en.wikipedia.org/wiki/AVX-512#VP2INTERSECT
-[AVX512GFNI]:                         https://en.wikipedia.org/wiki/AVX-512#GFNI
-[AVX512VPCLMULQDQ]:                   https://en.wikipedia.org/wiki/AVX-512#VPCLMULQDQ
-[AVX512VEAS]:                         https://en.wikipedia.org/wiki/AVX-512#VAES
-[AVX512BF16]:                         https://en.wikipedia.org/wiki/AVX-512#BF16
-[AVX512FP16]:                         https://en.wikipedia.org/wiki/AVX-512#FP16
-[BMI1]:                               https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set#BMI1
-[BMI2]:                               https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set#BMI2
-[cmpxchg16]:                          https://www.felixcloutier.com/x86/cmpxchg8b:cmpxchg16b
-[F16C]:                               https://en.wikipedia.org/wiki/F16C
-[FMA3]:                               https://en.wikipedia.org/wiki/FMA_instruction_set
-[fxsave]:                             https://www.felixcloutier.com/x86/fxsave
-[fxrstor]:                            https://www.felixcloutier.com/x86/fxrstor
-[lzcnt]:                              https://www.felixcloutier.com/x86/lzcnt
-[movbe]:                              https://www.felixcloutier.com/x86/movbe
-[pclmulqdq]:                          https://www.felixcloutier.com/x86/pclmulqdq
-[popcnt]:                             https://www.felixcloutier.com/x86/popcnt
-[rdrand]:                             https://en.wikipedia.org/wiki/RDRAND
-[rdseed]:                             https://en.wikipedia.org/wiki/RDRAND
-[SHA]:                                https://en.wikipedia.org/wiki/Intel_SHA_extensions
-[SSE]:                                https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions
-[SSE2]:                               https://en.wikipedia.org/wiki/SSE2
-[SSE3]:                               https://en.wikipedia.org/wiki/SSE3
-[SSE4.1]:                             https://en.wikipedia.org/wiki/SSE4#SSE4.1
-[SSE4.2]:                             https://en.wikipedia.org/wiki/SSE4#SSE4.2
-[SSSE3]:                              https://en.wikipedia.org/wiki/SSSE3
-[xsave]:                              https://www.felixcloutier.com/x86/xsave
-[xsavec]:                             https://www.felixcloutier.com/x86/xsavec
-[xsaveopt]:                           https://www.felixcloutier.com/x86/xsaveopt
-[xsaves]:                             https://www.felixcloutier.com/x86/xsaves
+[conditional compilation attributes]: ./attributes/conditional-compilation.md
+[meta-variable]:                      ./metaprogramming.md#meta-variables-
+[`when` item]:                        ./items/when-items.md
+[x86/64 features]:                    ./configuration-options/x86-64-features.md
+[arm features]:                       ./configuration-options/arm-features.md
+[risc-v features]:                    ./configuration-options/riscv-features.md
+[compilation set extensions]:         #configuration-options "Todo: link to docs"
+[cpuid]:                              https://en.wikipedia.org/wiki/CPUID
