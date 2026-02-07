@@ -89,7 +89,10 @@ However, labels are only allowed if the arm's pattern does not capture any bindi
 
 
 
-[`fallthrough`]:       ./fallthrough-expressions.md
-[place expression]:    ../expressions.md#place-expressions-
-[value expression]:    ../expressions.md#value-expressions-
-[alternative pattern]: ../patterns/alternative-patterns.md
+[`fallthrough`]:            ./fallthrough-expressions.md
+[place expression]:         ../expressions.md#place-expressions-
+[value expression]:         ../expressions.md#value-expressions-
+[block expression]:         ../expressions/block-expressions.md
+[struct expression]:        ../expressions/constructing-expressions/struct-expressions.md
+[parenthesized expression]: ../expressions/paren-expressions.md
+[alternative pattern]:      ../patterns/alternative-patterns.md
