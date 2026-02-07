@@ -60,8 +60,8 @@ An actual property is defined by `prop`, followed by a name.
 
 ### Getters [↵](#accessors-)
 ```
-<prop-getter>       := [ <vis> ] [ 'const' [ '!' ] ] [ 'mut' | 'ref' ] 'get' <accessor-body>
-<field-prop-getter> := [ <vis> ] [ 'const' [ '!' ] ] [ 'mut' | 'ref' ] 'get' ( <accessor-body> | ';' )
+<prop-getter>       := [ <vis> ] [ 'const' [ '!' ] ] [ 'mut' | 'ref' ] 'get' [ '?' ] <accessor-body>
+<field-prop-getter> := [ <vis> ] [ 'const' [ '!' ] ] [ 'mut' | 'ref' ] 'get' [ '?' ] ( <accessor-body> | ';' )
 ```
 A getter is used to retrieve a value from the property.
 
@@ -69,11 +69,14 @@ A getter may also define how it will access `self`
 
 There are 3 kinds of getters, each differing in how they default get access to `self` and what the type is that they return
 
-getter    | kind     |`self` access | return type
-----------|----------|-----------------------|-------------
-`get`     | value    | `&self`               | `T`
-`ref get` | refernce | `&self`               | `&T`
-`mut get` | mutable  | `&mut self`           | `&mut T`
+getter     | kind                  |`self` access | return type
+-----------|-----------------------|--------------|-------------
+`get`      | value                 | `&self`      | `T`
+`ref get`  | refernce              | `&self`      | `&T`
+`mut get`  | mutable               | `&mut self`  | `&mut T`
+`get?`     | opt-chaining value    | `&self`      | `?T`
+`ref get?` | opt-chaining refernce | `&self`      | `?&T`
+`mut get?` | opt-chaining mutable  | `&mut self`  | `?&mut T`
 
 Both `ref` and `mut` getter will borrow the value containing the property as long as the property is borrowed.
 
@@ -86,10 +89,34 @@ When calling a getter as a function, the exact getter will be resolved by the bo
 > struct Foo {
 >     inner: i32,
 > 
->     property value {
+>     prop value: i32 {
 >         get => inner;
 >         ref get => &inner;
 >         mut get => &mut inner;
+>     }
+> }
+> ```
+
+The optional-chaining getters are used to support [optional chaining] on a property which would normally return non-optional value.
+This operator will also be used when used in a location where an optional type would be expected, such as comparing to `null`.
+
+> _Note_: Optional getters are not allowed when the property has an [optional type].
+
+> _Example_
+> 
+> Optional chaining getters can be used in cases where otherwise a default or unwrap value would be returned.
+> ```
+> struct Foo {
+>     inner: ?i32,
+> 
+>     prop value: i32 {
+>         get => inner!,
+>         get? => inner,
+>     }
+> 
+>     prop value_or_default: i32 {
+>         get => inner ?? 0,
+>         get? => inner,
 >     }
 > }
 > ```
@@ -441,8 +468,10 @@ A constraint property is similar to a trait property, except that is does not al
 [static items]:            ./statics.md
 [struct expression]:       ../expressions/constructing-expressions/struct-expressions.md
 [field expressions]:       ../expressions/field-access-expressions.md
+[optional chaining]:       ../expressions/field-access-expressions.md#optional-chaining-
 [method call expressions]: ../expressions/method-expressions.md
 [destructor]:              ../type-system/destructors.md
+[optional type]:           ../type-system/types/abstract-types/optional-types.md
 [composite type]:          ../type-system/types/composite-types.md
 [struct types]:            ../type-system/types/composite-types/struct-types.md
 [field tag]:               ../type-system/types/composite-types/struct-types.md#fields-tags-
