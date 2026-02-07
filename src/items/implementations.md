@@ -289,6 +289,7 @@ This is one of the rare cases where whitespace determines how code is parsed.
               | <property>
               | <inline-impl>
               | <init-item>
+              | <assoc-invar-contract>
 ```
 
 Associated items are items which will have path relative to the type they are part of.
