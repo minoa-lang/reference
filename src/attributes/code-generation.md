@@ -344,6 +344,73 @@ It indicates to the compiler that the field may only contain a value within the 
 
 > _Note_: This attribute may be extended to other types in the future, such as floats
 
+## `drop_flag` [↵](#code-generation-attributes)
+
+The `drop_flag` attribute allows a value to be conditionally dropped, based on a user-defined drop flag.
+It takes in at least one field, which represents the drop flag.
+
+Additionally, it may take in either of the following:
+- `on_drop`: an expression metadata, that will be ran when dropping the value, used to update the drop flag
+- `auto_flag`: a name-only metadata, that will automatically update the drop flag (this requires the flag to have a [boolean type])
+
+
+This attribute is `unsafe`, as the developer must ensure the correct updating of drop flags whenever the value is dropped.
+
+_Example_
+```
+struct Foo {
+    flags: u8,
+
+    @unsafe(drop_flag(flags & 0x1 == 0, on_drop = flags &= !0x1))
+    val: PrintOnDrop
+}
+
+mut foo := Foo{ flag: 0x1, val: PrintOnDrop("value dropped") };
+
+// Drops `val` and updates the drop flags
+drop_in_place(&mut foo.val);
+```
+
+_Example_
+```
+struct Foo {
+    flag: bool,
+
+    @unsafe(drop_flag(flag, auto_flag))
+    val: PrintOnDrop
+}
+
+mut foo := Foo{ flag: true, val: PrintOnDrop("value dropped") };
+
+// Drops `val` and updates the drop flags
+drop_in_place(&mut foo.val);
+```
+
+## `non_exhaustive` [↵](#code-generation-attributes)
+
+The `non_exhaustive` attribute may only be applied to [enums].
+It indicates that the enum is likely to be expanded in the future, so any pattern matching on it must always contain a [wildcard pattern] to handle any future addition.
+
+This also prevents the enum to be initialized from inside of the artifact it is defined in.
+
+_Example_
+```
+@non_exhaustive
+enum Foo {
+    A,
+    B
+}
+
+foo := Foo.A;
+
+match foo {
+    .A => {},
+    .B => {},
+
+    // Required, as `Foo` is non exhaustive
+    _ => {},
+}
+```
 
 ## `safety_checks` [↵](#code-generation-attributes)
 
@@ -514,8 +581,11 @@ The default mode is `.denormal`
 [language item]:                    ../langauge-items.md
 [main module]:                      ../package-structure.md#main-module-
 [main function]:                    ../package-structure.md#main-function-
+[wildcard pattern]:                 ../patterns/wildcard-patterns.md
 [statement]:                        ../statements.md
 [statements]:                       ../statements.md
+[boolean type]:                     ../type-system/types/builtin-types/boolean-types.md
+[enum]:                             ../type-system/types/composite-types/enum-types.md
 [field priority]:                   ../type-system/type-layout/composite-layout.md#field-priority-
 [transparent layout]:               ../type-system/type-layout/composite-layout.md#transparent-representation-
 [unique zero-sized address]:        ../type-system/type-layout/composite-layout.md#unique-zero-sized-address-

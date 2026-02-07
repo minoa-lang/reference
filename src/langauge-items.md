@@ -61,6 +61,7 @@ type                    | language item                | description
 [`KeyValue`]            | `key_value`                  | Type produces by a [key-value expression]
 [`KeyPath`]             | `key_path`                   | Type produces by a [key-path expression]
 [`ManuallyDrop`]        | `manually_drop`              | The contained type will not be automatically dropped by the compiler
+[`ConditionalDrop`]     | `conditional_drop`           | The contained type will only be dropped when a condition is fulfilled, used by the [`@drop_flag`] attribute
 [`MaybeUninit`]         | `maybe_uninit`               | The contained type may be in an uninitialized state, but can be used in such a state, without invoking [IB]. It is not automatically dropped
 [`DecLiteral`]          | `decimal_literal`            | Type produced by a [decimal literal]
 [`DecFloatLiteral`]     | `decimal_float_literal`      | Type produced by a [decimal float literal]
@@ -81,6 +82,7 @@ As their names imply, they represent the highest and lowest precedence an operat
 More info can be found in the [precedences section].
 
 
+[`@drop_flag`]:                ./attributes/code-generation.md#drop_flag-
 [pattern matching]:            ./expressions/match-expressions.md
 [optional chaining]:           ./expressions/field-access-expressions.md#optional-chaining-
 [index expression]:            ./expressions/index-expressions.md
@@ -153,6 +155,7 @@ More info can be found in the [precedences section].
 [`KeyValue`]:                  #types- "Todo: link to docs"
 [`KeyPath`]:                   #types- "Todo: link to docs"
 [`ManuallyDrop`]:              #types- "Todo: link to docs"
+[`ConditionalDrop`]:           #types- "Todo: link to docs"
 [`MaybeUninit`]:               #types- "Todo: link to docs"
 [`DecLiteral`]:                #types- "Todo: link to docs"
 [`DecFloatLiteral`]:           #types- "Todo: link to docs"

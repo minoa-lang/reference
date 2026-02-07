@@ -124,6 +124,7 @@ The `unsafe` attribute allows for any unsafe to be applied within it, this is us
 The following built-in attribute are unsafe:
 - [`link`]
 - [`no_mangle`]
+- [`drop_flag`]
 
 ### `path` [↵](#built-in-attributes-)
 
