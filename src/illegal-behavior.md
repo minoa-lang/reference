@@ -529,7 +529,7 @@ With the [`@safety_check`] attribute, this is the `multiple_drop` behavior.
 
 ## User defined illegal behavior [↵](#illegal-behavior)
 
-While there currently is not way to add any user-defined illegal behavior, some possible IBs can be replicated with the use of [contracts]. s
+While there currently is not way to add any user-defined illegal behavior, some possible IBs can be replicated with the use of [contracts].
 
 
 
