@@ -1,6 +1,7 @@
 # Traits
 ```
 <trait-item> := { <attribute> }* [ <vis> ] [ 'unsafe' ] [ 'sealed' ] 'trait' <name> [ <generic-prams> ] [ ':' <trait-bounds> ] [ <where-clause> ] '{' { <trait-item> }* '}'
+              | <marker-trait-item>
 ```
 
 A trait defines an abstract interface which can be implemented by types.
@@ -13,8 +14,31 @@ This represents the type which implements the trait, and not the trait itself.
 
 Traits may also contain additional generic parameters, which may include `Self`, and may be constrained by additional requirements.
 
+## Marker traits [↵](#trait)
+```
+<marker-trait-item> := { <attribute> }* [ <vis> ] [ 'unsafe' ] [ 'sealed' ] 'trait' <name> [ <generic-prams> ] [ ':' <trait-bounds> ] [ <where-clause> ] ';'
+```
+A marker trait is a special variant of a trait with no members.
+They are used to mark a certain property of a type which implements them.
 
+Additionally, marker trait do not generate a vtable, and are therefore not callable.
 
+> _Example_
+> ```
+> pub trait Numeric;
+> 
+> impl i32 as Numeric {}
+> 
+> 
+> fn print_val_is_numeric[T](val: T) {
+>     if T is Numeric {
+>         println("value \{val} is numeric");
+>     }
+> }
+> 
+> // Prints "value 0 is numeric"
+> print_val_is_numeric(0);
+> ```
 
 ## Sealed traits [↵](#trait)
 
