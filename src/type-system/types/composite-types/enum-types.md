@@ -392,24 +392,46 @@ Type      | Initial value | Increment | Auto-assign
 Enums also allow the discriminant to be stored externally to the enum.
 No additional syntax is needed for this, as in the background, any operation using the discriminant function handles both integrated and external discriminant values.
 
+When defining a value of this type, the discriminant always needs to be accessible from any location the enum is accessible.
+This means that when being declared within another type, the discriminant must be another member of that type.
+
 This value always needs to contain a valid value for the enum, or this will result in [illegal behavior](../../../illegal-behavior.md#external-enum-discriminant).
 
-> _Example_:
+> _Example_
+>
+> Locally declared enums
 > ```
 > enum Foo: i32 {
 >     A(i32),
 >     B(u32),
 > }
 > 
-> d := 0;
+> mut d := 0;
 > let f: Foo in d = .B(0);
 > 
 > assert(d == 1);
+>
+> // `e` will be assigned when the enum below is created
+> e: i32;
+> let g: Foo in e = .B(0);
 > 
-> // illegal behavior: discriminant does not contain a valid value
-> // match f {
-> //     _ => ()
-> // }
+> assert(d == 1);
+> ```
+
+> _Example_
+> 
+> As part of a type
+> ```
+> enum Foo: i32 {
+>     A(i32),
+>     B(u32),
+> }
+> 
+> extern struct Bar {
+>     tag:  i32,
+>     misc: u64,
+>     foo:  Foo in tag,
+> }
 > ```
 
 ## Fieldless enums [↵](#enum-types)
