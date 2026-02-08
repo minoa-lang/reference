@@ -412,6 +412,27 @@ This also prevents the enum to be initialized from inside of the artifact it is 
 > }
 > ```
 
+## `curry` [↵](#code-generation-attributes)
+
+The `curry` attribute may only be applied to [functions].
+It indicates that the function it is applied on can only be called as if it is a curried function.
+
+> _Example_
+> ```
+> @curry
+> fn foo(a, b, c: i32) -> i32 { a + b + c }
+> ```
+> will essentially be converted to:
+> ```
+> fn foo(a: i32) -> impl Fn(i32) -> Fn(i32) -> i32 {
+>    move fn{ (b: i32) -> impl Fn(i32) -> i32 {
+>       move fn{ (c: i32) -> i32 {
+>          a + b + c
+>       } }
+>    } }
+> }
+> ```
+
 ## `safety_checks` [↵](#code-generation-attributes)
 
 The `safety_check` attribute may only be applied to [functions] or [statements].

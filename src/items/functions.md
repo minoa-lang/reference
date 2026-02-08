@@ -646,11 +646,99 @@ Optional parameters are allowed, but they must appear after all non-optional par
 
 > _Note_: Template string functions ignore all parameters labels
 
-## Partial application (currying) [↵](#functions)
+## Partial application [↵](#functions)
 
-Function can be partially applied (also known as function currying).
+Function can be partially applied, this allows a function to bake in a given set of parameters which will stay the same over all calls to the curried function.
 
-A function containing constant arguments will, for example, be partially applied at compile time, based on those arguments.
+A function containing constant parameters will, for example, be partially applied at compile time, based on its arguments, i.e. it will return a partially applied function with the `const` params baked in.
+
+Functions can be partially applied, by passing an `_` to the arguments that will need to have a value passed to them.
+
+> _Implemention note_: When a non-`const` parameter is given a value which can be known at compile time, the compiler is free to partially apply the function using those parameters
+
+> _Example_: Partially apply with `const` parameter
+> ```
+> fn add(const a: i32, b: i32) -> i32 {
+>    a + b;
+> }
+> 
+> applied := add(4, _);
+> ```
+> `applied` will be equivalent to the following function
+> ```
+> fn applied(b: i32) -> i32 {
+>    4 + b
+> }
+>
+> // Function is assigned to the variable
+> applied := applied
+> ```
+
+> _Example_: Partially applied with runtime parameter
+> ```
+> fn add(a: i32, b: i32) -> i32 {
+>    a + b;
+> }
+> 
+> applied := add(4, _);
+> ```
+> `applied` will be equivalent to the following closure
+> ```
+> applied := fn{ (b) -> i32 => add(4, b) };
+> ```
+
+> _Todo_: Could `foo(3)` partially apply `fn foo(_ a: i32, _ b: i32)`?
+
+### Currying [↵](#functions)
+
+Functions may also be curried, this can be seen as a variant on partial application.
+But unlike partial application, a curried function is a split up version where each intermediate function takes only 1 argument.
+This will result in another function with 1 argument, until all arguments are applied.
+
+> _Example_
+> ```
+> @curry
+> fn foo(a, b, c: i32) -> i32 { a + b + c }
+> ```
+> will essentially be converted to:
+> ```
+> fn foo(a: i32) -> impl Fn(i32) -> Fn(i32) -> i32 => {
+>    move fn{ (b: i32) -> impl Fn(i32) -> i32 =>
+>       move fn{ (c: i32) -> i32 =>
+>          a + b + c
+>       }
+>    }
+> }
+> ```
+> 
+> instead of calling it as
+> ```
+> fn foo(1, 2, 3);
+> ```
+> it must now be called as
+> ```
+> fn foo(1)(2)(3);
+> ```
+
+Functions can also be curried after they are defined, using the `#curry` meta-function
+
+> _Example_
+> ```
+> fn foo(a, b, c: i32) -> i32 { a + b + c }
+> 
+> curried := #curry foo;
+> ```
+> 
+> This will result in `curried` being equivalent to
+> ```
+> curried := fn{ (a) -> Fn(i32) -> Fn(i32) -> i32 =>
+>    move fn{ (b: i32) -> impl Fn(i32) -> i32 =>
+>       move fn{ (c: i32) -> i32 =>
+>          a + b + c
+>       }
+>    }
+> }
+> ```
 
 
 
