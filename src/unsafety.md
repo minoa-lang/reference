@@ -9,11 +9,13 @@ The following features cannot be used outside of an explicitly unsafe context:
 - Calling any `unsafe` function (including intrinsics or extern functions)
 - Implementing an [`unsafe` trait]
 - Declaring an [`extern` block]
+- Applying any [`unsafe` attributes]
 
 
 
-[`extern` block]: ./items/external-export-block.md
-[extern static]:  ./items/statics.md#external-statics-
-[`unsafe` trait]: ./items/traits.md#unsafe-traits-
-[pointer]:        ./type-system/types/pointer-types.md
-[union]:          ./type-system/types/union-types.md
+[`unsafe` attributes]: ./attributes.md#unsafe-
+[`extern` block]:      ./items/external-export-block.md
+[extern static]:       ./items/statics.md#external-statics-
+[`unsafe` trait]:      ./items/traits.md#unsafe-traits-
+[union]:               ./type-system/types/composite-types/union-types.md
+[pointer]:             ./type-system/types/pointer-like-types/pointer-types.md
