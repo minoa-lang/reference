@@ -109,6 +109,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `assign`: as part of an [operator] declaration
 - `associativity`: as part of a [precedence] declaration
 - `attr`: to declare a [meta attribute] or [meta attribute role] or as part of a [meta pattern]
+- `bench`: to declare a [benchmark]
 - `bitfield`: to declare a [bitfield]
 - `block`: as part of a [meta pattern]
 - `chain`: as part of an [operator] declaration
@@ -208,6 +209,7 @@ A list of weak keywords can be found below (in alphabetic order):
 [property setter]:                 ../items/properties.md#setters-
 [thread-local static]:             ../items/statics.md#thread-local-storage-
 [test]:                            ../items/tests.md
+[benchmark]:                       ../items/tests.md#benchmarks-
 [sealed trait]:                    ../items/traits.md
 [adapt type alias]:                ../items/type-aliases.md#adapt-type-aliases-
 [distinct type alias]:             ../items/type-aliases.md#distinct-type-aliases-
