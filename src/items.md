@@ -20,6 +20,7 @@
         | <constraint-item>
         | <meta-item>
         | <assert-item>
+        | <test-item>
 ```
 
 An item is a component of a package and are organized within it, inside one of its modules.
