@@ -194,6 +194,7 @@ User defined attributes are provided using by [meta attributes].
 
 [`link`]:                        ./attributes/abi-link-symbol-ffi.md#link-
 [`no_mangle`]:                   ./attributes/abi-link-symbol-ffi.md#no_mangle-
+[`drop_flag`]:                   ./attributes/code-generation.md#drop_flag-
 [expressions]:                   ./expressions.md
 [block expressions]:             ./expressions/block-expressions.md
 [closure]:                       ./expressions/closure-expressions.md
