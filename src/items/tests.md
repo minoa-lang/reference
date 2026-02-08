@@ -1,6 +1,7 @@
 # Tests
 ```
 <test-item>      := 'test' <test-name> <test-tags> [ '(' <fn-params> ')' ] [ <test condition> ] <block> [ <test-args> ]
+                  | <bench-test-item>
 <test-name>      := <ext-name> | <string-literal>
 <test-tags>      := '[' <test-name> { ',' <test-name> }* [ ',' ] ']'
 <test-args>      := 'with` <block>
@@ -107,6 +108,8 @@ All tests are provided with the following:
 - a test allocator, allowing memory leaks to be reported
 - a logger to output any additional info
 - a random seed, e.g. to initialize an RNG
+- access to the [`test.Tester`], allowing configuration of the test
+
 
 These can be accessed via the implicit context.
 
@@ -114,7 +117,83 @@ The test will try to run multiple asserts whenever the compiler can determine th
 
 Test must appear directly within a module.
 
+## Benchmarks [↵](#tests)
+```
+<bench-test-item> := 'bench' <test-name> <test-tags> [ '(' <fn-params> ')' ] [ <test condition> ] <bench-body> [ <test-args> ]
+<bench-body> := '{' { <bench-elem> }* '}'
+<bench-elem> := <struct-fields>
+              | <bench-init>
+              | <bench-drop>
+              | <statement>
+
+<bench-init> := '#' 'init' <block>
+<bench-drop> := '#' 'drop' <block>
+```
+
+Benchmark are variants of tests, which allow a piece of code to be benchmarked.
+Like tests, they are only compiled when the project is compiled as a test.
+
+Each item has a very similar compared to a test, a couple differences:
+- Benchmarks may contain both an init and drop block.
+  These blocks allow a piece of code to run before and after the actual benchmark, allowing for setup and teardown respectively.
+
+  They have access to the all values declared at the start of the block.
+
+- Benchmarks carry struct fields with them, allowing these to be used across the body and init/drop blocks.
+
+Instead of access to the `test.Tester` context, benchmarks have access to the [`test.Bencher`] context to configure the benchmarks
+
+> _Example_
+> ```
+> bench "print dynarr elems" {
+>     arr: DynArr[i32],
+> 
+>     #init {
+>         for i in 0..=1000 {
+>             arr.push(i);
+>         }
+> 
+>         // Run 2 cycles to warm up the cache.
+>         #ctx.bench.set_warmup_count(2);
+>     }
+> 
+>     #drop {
+>         // Teardown code
+>     }
+> 
+>     for i in arr {
+>         pritnln("\{i}");
+>     }
+> }
+> ```
 
 
-[contracts]: ../constracts.md
-[asserts]:   ../constracts.md#asserts-
+Additionally, benchmarks provide 2 kinds of helpers:
+- [`do_not_optimize`]: this can be used as a meta-function or attribute and prevents certain expressions from being optimized
+- [`clobber_memory`]: this can be used as a meta-function and enforces all memory writes to be flushed before continueing.
+
+> _Example_
+> ```
+> mut val: i32 = 0;
+> for i in 0..1000 {
+> 
+>     // Prevent the compiler from optimizing this, or the loop would be optimized out.
+>     @do_not_optimize
+>     val = i;
+> 
+>     // ensure the above code finishes all writes before moving to the next iteration
+>     #clobber_memory;
+> }
+> ```
+
+
+
+
+[contracts]:         ../constracts.md
+[asserts]:           ../constracts.md#asserts-
+[implicit context]:  ../implicit-context.md
+
+[`clobber_memory`]:  #benchmarks- "Todo: link to docs"
+[`do_not_optimize`]: #benchmarks- "Todo: link to docs"
+[`test.Tester`]:     #tests "Todo: link to docs"
+[`test.Bencher`]:    #benchmarks- "Todo: link to docs"
