@@ -281,20 +281,20 @@ It indicates to the compiler that the type should inherit its type layout from t
 
 More info can be found in the [transparent layout] section.
 
-_Example_
-```
-extern struct Foo {
-    a, b: i32
-}
-
-
-// Takes over the type layout of `Foo`
-@transparent
-struct Bar {
-    sized_field: Foo,
-    unsized_field: (),
-}
-```
+> _Example_
+> ```
+> extern struct Foo {
+>     a, b: i32
+> }
+> 
+> 
+> // Takes over the type layout of `Foo`
+> @transparent
+> struct Bar {
+>     sized_field: Foo,
+>     unsized_field: (),
+> }
+> ```
 
 ## `spec_priority` [↵](#code-generation-attributes)
 
@@ -356,35 +356,35 @@ Additionally, it may take in either of the following:
 
 This attribute is `unsafe`, as the developer must ensure the correct updating of drop flags whenever the value is dropped.
 
-_Example_
-```
-struct Foo {
-    flags: u8,
+> _Example_
+> ```
+> struct Foo {
+>     flags: u8,
+> 
+>     @unsafe(drop_flag(flags & 0x1 == 0, on_drop = flags &= !0x1))
+>     val: PrintOnDrop
+> }
+> 
+> mut foo := Foo{ flag: 0x1, val: PrintOnDrop("value dropped") };
+> 
+> // Drops `val` and updates the drop flags
+> drop_in_place(&mut foo.val);
+> ```
 
-    @unsafe(drop_flag(flags & 0x1 == 0, on_drop = flags &= !0x1))
-    val: PrintOnDrop
-}
-
-mut foo := Foo{ flag: 0x1, val: PrintOnDrop("value dropped") };
-
-// Drops `val` and updates the drop flags
-drop_in_place(&mut foo.val);
-```
-
-_Example_
-```
-struct Foo {
-    flag: bool,
-
-    @unsafe(drop_flag(flag, auto_flag))
-    val: PrintOnDrop
-}
-
-mut foo := Foo{ flag: true, val: PrintOnDrop("value dropped") };
-
-// Drops `val` and updates the drop flags
-drop_in_place(&mut foo.val);
-```
+> _Example_
+> ```
+> struct Foo {
+>     flag: bool,
+> 
+>     @unsafe(drop_flag(flag, auto_flag))
+>     val: PrintOnDrop
+> }
+> 
+> mut foo := Foo{ flag: true, val: PrintOnDrop("value dropped") };
+> 
+> // Drops `val` and updates the drop flags
+> drop_in_place(&mut foo.val);
+> ```
 
 ## `non_exhaustive` [↵](#code-generation-attributes)
 
@@ -393,24 +393,24 @@ It indicates that the enum is likely to be expanded in the future, so any patter
 
 This also prevents the enum to be initialized from inside of the artifact it is defined in.
 
-_Example_
-```
-@non_exhaustive
-enum Foo {
-    A,
-    B
-}
-
-foo := Foo.A;
-
-match foo {
-    .A => {},
-    .B => {},
-
-    // Required, as `Foo` is non exhaustive
-    _ => {},
-}
-```
+> _Example_
+> ```
+> @non_exhaustive
+> enum Foo {
+>     A,
+>     B
+> }
+> 
+> foo := Foo.A;
+> 
+> match foo {
+>     .A => {},
+>     .B => {},
+> 
+>     // Required, as `Foo` is non exhaustive
+>     _ => {},
+> }
+> ```
 
 ## `safety_checks` [↵](#code-generation-attributes)
 
