@@ -331,19 +331,6 @@ fn custom_copy[T](@no_alias src: [^]T, @no_alias dst: [^]T, count: usize) {
 }
 ```
 
-## `val_range` [↵](#code-generation-attributes)
-
-The `val_range` attribute may only be defined on field with an [integer type].
-It indicates to the compiler that the field may only contain a value within the specified range, allowing the compiler to utilize any unused value for certain optimizations, such as embedding the `null` option variant within the value.
-
-> _Example_
-> ```
-> // This tell the compiler that the value will never store a value below 1, allowing it to use the 0 value for any optimizations
-> struct NonZeroU32(@val_range(1..) u32);
-> ```
-
-> _Note_: This attribute may be extended to other types in the future, such as floats
-
 ## `drop_flag` [↵](#code-generation-attributes)
 
 The `drop_flag` attribute allows a value to be conditionally dropped, based on a user-defined drop flag.

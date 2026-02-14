@@ -83,8 +83,26 @@ More information about support can be found the [documentation]
 
 > _Todo_: Links for type info flag
 
+> _Todo_: Conditionally optional types (maybe just restricted to fields, as part of the tag perhaps?), i.e.
+> ```
+> struct Foo {
+>     mode: i32,
+>     //          v---------v (info encoded in type system)
+>     data: ?Data if mode > 1,
+> }
+> ```
+> Or maybe using [constrained types] (extended from current restrictions), i.e.
+> struct Foo {
+>     mode: i32,
+>     //          v------------v (info encoded in type system)
+>     data: ?Data @ Foo.mode > 1,
+>     // or 
+>     data: ?Data @ self.mode > 1, // where `self` refers to the instance of the surround `Foo` type, and not `data`
+> }
+> ```
 
 [documentation]:              #internal-representation- "Todo: link to docs"
+[constrained types]:          ../abstract-types/contrained-types.md
 [nullable/optional pointer]:  ../pointer-like-types/pointer-types.md#optional-pointers-
 [nullable/optional pointers]: ../pointer-like-types/pointer-types.md#optional-pointers-
 [`allowzero` pointers]:       ../pointer-like-types/pointer-types.md#allowzero-
