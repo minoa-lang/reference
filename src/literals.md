@@ -8,11 +8,13 @@
 
 A literal is a compile time constant representing a given value as defined below.
 
-> _Note_: Literals are tokens and will therefore be processed in the lexer stage_
+In addition, the resulting types also support most operator which can be used on their respective type.
+Since these can be done at compile-time, there is a guarantee that these operation will not lose any precision (up to a certain point).
+Meaning that for example `16_777_216 + 1` will result in a valid value at compile-time, even when later used as an `f32`.
+
+> _Note_: Literals are tokens and will therefore be processed in the lexer stage
 
 > _Todo_: Specify how the literal values will be encoded, e.g. decimal values keeping all info so a literal operator can also know that a non-latin decimal character was used
-
-> _Todo_: When there is documentation to the literal types, link them
 
 ## Numeric literals [↵](#literals-)
 
@@ -26,7 +28,7 @@ A literal is a compile time constant representing a given value as defined below
                     | <float-hexadecimal-literal>
 ```
 
-Numeric literals are literals representing a value of either an integer or floating-point type.
+Numeric literals are literals representing a value of either an [integer] or [floating point] type.
 
 Numeric literals have no limits on precision and may be seen as infinite precision values.
 
@@ -477,14 +479,18 @@ a := "multi-line default: \{val:default= 1 + 2 }"
 > _Note_: It is not possible to split the format onto multiple lines
 
 
-[`core:.DecLiteral`]:          #decimal-literal-                     "Temporary link"
-[`core:.DecFloatLiteral`]:     #floating-point-literals-             "Temporary link"
-[`core:.BinLiteral`]:          #binary-literals-                     "Temporary link"
-[`core:.OctLiteral`]:          #octal-literals-                      "Temporary link"
-[`core:.HexLiteral`]:          #hexadecimal-integer-literals-        "Temporary link"
-[`core:.HexFloatLiteral`]:     #hexadecimal-floating-point-literals- "Temporary link"
-[`core:.CharLiteral`]:         #character-literals-                  "Temporary link"
-[`core:.StringLiteral`]:       #string-literals-                     "Temporary link"
-[`core:.InterpStringLiteral`]: #string-interpolation-                "Temporary link"
+
 [Normalization]:               ./source-representation.md#normalization
-[`bool`]:                      ./type-system/types/primitive-types.md#boolean-types
+[`bool`]:                      ./type-system/types/builtin-types/boolean-types.md
+[integer]:                     ./type-system/types/builtin-types/integer-types.md
+[floating point]:              ./type-system/types/builtin-types/floating-point-types.md
+
+[`core:.DecLiteral`]:          #decimal-literal-                     "Todo: link to docs"
+[`core:.DecFloatLiteral`]:     #floating-point-literals-             "Todo: link to docs"
+[`core:.BinLiteral`]:          #binary-literals-                     "Todo: link to docs"
+[`core:.OctLiteral`]:          #octal-literals-                      "Todo: link to docs"
+[`core:.HexLiteral`]:          #hexadecimal-integer-literals-        "Todo: link to docs"
+[`core:.HexFloatLiteral`]:     #hexadecimal-floating-point-literals- "Todo: link to docs"
+[`core:.CharLiteral`]:         #character-literals-                  "Todo: link to docs"
+[`core:.StringLiteral`]:       #string-literals-                     "Todo: link to docs"
+[`core:.InterpStringLiteral`]: #string-interpolation-                "Todo: link to docs"
