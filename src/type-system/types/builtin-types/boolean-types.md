@@ -27,6 +27,19 @@ It is not possible to implement any items on a partial/generic subset of boolean
 - a specific width boolean: only implementing an item for this specific type
 
 > _Note_: Unlike [integer types], variably-sized boolean types do not support endianess
+_: Minoa represents signed integer types using two's complement
+
+### Endianness [↵](#integer-types)
+
+Boolean type additionally support a specific endianess to be provided.
+This can be done by appending either `le` or `be` to the end of the type, specifying little- and big-endian respectively.
+
+These types have similar properties to their versions without an explicit endianess in terms of size and aligment, but have bytes that are laid out in the specific endianness.
+This is to prevent issues where endianess might result in invalid boolean representations when using multi-byte booleans, such as a `b16` being interpreted as `0x0100` instead of `0x0001`.
+
+In addition, these types don't allow any operator to be called on them and must first be converted to their native/machine-endian versions.
+
+> _Note_: Trait implementations may still be provided for these types, but none of the core operators are implemented, as this might require intermediate conversions to native/machine-endianness, which might be unclear to the user, as they could expect all integer types to behave the same in compiled code.
 
 
 

@@ -188,7 +188,7 @@ The pattern is defined by having `{}`, surrouonding a pattern definition, which 
 It also defines optional characters between `[]`, separated by `|`.
 
 A list of weak keywords can be found below (in alphabetic order):
-- `b{N}`: where `N` is any whole integer <= 65536.
+- `b{N}[le|be]`: where `N` is any whole integer <= 65536.
 - `u{N}[le|be]`: where `N` is any whole integer <= 65536.
 - `i{N}[le|be]`: where `N` is any whole integer <= 65536.
 - `f(16|32|64|128)[le|be]`
