@@ -92,6 +92,7 @@ More information about support can be found the [documentation].
 > }
 > ```
 > Or maybe using [constrained types] (extended from current restrictions), i.e.
+> ```
 > struct Foo {
 >     mode: i32,
 >     //          v------------v (info encoded in type system)
