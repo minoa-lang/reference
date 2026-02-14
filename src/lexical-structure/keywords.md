@@ -20,6 +20,7 @@ A list of strong keywords can be found below (in alphabetic order):
 - `async`
 - `await`
 - `bool`
+- `bitfield`
 - `break`
 - `catch`
 - `char`
@@ -74,6 +75,7 @@ A list of strong keywords can be found below (in alphabetic order):
 - `trait`
 - `true`
 - `try`
+- `try?`
 - `try!`
 - `type`
 - `unsafe`
@@ -110,7 +112,6 @@ A list of weak keywords can be found below (in alphabetic order):
 - `associativity`: as part of a [precedence] declaration
 - `attr`: to declare a [meta attribute] or [meta attribute role] or as part of a [meta pattern]
 - `bench`: to declare a [benchmark]
-- `bitfield`: to declare a [bitfield]
 - `block`: as part of a [meta pattern]
 - `chain`: as part of an [operator] declaration
 - `consume`: as part of an [operator] declaration
