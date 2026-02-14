@@ -75,11 +75,11 @@ This is most commonly done with type which do not allow a zero value.
 An example of a type which support this, would be a pointer type, resulting in a [nullable/optional pointer].
 Since a pointer cannot represent an address of `0x0000000000000000`, it can be used as the optional's `None` value.
 
-Whether a type can use this optimization can be found using the `NullOptimization` flag within the type's typeinfo.
+Whether a type can use this optimization can be found using the `Flattened` flag within the type's typeinfo (see []).
 
 A value for this can be manually defined using the [`@val_range`] attribute on a type.
 
-More information about support can be found the [documentation]
+More information about support can be found the [documentation].
 
 > _Todo_: Links for type info flag
 
@@ -103,6 +103,7 @@ More information about support can be found the [documentation]
 
 [documentation]:              #internal-representation- "Todo: link to docs"
 [constrained types]:          ../abstract-types/contrained-types.md
+[flattened enums]:            ../composite-types/enum-types.md#flattened-enum-
 [nullable/optional pointer]:  ../pointer-like-types/pointer-types.md#optional-pointers-
 [nullable/optional pointers]: ../pointer-like-types/pointer-types.md#optional-pointers-
 [`allowzero` pointers]:       ../pointer-like-types/pointer-types.md#allowzero-
@@ -110,4 +111,4 @@ More information about support can be found the [documentation]
 [`if` expressions]:           ../../../expressions/if-expressions.md#optional-shorthand-
 [`while` loops]:              ../../../expressions/loop-expressions.md#result-while-
 [`for` loops]:                ../../../expressions/loop-expressions.md#result-for-
-[`?` or `!` operator]:        ../../../operators/special-operators.md#try-operator- 
+[`?` or `!` operator]:        ../../../operators/special-operators.md#try-operator-

@@ -1,6 +1,6 @@
 # Enum types
 ```
-<enum-type>     := <type-layout-specifiers> [ 'mut' ] 'enum' [ <discriminant> ] '{' <enum-members> '}'
+<enum-type>     := <type-layout-specifiers> [ 'mut' ] [ 'flatten' ] 'enum' [ <discriminant> ] '{' <enum-members> '}'
 <enum-memebers> := [ <enum-variants> ] { <assoc-item> }*
 ```
 
@@ -483,35 +483,70 @@ assert(f == Foo.A);
 A record enum is a variant of an enum which is a _record_ instead of _nominal_ type.
 These structs follow the rules defined [here](../nominal-vs-record-types.md).
 
-## Adhoc ADT enums [↵](#enum-types)
-```
-<adhoc-enum> := <type> { '|' <type> }+
-```
+## Flattened enum [↵](#enum-types)
 
-An adhoc ADT enum type is a special variant of an enum which can contain multiple types, but cannot be explicitly defined.
-None of its variants has a name, and must therefore be distinguished using either a [type check expression] or a [type check pattern].
+Enum types support flattening, this allows an enum which would normally take up additional space to store the discriminant, and transform it into an enum which encodes this within its variant's values.
+
+Flattening has the following restrictions:
+- each variant needs to either be:
+  - a fieldless variant, which counts as a single value, or
+  - have a field which can be represented by a constrained range of values
+- if these values fit within a common type, their sum must fit within the common type
+
+If these conditions do not hold, the enum will act like any other enum.
+
+> _Note_: This mechanism is used to implement null-optmization for [optional types]
 
 > _Example_
 > ```
-> let a: i32 | f32 = 1.0;
+> // has 124 values
+> type TyA = i8 @ -62..62;
 > 
-> match a {
->     val @ is i32 => do_int(val),
->     val @ is f32 => do_float(val),
+> // has 4 values
+> enum TyB {
+>     A,
+>     B,
+>     C,
+>     D,
+> }
+> 
+> // since an enum can be represented using an i32, the common type is an i32
+> // 4 + 124 == 128 distinct, so this fits in an i8, so
+> // the enum will only take up 1 byte
+> flatten enum Foo {
+>     A(TyA), // stored in values 0-3
+>     B(TyB), // stored in values 4-127 and -128
 > }
 > ```
-> > _Todo_: Is there a shorthand for type check patterns?
-
-If a literal is assigned to an adhoc enum, type confusion may happen if the literal can be converted to 2 or more possible types, in this case, the user needs to be explicit about the type of the literal
-```
-// error: cannot distinguish between either type
-// let a: f32 | f64 = 1.0;
-
-// Explicitly defined to be a f32, so this works fine
-let a: f32 | f64 = 1.0f32;
-```
-
-> _Implementation note_: Internally, adhoc enums generate a full enum, and any check check is converted into a discriminant comparison.
+> 
+> For bigger types this can have a much larger impact, take the following sub-types
+> ```
+> type Small = i32 @ -1..=1;
+> type LargePos = i32 @ 2..;
+> type LargeNeg = i32 @ ..=-2;
+> ```
+> And the resulting type
+> ```
+> enum Foo {
+>     SmallVal(Small)
+>     LargePosVal(LargePos)
+>     LargeNegVal(LargeNeg)
+> }
+> ```
+> Because the discriminant needs to be stored separate from the actual values, this type would take up 8-bytes:
+> - 1 byte for the discriminant
+> - 3 bytes of padding
+> - 4 bytes for the actual values
+> 
+> Now if this were flattened
+> ```
+> enum Foo {
+>     SmallVal(Small)
+>     LargePosVal(LargePos)
+>     LargeNegVal(LargeNeg)
+> }
+> ```
+> This would take up only 4 bytes, where the values can be stored directly, and the discriminant can be derived from it
 
 ## Enum field coercion [↵](#enum-types)
 
@@ -544,6 +579,36 @@ let f: Foo = 1.0;
 ```
 
 > _Tooling_: Tools should make clear a coercion happens here, and optionally annotate to which variant assignment happens.
+
+## Adhoc ADT enums [↵](#enum-types)
+```
+<adhoc-enum> := <type> { '|' <type> }+
+```
+
+An adhoc ADT enum type is a special variant of an enum which can contain multiple types, but cannot be explicitly defined.
+None of its variants has a name, and must therefore be distinguished using either a [type check expression] or a [type check pattern].
+
+> _Example_
+> ```
+> let a: i32 | f32 = 1.0;
+> 
+> match a {
+>     val @ is i32 => do_int(val),
+>     val @ is f32 => do_float(val),
+> }
+> ```
+> > _Todo_: Is there a shorthand for type check patterns?
+
+If a literal is assigned to an adhoc enum, type confusion may happen if the literal can be converted to 2 or more possible types, in this case, the user needs to be explicit about the type of the literal
+```
+// error: cannot distinguish between either type
+// let a: f32 | f64 = 1.0;
+
+// Explicitly defined to be a f32, so this works fine
+let a: f32 | f64 = 1.0f32;
+```
+
+> _Implementation note_: Internally, adhoc enums generate a full enum, and any check check is converted into a discriminant comparison.
 
 ## Flag enums [↵](#enum-types)
 ```
@@ -585,6 +650,7 @@ These are the following:
 [`discriminant(enum_type)`]:    #accessing-discriminant-values- "Todo: link to docs"
 [struct]:                       ./struct-types.md
 [tuple struct]:                 ./tuple-struct-types.md
+[optional types]:               ../abstract-types/optional-types.md
 [path expression]:              ../../../expressions/path-expressions.md
 [call expression]:              ../../../expressions/call-expressions.md
 [struct expression]:            ../../../expressions/constructing-expressions/struct-expressions.md
@@ -593,5 +659,3 @@ These are the following:
 [meta function]:                ../../../metaprogramming.md
 [identity comparison operator]: ../../../operators/core-operators.md#identity
 [type check pattern]:           ../../../patterns/type-check-patterns.md
-
-[`repr` attribute]:  ../../../attributes/abi-link-symbol-ffi.md#repr-

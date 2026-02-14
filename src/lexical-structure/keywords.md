@@ -121,6 +121,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `expr`: as part of a [meta pattern]
 - `extend`: as part of a [trait implementation]
 - `flag`: to declare a [flag enum]
+- `flatten`: to declared [flattened enums]
 - `field`: within a [field property]
 - `field_convert`: as part of meta [hygiene info]
 - `full`: to declare a [meta attribute role]
@@ -227,6 +228,7 @@ A list of weak keywords can be found below (in alphabetic order):
 [bitfield]:                        ../type-system/types/bitfield-types.md
 [opaque type]:                     ../type-system/types/opaque-types.md
 [record bitfield]:                 ../type-system/types/bitfield-types.md#record-bitfield-types-
+[flattened enums]:                 ../type-system/types/composite-types/enum-types.md#flattened-enum-
 [record enum]:                     ../type-system/types/enum-types.md#record-enum-types-
 [pointer type]:                    ../type-system/types/pointer-types.md#alignment-
 [`allowzero` pointer type]:        ../type-system/types/pointer-types.md#allowzero-
