@@ -84,24 +84,85 @@ The core precedences are a set of precedences which are provided by the `core` l
 
 Below is a table of the provided core precedences, their properties, and the operators they apply to
 
-precedence  | lower than  | associativity | associated operators
-------------|-------------|---------------|------------------------------------------------------------------------
-`Highest`   | n/a         | n/a           | none, this indicates the highest precedence in the precedence hierachy
-`PowRep`    | `Highest`   | left to right | `**` ([power/repetition])
-`MulDivRem` | `PowRep`    | left to right | `*` ([multiply]), `/` ([division]), and `%` ([remainder])
-`AddSub`    | `MulDivRem` | left to right | `+` ([addition]) and `-` ([subtraction])
-`ShiftRot`  | `AddSub`    | left to right | `<<` & `>>` ([bitwise shift]), and `<<*` & `>>*` ([bitwise rotate])
-`BitAnd`    | `ShiftRot`  | left to right | `&` ([bitwise AND])
-`BitXor`    | `BitAnd`    | left to right | `~` ([bitwise XOR])
-`BitOr`     | `BitXor`    | left to right | `\|` ([bitwise OR])
-`Select`    | `BitOr`     | left to right | `?:` ([or-else]) and `??` ([catch])
-`Compare`   | `Select`    | left to right | `==`, `!=`, etc ([comparison])
-`Contains`  | `Compare`   | left to rifht | `in` and `!in` ([contains])
-`LogicAnd`  | `Compare`   | left to right | `&&` ([logical AND])
-`LogicOr`   | `LazyAnd`   | left to right | `\|\|` ([logical OR])
-`Range`     | `LogicOr`   | left to right | `..` & `..=` ([range])
-`Pipe`      | `Range`     | left to right | `<\|` & `\|>` ([pipe])
-`Lowest`    | `Pipe`      | n/a           | none, this indicates the lowest precedence in the precedence hierachy
+precedence  | lower than              | associativity | associated operators
+------------|-------------------------|---------------|------------------------------------------------------------------------
+`Highest`   | n/a                     | n/a           | none, this indicates the highest precedence in the precedence hierachy
+`PowRep`    | `Highest`               | left to right | `**` ([power/repetition])
+`MulDivRem` | `PowRep`                | left to right | `*` ([multiply]), `/` ([division]), and `%` ([remainder])
+`AddSub`    | `MulDivRem`             | left to right | `+` ([addition]) and `-` ([subtraction])
+`ShiftRot`  | `Highest`               | left to right | `<<` & `>>` ([bitwise shift]), and `<<*` & `>>*` ([bitwise rotate])
+`BitAnd`    | `ShiftRot`              | left to right | `&` ([bitwise AND])
+`BitXor`    | `BitAnd`                | left to right | `~` ([bitwise XOR])
+`BitOr`     | `BitXor`                | left to right | `\|` ([bitwise OR])
+`Select`    | `AddSub` or `BitOr`     | left to right | `?:` ([or-else]) and `??` ([catch])
+`Range`     | `Select`                | left to right | `..` & `..=` ([range])
+`Compare`   | `Range`                 | left to right | `==`, `!=`, etc ([comparison])
+`Contains`  | `Range`                 | left to rifht | `in` and `!in` ([contains])
+`LogicOr`   | `Compare` or `Contains` | left to right | `\|\|` ([logical OR])
+`LogicAnd`  | `LogicOr`               | left to right | `&&` ([logical AND])
+`Pipe`      | `RLogicAnde`            | left to right | `<\|` & `\|>` ([pipe])
+`Lowest`    | `Pipe`                  | n/a           | none, this indicates the lowest precedence in the precedence hierachy
+
+> _Note_: No precedence may either use `Highest` for `higher_than`, or `Lowest` for `lower_than`
+
+Current core precedence graph:
+```
+                +---------+
+                | Highest |
+                +---------+
+                 /       \
+                /         \
+               /           \
+          +----+        +-------+
+          | ** |        | << >> | 
+          +----+        +-------+
+            |                |
+        +-------+          +---+
+        | * / % |          | & |
+        +-------+          +---+
+            |                |
+         +-----+           +---+
+         | + - |           | ~ |
+         +-----+           +---+
+             \               |
+              \            +---+
+               \           | | |
+                \          +---+
+                 \         /
+                  \       /
+                   \     /
+                  +-------+
+                  | ?: ?? |
+                  +-------+
+                      |
+                  +--------+
+                  | .. ..= |
+                  +--------+
+                    /    \
+                   /      \
+                  /        \
++---------------------+  +--------+
+| == != < <= > >= etc |  | in !in |
++---------------------+  +--------+
+                  \        /
+                   \      /
+                    \    /
+                    +----+
+                    | && |
+                    +----+
+                      |
+                    +----+
+                    | || |
+                    +----+
+                      |
+                  +-------+
+                  | <| |> |
+                  +-------+
+                      |
+                  +--------+
+                  | Lowest |
+                  +--------+
+```
 
 ## Precedence scoping and use
 ```
