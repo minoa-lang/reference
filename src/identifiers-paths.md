@@ -71,7 +71,7 @@ Both path types have some common path starts:
 - `$lib.`
 
 In addition, regular paths have additional path starts:
-- `<type>.`
+- `(:type:).`
 - `Self.`
 - `.`
 - `:.`
@@ -177,7 +177,7 @@ struct S {
 }
 
 // `Self` is also in scope for generics, and thus can be used within the generic parameters
-trait Foo<Rhs = Self> {
+trait Foo[Rhs = Self] {
     // ...
 }
 ```
@@ -201,7 +201,7 @@ fn foo() {
     let f: Foo = .Bar;
 }
 
-fn bar[T is Trait(.Output = i32)](x: T) {}
+fn bar[T is Trait[.Output = i32]](x: T) {}
 ```
 
 
