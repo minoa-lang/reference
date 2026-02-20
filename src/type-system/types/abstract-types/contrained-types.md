@@ -19,8 +19,8 @@
 
 A constrained type allows a given set of restrictions to type.
 Specifically, it allows a restriction or constraint to be added to any type or sub-type which may be represented as a type which can
-- be compared to another value
-- can be within a range or collection
+- be compared to another value, by implementing the [identity and/or total ordering] operators
+- can be within a range or collection, by implementing the [contains] operator
 
 The allowed contraints depend on the type they're applied on:
 - [builtin types] may be limited to a given range of values, the following are supported:
@@ -94,16 +94,18 @@ The constraint checks are limited to the following expressions:
 
 
 
-[builtin types]:        ../builtin-types.md
-[character]:            ../builtin-types/character-types.md
-[integer]:              ../builtin-types/integer-types.md
-[floating point]:       ../builtin-types/floating-point-types.md
-[sequence types]:       ../sequence-types.md
-[composite types]:      ../composite-types.md
-[invariant contracts]:  ../../../contracts.md#invariant-contracts-
-[arrays]:               ../../../expressions/constructing-expressions/array-expressions.md
-[paths]:                ../../../expressions/path-expressions.md
-[value bounds]:         ../../../generics.md#value-bounds-
-[constraints]:          ../../../generics/constraints.md
-[literals]:             ../../../literals.md
-[ranges]:               ../../../operators/core-operators.md#range-
+[builtin types]:                  ../builtin-types.md
+[character]:                      ../builtin-types/character-types.md
+[integer]:                        ../builtin-types/integer-types.md
+[floating point]:                 ../builtin-types/floating-point-types.md
+[sequence types]:                 ../sequence-types.md
+[composite types]:                ../composite-types.md
+[invariant contracts]:            ../../../contracts.md#invariant-contracts-
+[arrays]:                         ../../../expressions/constructing-expressions/array-expressions.md
+[paths]:                          ../../../expressions/path-expressions.md
+[value bounds]:                   ../../../generics.md#value-bounds-
+[constraints]:                    ../../../generics/constraints.md
+[literals]:                       ../../../literals.md
+[ranges]:                         ../../../operators/core-operators.md#range-
+[identity and/or total ordering]: ../../../operators/special-operators.md#comparison-
+[contains]:                       ../../../operators/special-operators.md#contains-
