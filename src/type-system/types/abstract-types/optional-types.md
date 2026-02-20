@@ -95,9 +95,7 @@ More information about support can be found the [documentation].
 > ```
 > struct Foo {
 >     mode: i32,
->     //          v------------v (info encoded in type system)
->     data: ?Data @ Foo.mode > 1,
->     // or 
+>     //          v--------------v (info encoded in type system)
 >     data: ?Data @ self.mode > 1, // where `self` refers to the instance of the surround `Foo` type, and not `data`
 > }
 > ```
