@@ -1,9 +1,9 @@
 # Struct patterns
 ```
-<struct-pattern>       := <struct-pattern-path> '{' <struct-pattern-elem> { ',' <struct-pattern-elem> } [ ',' <> ] '}'
+<struct-pattern>       := <struct-pattern-path> '{' <struct-pattern-elems> '}'
 <struct-pattern-path>  := <path>
                         | '.'
-<struct-pattern-elems> := <struct-pattern-elem> { ',' <struct-pattern-elem> }* [ ',' <struct-pattern-etc> ]
+<struct-pattern-elems> := <struct-pattern-elem> { ',' <struct-pattern-elem> }* [ ',' [ <struct-pattern-etc> ] ]
                         | <<struct-pattern-etc>>
 <struct-pattern-elem>  := { <attribute> }* <ext-name> ':' <pattern>
                         | { <attribute> }* <int-literal> ':' <pattern>
