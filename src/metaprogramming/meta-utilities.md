@@ -118,6 +118,6 @@ This can only be called on the parameters of the meta-function, any other values
 
 [`#tokenize`]:      #tokenize--synthesize- "Todo: link to docs"
 [`#synthesize`]:    #tokenize--synthesize- "Todo: link to docs"
-[`#parse_pattern`]: #parse_pattern-"Todo: link to docs"
+[`#parse_pattern`]: #parse_pattern- "Todo: link to docs"
 [`#match_pattern`]: #match_pattern- "Todo: link to docs"
 [`#invoked_repr`]:  #invoked_repr- "Todo: link to docs"

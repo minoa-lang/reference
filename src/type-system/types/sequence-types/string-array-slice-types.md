@@ -33,7 +33,7 @@ In addition, when using `str` or `str16`, creating a slice which is not located 
 
 ## String array
 ```
-<string-array-type> := <string-kind> '(' <expr> [ ':' <expr> ] ')'
+<string-array-type> := <string-kind> '[' <expr> [ ':' <expr> ] ']'
 ```
 
 Unlike an array, there is no guarantee that the array will contain a full string, only that it will be stored within a statically sized array with a given size.
@@ -45,7 +45,7 @@ If an explicit sentinel is provided, it will both add a sentinel at the end of t
 ## String slice
 
 ```
-<string-slice-type> <string-kind> [ '(' ':' <expr> ')' ]
+<string-slice-type> <string-kind> [ '[' ':' <expr> ']' ]
 ```
 
 Similarly to any other [slice], as this type is backed by other data within the program, they are dynamically sized types and can therefore only be instantiated through a pointer or reference type.

@@ -45,7 +45,7 @@ The allowed contraints depend on the type they're applied on:
   > 
   > Limit the first element to only contain a range of values, and the last to only 1 valid value
   > ```
-  > type A = [3]i32 @ [0] == 0..=4 && [2] in [42, 1337];
+  > type A = [3]i32 @ [0] in 0..=4 && [2] in [42, 1337];
   > ```
 
 - [composite types] may limit the value of a given field
@@ -59,7 +59,7 @@ The allowed contraints depend on the type they're applied on:
   >     b: i32,
   > }
   > 
-  > type A = Foo @ .a == -1..=1;
+  > type A = Foo @ .a in -1..=1;
   > ```
   > 
   > limiting a tuple field
@@ -75,14 +75,13 @@ The allowed contraints depend on the type they're applied on:
   >     Val2{ x, y: f32 }
   > }
   > 
-  > type C = Bar @ .Val1(.2) >= 0 && .Val2{.x && .y} == -1.0..=1.0;
+  > type C = Bar @ .Val1(.2) >= 0 && .Val2{.x && .y} in -1.0..=1.0;
   > ```
 
 
 The constraint checks are limited to the following expressions:
 - [literals], for all operators, except `in` and `!in`
-- [ranges], for `==`, `in`, and `!in`
-- [arrays], for `in` and `!in`
+- [ranges] and [arrays], for `in` and `!in`
 - [paths] to any of the above
 
 > _Note_: This is similar to having [invariant contracts] on types, but more resticted

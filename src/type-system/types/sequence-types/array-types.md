@@ -1,6 +1,6 @@
 # Array types
 ```
-<array-type> := '[' <expr> [ ':' <expr> ] ']' <type>
+<array-type> := '[' <expr> ']' <type>
               | <sentinel-terminated-array-type>
               | <enumerated-array-type>
               | <key-value-array-type>
