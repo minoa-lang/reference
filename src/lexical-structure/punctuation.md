@@ -62,3 +62,35 @@ These unicode ranges consists out of:
 - etc
 
 > _Note_: For more info about which punctuation is not allowed as an operator, can be found [here](../operators.md#disallowed-operators-).
+
+
+While most punctuation is not treated specially, the following have a syntactical meaning, and thus have a special meaning to the compiler. They are the following
+
+- `.`
+- `..`
+- `...`
+- `..=`
+- `,`
+- `:`
+- `;`
+- `_`
+- `-`
+- `=`
+- `:=`
+- `^`
+- `*`
+- `+`
+- `@`
+- `#`
+- `$`
+- `$$`
+- `!`
+- `?`
+- `?.`
+- `\`
+- `&`
+- `&&`
+- `|`
+- `||`
+- `->`
+- `=>`
