@@ -44,8 +44,8 @@ These are differentiated by how the comment starts, regular doc comments start w
 > _Note_: A top-level doc comment within the library's root module applies directly to the library.
 
 During compilation, these are interpreted as their relavent attributes, i.e.
-- regular doc comments like `/// Foo` and `/** Foo */` map to `@doc("Foo")`
-- module-level doc comments like `//! Bar` and `/*! Bar */` map to `@!doc("Bar")`
+- regular doc comments like `/// Foo` maps to `@doc("Foo")`
+- module-level doc comments like `//! Bar` maps to `@!doc("Bar")`
 
 But at the same time, they are stored as _trivia_, similar to how regular comments are stored
 
