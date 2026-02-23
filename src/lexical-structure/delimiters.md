@@ -1,8 +1,8 @@
 # Delimiters
 ```
 <delimiters>         := <opening-delimiters> | <closing-delimiters>
-<opening-delimiters> := '{' | '(' | '[' | '[<' | '(:'
-<closing-delimiters> := '}' | ')' | ']' | '>]' | ':)'
+<opening-delimiters> := '{' | '(' | '[' | '[<'
+<closing-delimiters> := '}' | ')' | ']' | '>]'
 ```
 
 Delimiters are special forms of punctuation that are used to surround an inner subsection of code.
@@ -16,4 +16,3 @@ Delimiter     | Type
 `[` and `]`   | (Square) brackets
 `(` and `)`   | Parentheses
 `[<` and `>]` | Vector brackets
-`(:` and `:)` | Type path parentheses

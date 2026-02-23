@@ -48,6 +48,8 @@ x;
 x.y.z;
 ```
 
+> _Implementation_: Quite some paths can only be determined to be a path after types are resolved, and may therefore not always appear within the AST as a complete path
+
 ### Path start [↵](#paths-)
 ```
 <simple-path-start>       := <path-super-start> | <path-meta-lib-start> | <path-meta-package-start>
@@ -56,7 +58,7 @@ x.y.z;
 <path-meta-lib-start>     := '$' 'lib'
 
 <path-start>              := <simple-path-start> | <path-type-start> | <path-self-type-start> | <path-infer-start> | <path-lib-ref-start>
-<path-type-start>         := '(:' <type> ':)' '.'
+<path-type-start>         := '(' <type> ')' '.'
 <path-self-type-start>    := 'Self' '.'
 <path-infer-start>        := '.'
 <path-lib-rel-start>      := ':.'
@@ -71,7 +73,7 @@ Both path types have some common path starts:
 - `$lib.`
 
 In addition, regular paths have additional path starts:
-- `(:type:).`
+- `(type).`
 - `Self.`
 - `.`
 - `:.`
@@ -137,14 +139,16 @@ It can only be used inside of the any supportred meta function.
 
 When used in a [use item], it is equivalent to: `$package:$lib`.
 
-#### `(:...:).` [↵](#path-start-)
+#### `(...).` [↵](#path-start-)
 
-The `(:type:).` path start indicates a path that is relative to a specific type.
+The `(type).` path start indicates a path that is relative to a specific type.
 This syntax allows unnamed types to be used as the start of a path where they would normally not be able to be used.
 
 ```
-(:^T:).foo(); // Calls `^T`'s foo
-```
+(^T).foo(); // Calls `^T`'s foo
+``` 
+
+> _Note_: This is essentially just a type in a [parenthesized expression], on which a field access will occur
 
 #### `Self.` [↵](#path-start-)
 
@@ -319,23 +323,24 @@ mod no { // :.no
 
 
 
-[type start]:         #-
-[attributes]:         ./attributes.md
-[block expressions]:  ./expressions/block-expressions.md
-[function call]:      ./expressions/call-expressions.md
-[generic arguments]:  ./generics.md#generic-arguments-
-[generic parameters]: ./generics.md#generic-parameters-
-[enum]:               ./items/enums.md
-[functions]:          ./items/functions.md
-[implementations]:    ./items/implementations.md
-[use item]:           ./items/use.md
-[use items]:          ./items/use.md
-[extended name]:      ./lexical-structure/names.md#extended-names-
-[metafunctions]:      ./metaprogramming.md
-[meta function]:      ./metaprogramming.md
-[meta blocks]:        ./metaprogramming/meta-utilities.md#meta-blocks-
-[composite types]:    ./type-system/types/composite-types.md
-[type inferred]:      ./type-system/types/inferred-types.md
-[`Self` type]:        ./type-system/types/self-type.md
-[visibility]:         ./visibility.md
-[main module]:        ./package-structure.md#main-module-
+[type start]:               #path-start-
+[attributes]:               ./attributes.md
+[block expressions]:        ./expressions/block-expressions.md
+[function call]:            ./expressions/call-expressions.md
+[parenthesized expression]: ./expressions/paren-expressions.md
+[generic arguments]:        ./generics.md#generic-arguments-
+[generic parameters]:       ./generics.md#generic-parameters-
+[enum]:                     ./items/enums.md
+[functions]:                ./items/functions.md
+[implementations]:          ./items/implementations.md
+[use item]:                 ./items/use.md
+[use items]:                ./items/use.md
+[extended name]:            ./lexical-structure/names.md#extended-names-
+[metafunctions]:            ./metaprogramming.md
+[meta function]:            ./metaprogramming.md
+[meta blocks]:              ./metaprogramming/meta-utilities.md#meta-blocks-
+[composite types]:          ./type-system/types/composite-types.md
+[type inferred]:            ./type-system/types/inferred-types.md
+[`Self` type]:              ./type-system/types/self-type.md
+[visibility]:               ./visibility.md
+[main module]:              ./package-structure.md#main-module-
