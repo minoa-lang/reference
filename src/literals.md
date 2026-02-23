@@ -247,7 +247,7 @@ A character literal is of type [`core:.CharLiteral`].
                       | '\\'
                       | '\p'
                       | '\x' <hex-digit> <hex-digit>
-                      | '\u{' { <hex-digit> }[1,6] '}'
+                      | '\u{' { <hex-digit> }[1,8] '}'
 <string-escape-code> := <excape-code>
                       | '\p'
 ```
@@ -259,7 +259,7 @@ These can be generally split into 3 categories:
 - Hex codes
 - Unicode codepoints
 
-A simple escape code exists out of a forward slash `/`, followed by single character.
+A simple escape code exists out of a backslash `\`, followed by single character.
 The following escape codes are available:
 
 code | Escaped codes
@@ -282,7 +282,7 @@ By default, the hex code is limited to a value within the non-extended ASCII cha
 This behavior can be changed, if a supporting literal operator, or template string expression is used.
 
 Unicode codepoints represent any valid unicode codepoint, including surrogate pairs, this means all characters in the range 0x000000-0x10FFFF.
-A unicode escape code is written as `\u{`, followed by between 1 and 6 hex digits, and closed of with a `}`.
+A unicode escape code is written as `\u{`, followed by between 1 and 8 hex digits, and closed of with a `}`.
 
 > _Examples_:
 > ```
