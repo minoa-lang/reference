@@ -228,12 +228,14 @@ Unlike other literals, a boolean literal is not defined by a special constant ty
 
 ## Character literals [↵](#literals-)
 ```
-<character-literal> := "'" ( ? any unicode codepoint, except for \ or ' or in file representation of \n \r \t ? | <escape-code> ) "'"
+<character-literal> := "'" ( ? any unicode codepoint, except for \ or ' or in-file representation of either \n or \r \t ? | <escape-code> ) "'"
 ```
 
 A character literal defines a character, represented by its unicode codepoints.
 
 A character literal is of type [`core:.CharLiteral`].
+
+> _Implementation_: If a character literal is not closed using a `'`, all content on the line will be parsed as an invalid character literal
 
 ### Escaped characters [↵](#63-character-literals-)
 
