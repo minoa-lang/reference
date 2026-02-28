@@ -445,7 +445,7 @@ Including any string interpolation will result in the string being of type [`cor
 <multi-line-string-interp-start>    := `\` `{` <expr>
 <multi-line-string-interp-segments> := '"' `\` `{` <expr> <new-line>
 <multi-line-string-interp-end>      := [ ':' <string-interp-format> ] '}'
-                                     | []
+<string-interp-format>              := ? any character, other than an unmatched `}` ?
 ```
 
 It is also possible to let a have an interpolated value defined across a multiple line.
@@ -457,7 +457,7 @@ Since string literals are designed to be able to independently parse each source
 > "\{ +
 > "\{ 2 }, we hit the end";
 > ```
-> this is equlivalent to
+> this is equivalent to
 > ```
 > a := "Interplate this value \{ 1 + 2 }, we hit the end";
 > ```
@@ -465,18 +465,18 @@ Since string literals are designed to be able to independently parse each source
 
 This can also be applied to the default value
 
-_Example_
-```
-let val: ?i32 = .None;
-a := "multi-line default: \{val:default=
-"\{ 1 +
-"\{ 2 }
-```
-this is equivalent to
-```
-let val: ?i32 = .None;
-a := "multi-line default: \{val:default= 1 + 2 }"
-```
+> _Example_
+> ```
+> let val: ?i32 = .None;
+> a := "multi-line default: \{val:default=
+> "\{ 1 +
+> "\{ 2 }
+> ```
+> this is equivalent to
+> ```
+> let val: ?i32 = .None;
+> a := "multi-line default: \{val:default= 1 + 2 }"
+> ```
 
 > _Note_: It is not possible to split the format onto multiple lines
 
