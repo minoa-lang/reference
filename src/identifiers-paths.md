@@ -14,7 +14,7 @@ Names, identifiers, and paths are used to refer to things like:
 
 ```
 <iden-name>     := <name> | <path-disambig>
-<ext-iden-name> := <ext-iden-name> | <iden-name>
+<ext-iden-name> := <ext-name> | <iden-name>
 <iden>          := <iden-name> [ <generic-args> ]
 <ext-iden>      := <ext-iden-name> [ <generic-args> ]
 ```

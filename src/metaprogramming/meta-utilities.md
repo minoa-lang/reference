@@ -65,6 +65,10 @@ expr: meta.fragment.Expression = #synthesize {
 };
 ```
 
+Finally, both support 2 special values:
+- `$package`: Will be replaced by the current package name the macro is defined in
+- `$lib`: Will be replaced by the current library name the macro is defined in
+
 ### `#parse_pattern` [↵](#utility-meta-functions-)
 
 [`#parse_pattern`] allows for a `meta.TokenStream` to be converted to a `meta.FragmentStream`, based on a [meta-pattern] provided.

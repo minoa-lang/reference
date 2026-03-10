@@ -274,6 +274,8 @@ code | Escaped codes
 `\'` | U+0027 (APOSTROPHE)
 `\\` | U+005C (BACKSLASH)
 `\p` | Platform specific linebreaks, i.e. `\r\n` on windows and `\n` on unix-like systems
+`\}` | `}` within a interpolation format specifiers
+`\,` | `,` within a interpolation format specifiers
 
 The special escaped character `\p` is only allowed within string literals, as it may result in a 2 character long sequence.
 
@@ -323,6 +325,9 @@ To keep to the rule that each line should be able to be independtly parsed witho
 
 Each segments is its own independent token, which start with a `"` (double quote), but ends on a new line, this indicated that the literal continues in the next token.
 The multiline literal ends whenever a matching closing `"` is encountered.
+
+This is done to allow for a consistent newline insertion across different file encodings.
+By default this will match the line ending as the target OS, but can be controlled with a compiler setting.
 
 As each line is required to start with a `"`, indentation inside of the string can easily be controlled, any preceeding indentation will be ignored, and any succeeding indentation will be part of the the string.
 
@@ -419,43 +424,41 @@ The multiline literal ends whenever a matching closing sequence is encountered.
 
 ### String interpolation [↵](#string-literals-)
 ```
-<string-interpolation>   := '\' '{' <expr> [ ':' [ <string-interp-def> ',' ] ? format specifiers ? ] '}'
+<string-interpolation>   := '\' '{' <expr> [ ':' [ <string-interp-def> ',' ] <string-interp-format> ] '}'
                           | '\' '{' <expr> [ ':' <string-interp-def> ] '}'
                           | <multi-line-string-interp-section>
 <string-interp-def>      := [ 'default' '=' <expr> { <mult-line-string-interp-segment> }* ]
-<string-interp-format>   := ? format specifiers?
+<string-interp-format>   := ? any characters, other than an unescaped ',', or an unmatched or unmatched '}' ?
 ```
 
 A string interpolation allows expressions to be included within a string, allowing it to use the computed value, in addition to a set of format specifiers.
 A string interpolation is indicated by `\`, followed by a block, which contains an expression and a format specifier, separated by a `:`.
 
-In addition, when passing an optional type, a default value may be provided to the interpolation, this is done by having a `default` format argument, followed by the default value.A
+In addition, when passing an optional type, a default value may be provided to the interpolation, this is done by having a `default` format argument, followed by the default value.
 A comma is then used to separate it from the format arguemnts
 
 The expression used within the interpolation have no requirements by themselves, but these are set by the function or template string that uses them.
 In cases where a string with an interpolation does not need special interpolation, this will be converted into just a string representation, as if the `\` was not present.
 
-The format specifier may be any sequence of tokens, and its representation is interpreted by one or more formatters.
+The format specifier may be any sequence of characters, except for an unmatched or unescaped `}`, and its representation is interpreted by one or more formatters.
 
 Including any string interpolation will result in the string being of type [`core:.InterpStringLiteral`].
 
 #### Multi-line string interpolation
 ```
-<mutli-line-string-interp-section>  := <multi-line-string-interp-start> { <multi-line-string-interp-segment> }* { <multi-line-string-interp-end> }
+<mutli-line-string-interp-section>  := <multi-line-string-interp-start> { <multi-line-string-interp-segment> }* <multi-line-string-interp-end>
 <multi-line-string-interp-start>    := `\` `{` <expr>
-<multi-line-string-interp-segments> := '"' `\` `{` <expr> <new-line>
+<multi-line-string-interp-segments> := '"' <expr> <new-line>
 <multi-line-string-interp-end>      := [ ':' <string-interp-format> ] '}'
-<string-interp-format>              := ? any character, other than an unmatched `}` ?
 ```
 
 It is also possible to let a have an interpolated value defined across a multiple line.
-Since string literals are designed to be able to independently parse each source line, a special version of multi-line string is used.
 
 > _Example_
 > ```
 > a := "Interpolate this value: \{ 1
-> "\{ +
-> "\{ 2 }, we hit the end";
+> " +
+> " 2 }, we hit the end";
 > ```
 > this is equivalent to
 > ```
@@ -469,8 +472,8 @@ This can also be applied to the default value
 > ```
 > let val: ?i32 = .None;
 > a := "multi-line default: \{val:default=
-> "\{ 1 +
-> "\{ 2 }
+> " 1 +
+> " 2 }"
 > ```
 > this is equivalent to
 > ```

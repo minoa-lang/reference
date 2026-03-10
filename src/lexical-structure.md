@@ -15,8 +15,6 @@ In general, each token will only have the trivia preceeding it associated with i
 - Any suffix description comment will be associated with the preceeding token
 - Any comment after the last token will be associated with the file
 
-> _Note_: The langauge is designed in such a way, that each line can independently be parsed into a set of tokens without needing to have any context from the surrounding lines
-
 
 
 

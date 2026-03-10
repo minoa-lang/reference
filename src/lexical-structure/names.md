@@ -29,7 +29,7 @@ Unlike most languages, Minoa support what are so-called _extended names_, these 
 Extended names are allowed in the following cases:
 - [package], [library] names
 - a [path] segments, as long as it is not the first segment
-- fields
+- [fields]
 - names in [field access expressions]
 
 > _Example_:
@@ -42,9 +42,7 @@ Extended names are allowed in the following cases:
 > ```
 > Either value can now be used like `.2D`, without requiring either an underscore to be added like `._2D` or longer names like `.Dimension2D` to be used.
 
-> _Implementation node_: When an extended name start with a number, it will be parsed as a [decimal integer literal], followed by a regular [name]
-
-> _Todo_: Link 'fields'
+> _Implementation_: When an extended name start with a number, it will be parsed as a [decimal integer literal], followed by a regular [name]
 
 ## Special names [↵](#names)
 ```
@@ -68,3 +66,4 @@ These will either be:
 [decimal integer literal]:  ../literals.md#decimal-literal-
 [package]:                  ../package-structure.md
 [library]:                  ../package-structure.md#libraries-
+[fields]:                   ../type-system/types/composite-types/struct-types.md#fields-
