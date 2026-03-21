@@ -12,11 +12,11 @@ Array types are laid out as a contiguous chunk of memory.
 An array's size expression needs to be a value that can be evaluated at compile time, and has a type of `usize`.
 In location where the array is assigned an array expression, the size can be left out and replaced by a `_`, which will infer the size of the array.
 
-_Example_
-```
-// Compiler infers the size of the array as 4 here
-let a: [_]u8 = [ 0, 1, 2, 3 ];
-```
+> _Example_
+> ```
+> // Compiler infers the size of the array as 4 here
+> let a: [_]u8 = [ 0, 1, 2, 3 ];
+> ```
 
 Arrays support out-of-bound safety checks.
 
@@ -70,9 +70,9 @@ Sentinel values have a limited, but useful set of applications:
 
 ## Enumerated arrays [↵](#array-types)
 ```
-<enumerated-array-type> := [ 'sparse' ] '[' <type> ']' <type>
+<enumerated-array-type> := [ 'sparse' ] '[' <type> [ ':' <expr> ] ']' <type>
 ```
-In addition to `usize` sizes, a fieldless enum, generaly with an integer discriminant, may also be used as the size of an array, this is done by supplying the type of the enum as the size expression.
+In addition to `usize` sizes, a fieldless enum, generally with an integer discriminant, may also be used as the size of an array, this is done by supplying the type of the enum as the size expression.
 Enums without an integer discriminant are allowed, but are required to implement `EnumIndex`.
 
 Enumerated arrays can be indexed using both an enum variant, or its corresponding discriminant value.
@@ -87,7 +87,7 @@ In this case, the array will have the size of the number of variants within the 
 
 For an enumerated array to support the `sparse` attribute, the enum used to index the array must implement the `SparseIndex` trait.
 
-> _Note_: Sparse arrays do come with a slight overhead for the translation of an the enum's value to the actual index.
+> _Note_: Sparse arrays do come with a slight overhead for the translation of the enum's value to the actual index.
 
 > _Tooling_: It is recommended that tooling indicates whether an index into the array is sparse or not
 

@@ -39,7 +39,7 @@ Some usecases of an anonymous bitfield:
 ## Fields [↵](#struct-types)
 ```
 <bitfield-fields> := ( <bitfield-field> | <bitfield-padding> ) { ',' <bitfield-field> | <bitfield-padding> }* [ ',' ]
-<bitfield-field>  := [ 'vis' ] [ 'mut' ] <name> ':' <type> [ <bitfield-field-size> ]
+<bitfield-field>  := { <attribute> }* [ 'vis' ] [ 'mut' ] <name> ':' <type> [ <bitfield-field-size> ]
 ```
 
 Fiels make up the data which is stored within the bitfield type.

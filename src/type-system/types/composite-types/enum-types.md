@@ -612,7 +612,7 @@ let a: f32 | f64 = 1.0f32;
 
 ## Flag enums [↵](#enum-types)
 ```
-<flag-enum-type> := 'enum' [ <discriminant> ] '{' <flag-enum-members> '}'
+<flag-enum-type> := 'flag' 'enum' [ <discriminant> ] '{' <flag-enum-members> '}'
 <flag-enum-members> := <unit-enum-variant> { ',' <unit-enum-variant> } [ ',' ] { <assoc-item> }*
 ```
 

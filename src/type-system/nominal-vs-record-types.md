@@ -22,6 +22,7 @@ Record types have the following properties:
   - `Identity`
   - `StructurealIdentity`
   - `Hash`
+  - `Default`
 - all fields are public
 - when initialized using a struct expression, any fields left out will be assigned their `Default::default()` value.
 

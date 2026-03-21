@@ -62,7 +62,6 @@ A list of strong keywords can be found below (in alphabetic order):
 - `pub`
 - `ref`
 - `return`
-- `safe`
 - `self`
 - `static`
 - `str`
@@ -105,7 +104,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `accessor`: to declare a [meta attribute role]
 - `adapt`: to declare an [adapt type alias]
 - `alias`: to declare an [disambiguation alias]
-- `align`: to declare the alignment of a [pointer type]
+- `align`: to declare the alignment of a [type]
 - `allowzero`: to declare an [`allowzero` pointer type]
 - `arbitrary`: as part of meta [hygiene info]
 - `assign`: as part of an [operator] declaration
@@ -120,6 +119,8 @@ A list of weak keywords can be found below (in alphabetic order):
 - `distinct`: to declare a [distinct type alias]
 - `expr`: as part of a [meta pattern]
 - `extend`: as part of a [trait implementation]
+- `extern`: as part of [externals]
+- `export`: as part of [exports]
 - `flag`: to declare a [flag enum]
 - `flatten`: to declared [flattened enums]
 - `field`: within a [field property]
@@ -148,6 +149,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `opaque`: to declare an [opaque type]
 - `overloaded`: as part of meta [hygiene info]
 - `package`: as part of a [visibility specifier]
+- `packed`: as part of a [layout specifier]
 - `pat`: as part of a [meta pattern]
 - `path`: as part of a [meta pattern]
 - `peer`: to declare a [meta attribute role]
@@ -159,6 +161,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `prop`: to declare a [property]
 - `raw`: to get a [raw pointer value]
 - `record`: to declare a [record struct], [record tuple struct], [record enum], or [record bitfield]
+- `safe`: to declare [externals] and [unions] as `safe`
 - `sealed`: to declare a [sealed trait]
 - `set`: to declare a [property setter]
 - `sparse`: to declare a [sparse array type]
@@ -200,6 +203,8 @@ A list of weak keywords can be found below (in alphabetic order):
 [simple path start]:               ../identifiers-paths.md#simple-paths-
 [disambiguation alias]:            ../items/disambig-aliases.md
 [flag enum]:                       ../items/enums.md#flag-enum-
+[externals]:                       ../items/external-export-block.md#external-blocks-
+[exports]:                         ../items/external-export-block.md#export-blocks-
 [lazy parameter]:                  ../items/functions.md#lazy-parameters-
 [template string function]:        ../items/functions.md#template-string-functions-
 [initializer]:                     ../items/initializers.md
@@ -224,16 +229,19 @@ A list of weak keywords can be found below (in alphabetic order):
 [literal operator]:                ../operators/literal-operators.md
 [raw pointer value]:               ../operators/special-operators.md#pointer-borrowing-
 [precedence]:                      ../precedences.md#user-defined-precedence-
+[layout specifier]:                ../type-system/type-layout.md#layout-specifiers-
+[type]:                            ../type-system/types.md
 [sparse array type]:               ../type-system/types/array-types.md
 [bitfield]:                        ../type-system/types/bitfield-types.md
 [opaque type]:                     ../type-system/types/opaque-types.md
 [record bitfield]:                 ../type-system/types/bitfield-types.md#record-bitfield-types-
 [flattened enums]:                 ../type-system/types/composite-types/enum-types.md#flattened-enum-
+[union]:                           ../type-system/types/composite-types/union-types.md
+[unions]:                          ../type-system/types/composite-types/union-types.md
 [record enum]:                     ../type-system/types/enum-types.md#record-enum-types-
 [pointer type]:                    ../type-system/types/pointer-types.md#alignment-
 [`allowzero` pointer type]:        ../type-system/types/pointer-types.md#allowzero-
 [volatile pointer]:                ../type-system/types/pointer-types.md#volatile-pointers-
 [record struct]:                   ../type-system/types/struct-types.md#record-structs-
 [record tuple struct]:             ../type-system/types/tuple-struct-types.md#record-tuple-structs-
-[union]:                           ../type-system/types/union-types.m
 [visibility specifier]:            ../visibility.md#specifiers-

@@ -25,6 +25,8 @@ This split mainly exists to allow for systems where the memory pointer and the r
 
 ```
 <unsigned-type> := ? \u{N}[le|be]\ where N is any integer <= 65536 ?
+                 | 'uptr'
+                 | 'usize'
 ```
 
 An unsigned type represents a natural number (including 0).
@@ -56,6 +58,8 @@ This is because the cast can strip [provenence] information that is needed by th
 
 ```
 <signed-type> := ? \i{N}[le|be]\ where N is any integer <= 65536 ?
+               | 'iptr'
+               | 'isize'
 ```
 
 An signed type represents a integral number.

@@ -1,6 +1,6 @@
 # Struct types
 ```
-<struct-type>   := <type-layout-specifiers> [ 'mut' ] 'struct' [ <generic-params> ] '{' [ <struct-members> ] '}'
+<struct-type>   := <type-layout-specifiers> [ 'mut' ] 'struct' '{' [ <struct-members> ] '}'
 <struct-members>:= [ <struct-fields> ] { <assoc-item> }*
 ```
 
@@ -44,6 +44,7 @@ Some usecases of an anonymous struct:
 <struct-fields> := <struct-field> { ',' <struct-field> }* [ ',' ]
 <struct-field>  := { <attribute> }* [ <vis> ] [ 'mut' ] <field-names> ':' <type> [ '=' <field-defs> ] [ <field-tag> ]
                  | <field-property>
+                 | <use-field>
 <field-names>   := <ext-name> { ',' <ext-name> }[N]
 <field-defs>    := <expr> { ',' <expr> }[N]
 ```
@@ -91,7 +92,7 @@ This visibility defines the fields visibility relative to the location of the st
 
 ### Multiple named fields [↵](#fields-)
 
-A field's definition may contain multiple names, indicatin that this contains multiple fields with the same type.
+A field's definition may contain multiple names, indicating that this contains multiple fields with the same type.
 Any specifier applied to this combined field will be propagated to each individual field generated from this..
 
 > _Example_
@@ -165,7 +166,7 @@ This means that if a field should have a default value that is calculated at com
 
 ### Use fields [↵](#fields-)
 ```
-<struct-use-field> := { <attribute> }* [ <vis> ] [ 'mut' ] [ 'extend' ] 'use' [ <name> ':' ] <path>
+<use-field> := { <attribute> }* [ <vis> ] [ 'mut' ] [ 'extend' ] 'use' [ <name> ':' ] <path> [ '=' <field-defs> ] [ <field-tag> ]
 ```
 
 Since Minoa does not support inheritence, it can be useful to still copy fields, and optional functionality, from a struct that is used in the composition of it, in this case a `use` field can be used.
@@ -306,6 +307,28 @@ If after importing all associated items, there would be a conflicting item, an e
 > ```
 > In this case, there are 3 conflicting functions
 
+#### Default values
+
+It is possible to provide a (partial) set of default values to the `use` field.
+This is done by assigning a [struct expression] with an inferred name, which assigns only the field that need a default value.
+
+> _Example_
+> ```
+> struct Foo {
+>     a: i32,
+>     b: u32,
+>     c: f32,
+> }
+> 
+> struct Bar {
+>     // Will assign a default values to the `a` and `b` fields provided by `Foo`
+>     use Foo = .{ a: 0, c: 2.0 },
+>     d: bool,
+> }
+> 
+> bar := Bar { b: 1, d: true };
+> ```
+
 #### Restrictions [↵](#use-fields-)
 
 For a `use` field to be valid, it must adhere to the following restrictions:
@@ -367,6 +390,15 @@ When a `use` field is marked as `mut`, it will only make imported field `mut`, i
 > }
 > ```
 
+#### Record use field
+```
+<record-use-field>     := { <attribute> }* [ 'extend' ] 'use' [ <name> ':' ] <path> [ '=' <field-defs> ] [ <field-tag> ]
+```
+
+A record use field is a variant of a use field which may be located in a struct type.
+
+This use field is restricted to only using other record types.
+
 #### Fields tags [↵](#fields-)
 ```
 <struct-field-tag> := <string-literal> | <raw-string-literal>
@@ -426,7 +458,8 @@ Anonymous struct fields allow a struct to be directly defined within a different
 > low := unsafe { f.low };
 > ```
 
-When a [`repr` attribute] is applied to the type containing an anonymous struct field, this attribute will also be applied to the struct field.
+When a [type layout specifier] is applied to the type containing an anonymous struct field, this attribute will also be applied to the struct field.
+Because of this, the anonyymous struct fields may not have any specifiers applied to them
 
 ## Associated items [↵](#struct-types)
 
@@ -437,12 +470,13 @@ These must appear after all fields have been declared, not doing so will result 
 ```
 <record-struct-type>   := <type-layout-specifiers> [ 'mut' ] 'record' [ 'struct' ] '{' <record-struct-fields> { <assoc-item> }* '}'
 <record-struct-fields> := <record-struct-field> { ',' <record-struct-field> } [ ',' ]
-<record-struct-field>  := <field-names> ':' <type> [ <struct-field-tag> ]
+<record-struct-field>  := { <attribute> }* <field-names> ':' <type> [ '=' <field-defs> ] [ <struct-field-tag> ]
+                        | <record-use-field>
 ```
 A record structure, also known as a POD (Plain Old Data) struct, is a variant of a struct which is a _record_ instead of _nominal_ type.
-These structs follow the rules defined [here](../nominal-vs-record-types.md).
+These structs follow the rules defined [here](../../nominal-vs-record-types.md).
 
-For a record struct, it is allowed to leave out the `struct` keyword.
+For a record struct type, it is allowed to leave out the `struct` keyword.
 
 ## Unit structs [↵](#struct-types)
 
@@ -454,13 +488,14 @@ A unit struct may be seen as a distinct version of a unit type, but with the erg
 
 
 
-[union]:              ./union-types.md
-[slice]:              ../sequence-types/slice-types.md
-[`packed`]:           ../../type-layout/composite-layout.md#packed
-[`repr` attribute]:   ../../../attributes.md#repr-
-[struct expression]:  ../../../expressions/constructing-expressions/struct-expressions.md
-[initializer]:        ../../../items/initializers.md
-[struct item]:        ../../../items/structs.md
-[unit struct item]:   ../../../items/structs.md#unit-structs-
-[meta function]:      ../../../metaprogramming.md
-[common denominator]: ../../../visibility.md#common-denominator-
+[union]:                 ./union-types.md
+[slice]:                 ../sequence-types/slice-types.md
+[`packed`]:              ../../type-layout/composite-layout.md#packed
+[type layout specifier]: ../../type-layout.md#layout-specifiers-
+[`repr` attribute]:      ../../../attributes.md#repr-
+[struct expression]:     ../../../expressions/constructing-expressions/struct-expressions.md
+[initializer]:           ../../../items/initializers.md
+[struct item]:           ../../../items/structs.md
+[unit struct item]:      ../../../items/structs.md#unit-structs-
+[meta function]:         ../../../metaprogramming.md
+[common denominator]:    ../../../visibility.md#common-denominator-oe

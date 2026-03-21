@@ -1,19 +1,20 @@
 # Floating point types
 ```
-<floating-point-type> := \f(16|32|64|128)[le|be]\
+<floating-point-type> := \f(16|32|64|80|128|256)[le|be]\
 ```
 
 A floating point type represent the same sized type as defined in the IEEE-754-2008 specification.
 
 Below is a table of supported floating-point types:
 
-Type   | Bit width | Mantissa bits      | Exponent bits | Min value  | Max value   | Smallest value | Significant decimal digits | Notes
--------|-----------|--------------------|---------------|------------|-------------|----------------|----------------------------|------
-`f16`  | 16-bits   | 10 (11 implicit)   | 5             | 6.55e+5    | -6.55e+5    | 6.10e-5        | 3                          |
-`f32`  | 32-bits   | 23 (24 implicit)   | 8             | 3.40e+38   | -3.40e+38   | 1.17e-38       | 6                          |
-`f64`  | 64-bits   | 52 (53 implicit)   | 11            | 1.80e+308  | -1.80e+308  | 2.23e-308      | 15                         |
-`f80`  | 80-bits   | 1 + 63             | 15            | 1.19e+4932 | -1.19e+4932 | 3.36e-4932     | 18                         | Does not have implicit bit, but explicit integer bit, i.e. `1 + ...`
-`f128` | 128-bits  | 112 (113 implicit) | 15            | 1.19e+4932 | -1.19e+4932 | 3.36e-4932     | 33                         |
+Type   | Bit width | Mantissa bits      | Exponent bits | Max value    | Min value   | Smallest value | Significant decimal digits | Notes
+-------|-----------|--------------------|---------------|--------------|-------------|----------------|----------------------------|------
+`f16`  | 16-bits   | 10 (11 implicit)   | 5             | 6.55e+5      | -6.55e+5    | 6.10e-5        | 3                          |
+`f32`  | 32-bits   | 23 (24 implicit)   | 8             | 3.40e+38     | -3.40e+38   | 1.17e-38       | 6                          |
+`f64`  | 64-bits   | 52 (53 implicit)   | 11            | 1.80e+308    | -1.80e+308  | 2.23e-308      | 15                         |
+`f80`  | 80-bits   | 1 + 63             | 15            | 1.19e+4932   | -1.19e+4932 | 3.36e-4932     | 18                         | Does not have implicit bit, but explicit integer bit, i.e. `1 + ...`
+`f128` | 128-bits  | 112 (113 implicit) | 15            | 1.19e+4932   | -1.19e+4932 | 3.36e-4932     | 33                         |
+`f256` | 256-bits  | 236 (237 implicit) | 19            | 1.61e78913   | |1.61e78913 | 2.24e-262142   | 71                         |
 
 Both the size and alignment of the floating points are defined by their bit-width.
 

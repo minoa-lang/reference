@@ -241,7 +241,7 @@ When used within a [visibility] or [use item], a path may start with an addition
 
 ### Regular paths [↵](#paths-)
 ```
-<path> := [ <path-start> ] <iden> { '.' <iden> }*
+<path> := [ <path-start> ] <iden> { '.' <ext-iden> }*
 ```
 
 Paths are used in expression and types to refer to a given item.

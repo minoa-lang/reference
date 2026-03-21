@@ -1,6 +1,6 @@
 # Path type
 ```
-<path-type> := <type-path>
+<path-type> := <path>
 ```
 
 A path type isn't a type by itself, but it refers to another type, either directly or indirectly to:
