@@ -7,6 +7,8 @@ Any conversions allowed by coercion can also be explicitly performed using the t
 
 > _Note_: This description is informal and not yet fully defined
 
+> _Todo_: Error coercions and `!T` -> `?T` coercions
+
 ## Coercion sites [↵](#type-coercions)
 
 A coersion can only occur at certain sites in a program.

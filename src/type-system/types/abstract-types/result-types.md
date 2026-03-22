@@ -39,14 +39,14 @@ To simplify assigning a non-error value to a result type (i.e. when in the `.Ok(
 
 This can also be used to infer the type of the value
 
-_Example_
-```
-// Since no explicit type is provided, the compiler will default to assigning a `Result(_, ())` type to `v`
-let v = .Err(());
-
-// We now assign an integer value (defaulted to i32), so we can now infer that the full type of `v` is `Result(i32, ())`
-v = 2;
-```
+> _Example_
+> ```
+> // Since no explicit type is provided, the compiler will default to assigning a `Result(_, ())` type to `v`
+> let v = .Err(());
+> 
+> // We now assign an integer value (defaulted to i32), so we can now infer that the full type of `v` is `Result(i32, ())`
+> v = 2;
+> ```
 
 ## Internal representation [↵](#result-types)
 
@@ -57,7 +57,7 @@ enum Result[T, E] {
     Err(E),
 }
 ```
-Meaning that any `!T` will be converted to `Result[T, _]`, and any `E!T` to `Result[T, E]`.
+Meaning that any `!T` will be converted to `Result[T, ()]`, and any `E!T` to `Result[T, E]`.
 
 In addition, since certain error types require only a couple values, this could be stored within unused values in the type containing it.
 When this is the case, the result type will use the unused values to represent the `.Err(E)` state.
