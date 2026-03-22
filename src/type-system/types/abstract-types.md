@@ -7,6 +7,7 @@
                   | <vector-type>
                   | <inferred-type>
                   | <constrained-type>
+                  | <key-value-type>
 ```
 
 An abstract type is a type which is a type that, while not being core to the type system and does not map to type within the compiler, has additional language support.
