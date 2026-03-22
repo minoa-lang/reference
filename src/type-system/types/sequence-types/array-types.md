@@ -3,7 +3,6 @@
 <array-type> := '[' <expr> ']' <type>
               | <sentinel-terminated-array-type>
               | <enumerated-array-type>
-              | <key-value-array-type>
 ```
 
 An array type (`[N]T`) is a fixed-size sequence of `N` elements of type `T`
@@ -90,16 +89,6 @@ For an enumerated array to support the `sparse` attribute, the enum used to inde
 > _Note_: Sparse arrays do come with a slight overhead for the translation of the enum's value to the actual index.
 
 > _Tooling_: It is recommended that tooling indicates whether an index into the array is sparse or not
-
-## Key-value arrays [↵](#array-types)
-```
-<key-value-array-type> := '[' <expr> ']' '(' <type> ':' <type> ')'
-```
-
-A key-value array is a special variant of an array that allows key-value pairs to be stored.
-While this might look similar to an array of tuples, the `:` is used to indicate that this maps keys to values.
-
-Each element within a `[N](K:V)` is stored as a [`KeyValue(K,V)`]
 
 
 [array expression]:  ../../../expressions/constructing-expressions.md#array-list-expression- "Todo: update once constructing expressions are split into multiple files"

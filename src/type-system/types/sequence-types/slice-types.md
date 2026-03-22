@@ -44,18 +44,8 @@ Since a slice is a view into an other data, there is no guuarantee that the sent
 Sentinel values have a limited, but useful set of applications:
 - interoperability with C and OS libraries which commonly expect a range of values to be terminated with a sentinel
 - indicating the end of certain collections, possible avoiding additional checks based on the length of the data
-- used as termination canaries
-
-## Key-value slices [↵](#slice-types)
-```
-<key-value-slice-type> := '[' ']' '(' <type> ':' <type> ')'
-```
-
-A key-value slice is a special variant of an array that allows key-value pairs to be stored, similarly to its array equivalent.
-While this might look similar to an slice of tuples, the `:` is used to indicate that this maps keys to values.
-
-Each element within a `[N](K:V)` is stored as a [`KeyValue(K,V)`]
-
+- used as terminat
+  
 ## Naked slice [↵](#slice-types)
 
 A naked slice is a special version of a slice which is not stored behind any indirection such as a reference of pointer.
