@@ -1,6 +1,14 @@
 # Result types
 ```
-<result-type> := [ <path-type> | <builtin-type> ] '!' <type>
+<result-type>     := [ <result-err-type> ] '!' <type>
+<result-err-type> := <boolean>
+                   | <unsigned-type>
+                   | <signed-type>
+                   | <floating-point-type>
+                   | <character-type>
+                   | <unit-type>
+                   | <type-type>
+                   | <path-type>
 ```
 
 A result type is used to represent either a valid value, or an error.

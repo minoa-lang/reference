@@ -74,7 +74,7 @@ This allows them to be used wherever an expression can be used
 
 ## Parenthesized types [↵](#types)
 ```
-<parenthesized-type> := '(' <type> ')'
+<parenthesized-type> := '(' ( <type> | <constrained-type> ) ')'
 ```
 
 In some locations it may be possible that a type would be ambiguous, this can be solved using a parenthesized type.

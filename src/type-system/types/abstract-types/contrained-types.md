@@ -84,6 +84,10 @@ The constraint checks are limited to the following expressions:
 - [ranges] and [arrays], for `in` and `!in`
 - [paths] to any of the above
 
+Constrained types are limited to be within the following locations:
+- [parenthesized type]
+- [type alias] 
+
 > _Note_: This is similar to having [invariant contracts] on types, but more resticted
 
 > _Note_: Constrained type should not be confused with generic [value bounds] or [constraints], as those are compile-time constraints
@@ -100,11 +104,13 @@ The constraint checks are limited to the following expressions:
 [floating point]:                 ../builtin-types/floating-point-types.md
 [sequence types]:                 ../sequence-types.md
 [composite types]:                ../composite-types.md
+[parenthesized type]:             ../../types.md#parenthesized-types-
 [invariant contracts]:            ../../../contracts.md#invariant-contracts-
 [arrays]:                         ../../../expressions/constructing-expressions/array-expressions.md
 [paths]:                          ../../../expressions/path-expressions.md
 [value bounds]:                   ../../../generics.md#value-bounds-
 [constraints]:                    ../../../generics/constraints.md
+[type alias]:                     ../../../items/type-aliases.md
 [literals]:                       ../../../literals.md
 [ranges]:                         ../../../operators/core-operators.md#range-
 [identity and/or total ordering]: ../../../operators/special-operators.md#comparison-

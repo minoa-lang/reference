@@ -161,7 +161,7 @@ If a value is assigned, which cannot be represented by the number of bits provid
 
 ## Backing integer [↵](#struct-types)
 ```
-<bitfield-backing-int> := `as` <unsigned-type>
+<bitfield-backing-int> := ':' <unsigned-type>
 ```
 
 Each bitfield is an unsigned integer behind the scenes, and any value in the bitfield, are packed into this single integer.
@@ -172,7 +172,7 @@ When it itself is not located within a bitfield, it will take up the next multip
 > _Example_:
 > The following bitfield has a size of 20 bits:
 > ``` 
-> bitfield Foo {
+> bitfield Foo : u24 {
 >     a: u4,
 >     b: u16,
 > }

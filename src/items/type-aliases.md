@@ -1,7 +1,7 @@
 # Type aliases
 ```
 <type-alias-item> := { <attribute> }* [ <vis> ] ( <type-alias> | <distinct-type-alias> | <adapt-type-alias> )
-<type-alias>      := 'type' <name> [ <generic-params> ] '=' <type> [ <where-clause> ] ';'
+<type-alias>      := 'type' <name> [ <generic-params> ] '=' ( <type> | <constrained-type> ) [ <where-clause> ] ';'
 <type-alias-body> := ';'
                    | '{' { <assoc-item> }* '}'
 ```
