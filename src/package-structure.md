@@ -104,7 +104,7 @@ In addition, any sub-modules defined within a main module, will be located along
 Modules are organized with a tree as part of a given library, where the [main module] represents the root of the tree.
 
 
-> _Example_:
+> _Example_
 > The following folder structure:
 > ```
 > - src/
@@ -126,6 +126,33 @@ Modules are organized with a tree as part of a given library, where the [main mo
 > │ └─d
 > └─c
 >   └─e
+> ```
+
+#### Splitting code across multiple files
+
+Additionally, it is also possible to spread code for a single module into multiple files.
+This can be done by adding a '+', followed by any name after the corresponding module file, this is called a module section.
+The compiler will go over all these files, and combine them within a single module.
+
+Additionally, it is not required to have any file without a module section, as it is just interpreted as a module section with the same name as the module.
+However, it is not allowed to have the section be identical to the module name, i.e. `foo+foo.mn` is not allowed.
+
+> _Example_
+> The following folder structure
+> ```
+> -src/
+>     - lib.mn
+>     - lib+utils.mn
+>     - a.mn
+>     - b+part1.mn
+>     - b+part2.mn
+> ```
+> 
+> result in the following module structure
+> ```
+> library
+> ├─a
+> └─b
 > ```
 
 ## Main function [↵](#package-structure)
