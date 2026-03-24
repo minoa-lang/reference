@@ -6,7 +6,6 @@
                   | <result-type>
                   | <vector-type>
                   | <inferred-type>
-                  | <constrained-type>
                   | <key-value-type>
 ```
 

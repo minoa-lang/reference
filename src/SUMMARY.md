@@ -146,7 +146,6 @@
       - [Result types](./type-system/types/abstract-types/result-types.md)
       - [Inferred types](./type-system/types/abstract-types/inferred-types.md)
       - [Vectorized types](./type-system/types/abstract-types/vectorized-types.md)
-      - [Constrained types](./type-system/types/abstract-types/contrained-types.md)
       - [Key-value types](./type-system/types/abstract-types/key-value-types.md)
   - [Dynamically sized types](./type-system/dynamically-sized-types.md)
   - [Nominal vs record types](./type-system/nominal-vs-record-types.md)
