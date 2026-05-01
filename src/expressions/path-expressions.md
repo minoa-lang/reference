@@ -1,7 +1,7 @@
 # Path expressions
 ```
-<path-expr> := [ <path-start> ] <iden>
-             | 'self'
+<path-expr> := <path>
+             | 'self' { '.' <identifier> }*
 ```
 
 A path expression only represents the start of a path that refers to a local variable or an item.
@@ -20,3 +20,5 @@ All subsequent path elements will be parsed as field accesses or special index e
 > // `self` path
 > f := self;
 > ```
+
+> _Implementation_: Path expressions may be parsed as only the first identifier or as an optional path start with the first identifier name

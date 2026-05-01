@@ -59,8 +59,8 @@ These paramets can be accessed using the implicitly provided `$n` values, where 
 ## Closure captures [↵](#closure-expressions)
 
 ```
-<capture-list>           := '[' <closure-capture> { ',' <closure-capture> }* [ ',' ] ']'
-<closure-capture>        := <closure-common-capture> | <closure-var-capture>
+<capture-list>           := '[' <closure-first-capture> { ',' <closure-var-capture> }* [ ',' ] ']'
+<closure-first-capture>  := <closure-common-capture> | <closure-var-capture>
 <closure-common-capture> := '&' [ 'mut' ]
 <closure-var-cpature>    := [ '&' [ 'unique' | 'mut' ] ] <name> [ '=' <path> ]
 ```

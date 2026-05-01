@@ -1,7 +1,6 @@
 # Slice patterns
 ```
 <slice-pattern> := '[' [ <pattern> { ',' <pattern> }* [ ',' ] ] ']'
-                 | '[' '..' ']'
 ```
 
 Slice pattens match any [array] or [slice] values that also match the cirteria defined in the subpatterns.

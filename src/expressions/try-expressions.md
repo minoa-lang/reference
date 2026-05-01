@@ -1,6 +1,6 @@
 # Try expressions
 ```
-<try-expr> := 'try' [ '?' | '!' ] <expr> { <catch-expr> }*
+<try-expr> := 'try' [ '?' | '!' ] <expr>
 ```
 
 The `try` expressions has 3 different variants:

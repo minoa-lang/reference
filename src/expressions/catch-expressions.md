@@ -1,6 +1,6 @@
 # Catch expressions
 ```
-<catch-expr> := <expr> 'catch' '(' <name> [ ':' <type> ] ')'
+<catch-expr> := <expr> 'catch' '(' <name> [ ':' <type> ] ')' <expr>
 ```
 
 A `catch` expression for the handling of an error within the same expression as the sub-expressions which produces the error.

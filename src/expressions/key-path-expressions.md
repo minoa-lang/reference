@@ -1,11 +1,11 @@
 # Key-path expressions
 ```
-<key-path>          := '\' [ <key-path-root> ] { '.' <key-path-segment> [ <key-path-postfix> ] }*
+<key-path>          := '\' [ <key-path-root> ] { <key-path-segment> [ <key-path-postfix> ] }*
                      | '\' [ <key-path-root> ] '.' 'self'
-<key-path-root>     := <iden>
-                     | '(' <type> ')'
-<key-path-segment>  := <name> [ <fn-args> ]
-                     | <int-dec-literal>
+<key-path-root>     := <name>
+                     | '<' <type> '>'
+<key-path-segment>  := '.' <name> [ <fn-args> ]
+                     | '.' <int-dec-literal>
                      | '[' <expr> ']'
 <key-path-postfix>  := '?'
                      | '!'
@@ -46,7 +46,7 @@ In addition, each member may have one of the following postfixes:
 > }
 > 
 > // Key-path refers to the 2nd element of `arr`
-> \Bar.arr.[2];
+> \Bar.arr[2];
 > 
 > struct Baz(i32, i32);
 > 
@@ -124,7 +124,7 @@ When an expression is used within a key-path, the value of this expression will 
 > }
 > 
 > // Index is calculated only once, meaning "calculating index" only gets printed when evaluating this expression
-> path := \([4]i32).[index()];
+> path := \<[4]i32>[index()];
 > 
 > // neither will print anything to the terminal
 > a := arr[key_path: path];
@@ -134,7 +134,7 @@ When an expression is used within a key-path, the value of this expression will 
 > // this also means that in the following case, `index` is not references anytime later on
 > mut index := 0;
 > 
-> path := \([4]i32).[index];
+> path := \<[4]i32>[index];
 > 
 > 
 > c := arr[key_path: path];

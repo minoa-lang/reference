@@ -2,7 +2,7 @@
 ```
 <pattern>             := <pattern-no-top-alt>
                        | <alt-pattern>
-<pattern-no-top-alt>  := <pattern-no-range>
+<pattern-no-top-alt>  := <pattern-allow-ref>
                        | <range-pattern>
                        | <grouped-pattern>
                        | <type-check-pattern>
@@ -11,9 +11,13 @@
                        | <iden-pattern>
                        | <wildcard-pattern>
                        | <ref-pattern>
-                       | <struct-pattern>
-                       | <tuple-struct-pattern>
-                       | ? <grouped-pattern> with an inner pattern matching <pattern-allow-ref> ?
+                       | ?
+                           <struct-pattern>
+                           | <tuple-pattern>
+                           | <tuple-struct-pattern>
+                           | <grouped-pattern> 
+                           with an inner pattern matching <pattern-allow-ref>
+                         ?
                        | <slice-pattern>
                        | <path-pattern>
 ```
@@ -81,9 +85,6 @@ On the other hand, an _irrifutable pattern_ can be guaranteed to always match ag
 >     println("Will always match")
 > }
 > ```
-
-# Constant patterns [↵](#patterns)
-
 
 
 

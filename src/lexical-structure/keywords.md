@@ -126,6 +126,7 @@ A list of weak keywords can be found below (in alphabetic order):
 - `field`: within a [field property]
 - `field_convert`: as part of meta [hygiene info]
 - `full`: to declare a [meta attribute role]
+- `gen`: to declare generator [functions] and [async blocks]
 - `get`: to declare a [property getter]
 - `higher_than`: as part of a [precedence] declaration
 - `iden`: as part of a [meta pattern]
@@ -200,6 +201,7 @@ A list of weak keywords can be found below (in alphabetic order):
 
 [function contract]:               ../constracts.md#function-contracts-
 [closure capture list]:            ../expressions/closure-expressions.md
+[async block]:                     ../expressions/block-expressions.md
 [simple path start]:               ../identifiers-paths.md#simple-paths-
 [disambiguation alias]:            ../items/disambig-aliases.md
 [flag enum]:                       ../items/enums.md#flag-enum-

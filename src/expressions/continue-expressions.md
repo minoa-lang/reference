@@ -1,7 +1,6 @@
 # Continue expressions
 ```
-<continue-expr> := 'continue' [ <label> ]
-                 | `continue` [ <label> ] <expr>
+<continue-expr> := 'continue' [ <label> ] [ <expr> ]
 ```
 
 The behavior of a `continue` expression depends on the surrounding expression.

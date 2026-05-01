@@ -1,12 +1,15 @@
 # When expressions
 ```
-<when--expr> := 'when' <expr> <when-expr-body> [ 'else' <expr-with-block> ]
-<when-expr-body> := '{' <expr> '}'
-<when-expr-else> := <when-expr-body>
-                  | ? <expr-with-block>, except <block-expr> ?
+<when-expr> := 'when' <scrutinee> <block> [ 'else' <expr-with-block> ]
+<when-expr-else> := <block>
+                  | <when-expr>
+                  | <if-expr>
 ```
 
 A `when` expression is the expression version of a [`when` item], which can be located where expressions are allowed.
+
+For most purposes, each arm of a when statement counts as [block expression], meaning it may contain statements.
+If the `when` expression is located in a place where a statement is allowed, and no final expression is provided, it will be interpreted a [`when` statement].
 
 Since this version is allowed within any expression, it is not allowed to contain any statements, and may only contain a single expression.
 If the `when` is located where both statements and expressions are allowed, it will be interpreted as a [`when` statement].
@@ -25,5 +28,6 @@ b := when #target_os == .linux {
 ```
 
 
+[block expression]: ./block-expressions.md
 [`when` item]:      ../items/when-items.md
 [`when` statement]: ../statements/when-statements.md

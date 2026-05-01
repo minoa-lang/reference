@@ -58,8 +58,8 @@ An `if` expression may also be explicitly marked as `const`, meaning that the co
 
 ## Branch conditions [↵](#if-expressions)
 ```
-<condition>      := <condition-elem> { ('&&' | '||') <condition> }
-                  | '('<condition-elem> { ('&&' | '||') <condition> } ')'
+<condition>      := <condition-elem> { ('&&' | '||') <condition-elem> }*
+                  | '('<condition-elem> { ('&&' | '||') <condition-elem> }* ')'
 <condition-elem> := <expr>
                   | <let-binding>
                   | '(' <condition> ')'

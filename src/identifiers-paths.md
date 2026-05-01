@@ -17,6 +17,7 @@ Names, identifiers, and paths are used to refer to things like:
 <ext-iden-name> := <ext-name> | <iden-name>
 <iden>          := <iden-name> [ <generic-args> ]
 <ext-iden>      := <ext-iden-name> [ <generic-args> ]
+<name-iden>     := <name> [ <generic-args> ]
 ```
 
 An identifier is a sub-segment of a path, which consists out of a name and optional generic arguments.
@@ -29,7 +30,7 @@ When the identifier refers to a generic symbol, the generic arguments are passed
 ### Trait disambiguation [↵](#identifiers-)
 
 ```
-<path-disambig> := '(' <trait-path> '.' <ext-name> ')'
+<path-disambig> := '(' <trait-path-no-fn> '.' <ext-name> ')'
 ```
 
 Sometimes an identifier can not be resolved directly to a trait's item, this can be caused by the item either not being from an `extend` trait impl, or when at least 2 `extend` trait impl items exists that have the same name, but no explicit (non-trait) item exists on the previous item in the path.
@@ -57,11 +58,13 @@ x.y.z;
 <path-mod-rel-start>      := 'mod' '.'
 <path-meta-lib-start>     := '$' 'lib'
 
-<path-start>              := <simple-path-start> | <path-type-start> | <path-self-type-start> | <path-infer-start> | <path-lib-ref-start>
-<path-type-start>         := '(' <type> ')' '.'
+<trait-path&-start>       := <simple-path-start> | <path-self-type-start> | <path-infer-start> | <path-lib-ref-start>
 <path-self-type-start>    := 'Self' '.'
 <path-infer-start>        := '.'
 <path-lib-rel-start>      := ':.'
+
+<path-start>              := <trait-path-start> | <path-type-start>
+<path-type-start>         := '<' <type> '>' '.'
 ```
 
 Path start are special syntaxes that may be the first element of a path.
@@ -73,7 +76,7 @@ Both path types have some common path starts:
 - `$lib.`
 
 In addition, regular paths have additional path starts:
-- `(type).`
+- `<type>.`
 - `Self.`
 - `.`
 - `:.`
@@ -139,13 +142,13 @@ It can only be used inside of the any supportred meta function.
 
 When used in a [use item], it is equivalent to: `$package:$lib`.
 
-#### `(...).` [↵](#path-start-)
+#### `<...>.` [↵](#path-start-)
 
-The `(type).` path start indicates a path that is relative to a specific type.
+The `<type>.` path start indicates a path that is relative to a specific type.
 This syntax allows unnamed types to be used as the start of a path where they would normally not be able to be used.
 
 ```
-(^T).foo(); // Calls `^T`'s foo
+<^T>.foo(); // Calls `^T`'s foo
 ``` 
 
 > _Note_: This is essentially just a type in a [parenthesized expression], on which a field access will occur
@@ -228,11 +231,8 @@ mod a {
 ### Simple paths [↵](#paths-)
 
 ```
-<simple-path>             := [<simple-path-start>] <ext-simple-path-segment> [ <simple-path-no-start> ]
-                           | <simple-path-segment> [ <simple-path-no-start> ]
-<simple-path-tail>        := { '.' <ext-simple-path-segment> }*
-<simple-path-segment>     := <name>
-<ext-simple-path-segment> := <name> | <ext-name>
+<simple-path>             := <simple-path-start> <ext-name> { '.' <ext-name> }*
+                           | <name> { '.' <ext-name> }*
 ```
 
 Simple path are used for [visibility], [attributes], [metafunctions], and [use items].
@@ -241,7 +241,8 @@ When used within a [visibility] or [use item], a path may start with an addition
 
 ### Regular paths [↵](#paths-)
 ```
-<path> := [ <path-start> ] <iden> { '.' <ext-iden> }*
+<path> := [ <path-start> ] <ext-iden> { '.' <ext-iden> }*
+        | <iden> { '.' <ext-iden> }*
 ```
 
 Paths are used in expression and types to refer to a given item.
@@ -253,9 +254,12 @@ The only part of the path that will be uniquely identified as a path is the path
 ### Trait paths [↵](#paths-)
 
 ```
-<trait-path> := [ <path-start> ] <type-path-segment> { '.' <type-path-segment> }* [ '.' <trait-path-fn> ]
-              |  <trait-path-fn>
-<trait-path-fn> := <name> '(' <fn-type-params> ')' [ '->' <type-no-bounds> ]
+<trait-path>       := <trait-path-no-fn>
+                    | [ <trait-path-base> '.' ] <trait-path-fn>
+<trait-path-no-fn> := <trait-path-base> [ '.' <ext-iden> ]
+<trait-path-base>  := <trait-path-start> <ext-name> { '.' <ext-name> }*
+                    | <name> { '.' <ext-name> }*
+<trait-path-fn>    := <name> '(' <fn-type-params> ')' [ '->' <type-no-bounds> ]
 ```
 
 Trait paths are a special variation of paths that are used in any location a trait is explicitly expected.

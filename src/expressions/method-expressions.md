@@ -1,6 +1,6 @@
 # Method expressions
 ```
-<method-call-expr> := <expr> [ '?' ] '.' [ <ext-name> | <path-disambig> ] [ '?' ] <fn-args>
+<method-call-expr> := <expr> [ '?' ] '.' <ext-iden-name> [ '?' ] <fn-args>
 ```
 
 Methods calls are used to call any associated method of a type, either as direct methods or as trait method implementations.

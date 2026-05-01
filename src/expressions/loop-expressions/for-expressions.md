@@ -1,6 +1,6 @@
 # For expressions
 ```
-<for-expr> := [ <label> ':' ] 'for' <pattern> 'in' <expr> <block> [ 'else' <block> ]
+<for-expr> := [ <label> ':' ] 'for' <pattern> 'in' <scrutinee> <block> [ 'else' <block> ]
             | <res-for-expr>
 ```
 A `for` expression repeats the execution of its body until the provided iterable is exhausted.

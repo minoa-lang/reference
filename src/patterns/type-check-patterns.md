@@ -1,6 +1,6 @@
 # Type check patterns
 ```
-<type-check-patter> := 'is' <type> [ '@' <pattern> ]
+<type-check-patter> := 'is' <type> [ '@' <pattern-no-top-alt> ]
                      | 'is' <struct-pattern>
                      | 'is' <tuple-struct-pattern>
 ```

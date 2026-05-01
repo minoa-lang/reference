@@ -396,6 +396,7 @@ The following sequences are not allowed:
 - `.`
 - `,`
 - `:`
+- `:.`
 - `:=`
 - `=`
 - `=>`
@@ -404,6 +405,10 @@ The following sequences are not allowed:
 - `\`
 - `\.`
 - `$` (with the exception of the `core`'s [contract capture operator])
+
+Additionally, the following operators may not be used as pre- or postfix operators:
+- `<`
+- `>`
 
 Additionally, any user-defined operator sets must not collide with any operators defined within the `core` library.
 

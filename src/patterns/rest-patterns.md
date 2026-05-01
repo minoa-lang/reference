@@ -65,7 +65,7 @@ In addition to a regular rest pattern, the pattern also allows for a shorter way
 
 [identifier pattern]:    ./identifier-patterns.md
 [range pattern]:         ./range-patterns.md
-[array patterns]:        ./slice-patterns.md
+[slice pattern]:         ./slice-patterns.md
 [struct rest pattern]:   ./struct-patterns.md#struct-rest-pattern-
 [tuple patterns]:        ./tuple-patterns.md
 [tuple struct patterns]: ./tuple-struct-patterns.md
