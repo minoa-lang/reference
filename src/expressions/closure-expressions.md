@@ -45,6 +45,10 @@ When this closure is then used in subsequent locations, it will have already be 
 
 ### implicit parameters [↵](#closure-parameters-)
 
+```
+<closure-var-expr> := '$' <int-dec-lit-no-exp>
+```
+
 When a closure can infer the parameters it will receive, no explicit parameters need to be defined.
 These paramets can be accessed using the implicitly provided `$n` values, where `n` is the index of the parameter.
 

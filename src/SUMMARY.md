@@ -82,6 +82,7 @@
   - [Fallthrough expressions](./expressions/fallthrough-expressions.md)
   - [Return expressions](./expressions/return-expressions.md)
   - [Underscore expressions](./expressions/underscore-expressions.md)
+  - [Unsafe expressions](./expressions/unsafe-expr.md)
   - [Throw expressions](./expressions/throw-expressions.md)
   - [Try expressions](./expressions/try-expressions.md)
   - [Catch expressions](./expressions/catch-expressions.md)

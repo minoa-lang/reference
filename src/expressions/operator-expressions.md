@@ -1,8 +1,11 @@
 # Operator expressions
 ```
-<op-expr> := <prefix-op> <expr>
-           | <expr> <postfix-op>
-           | <expr> <infix-op> <expr>
+<op-expr> := <prefix-op-expr>
+           | <postfix-op-expr>
+           | <infix-op-expr>
+<prefix-op-expr> := <prefix-op> <expr>
+<postfix-op-expr> := <expr> <postfix-op>
+<infix-op-expr> := <expr> <infix-op> <expr>
 ```
 
 An operator expressions applies an operator on 1 or 2 sub-expressions.

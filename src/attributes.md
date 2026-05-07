@@ -27,7 +27,7 @@ Attributes can be applied in 2 ways:
                             | <simple-path> '(' <attribute-metas> ')'
                             | <version-number>
                             | <attribute-meta-free-form>
-<version-number>           := <int-decimal-literal> { '.' <int-decimal-literal> }[1..2] [ '(' <hex-value> ')' ]
+<version-number>           := <int-dec-lit-no-exp> { '.' <int-dec-lit-no-exp> }[1..2] [ '(' <hex-value> ')' ]
 <attribute-meta-free-form> := '[ <ext-name> '=' ] { ? token tree ? }
 ```
 

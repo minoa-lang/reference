@@ -5,7 +5,7 @@
 <key-path-root>     := <name>
                      | '<' <type> '>'
 <key-path-segment>  := '.' <name> [ <fn-args> ]
-                     | '.' <int-dec-literal>
+                     | '.' <int-dec-lit-no-exp>
                      | '[' <expr> ']'
 <key-path-postfix>  := '?'
                      | '!'

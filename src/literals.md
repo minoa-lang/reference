@@ -20,8 +20,8 @@ Meaning that for example `16_777_216 + 1` will result in a valid value at compil
 
 ```
 <digit_sep> := "_"
-<numeric-literals> := <int-decimal-literal>
-                    | <float-decimal-literal>
+<numeric-literals> := <int-dec-literal>
+                    | <float-dec-literal>
                     | <binary-literal>
                     | <octal-literal>
                     | <int-hexadecimal-literal>
@@ -58,9 +58,10 @@ _1000 // Error: digit seperator before first digit
 ### Decimal literal [↵](#numeric-literals-)
 
 ```
-<dec-digit>         := '0' - '9'
-<dec-value>         := <dec-digit> { [ <digit-sep> ] <dec-digit> }*
-<int-dec-literal>   := <dec-value> [ 'e'  [ '+' ] <dec-value> ]
+<dec-digit>          := '0' - '9'
+<dec-value>          := <dec-digit> { [ <digit-sep> ] <dec-digit> }*
+<int-dec-literal>    := <dec-value> [ 'e'  [ '+' ] <dec-value> ]
+<int-dec-lit-no-exp> := <dec-digit> { <dec-digit> }*
 ```
 
 A decimal literal can represent either an integer or floating point value.

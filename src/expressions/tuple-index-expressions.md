@@ -1,6 +1,6 @@
 # Tuple index expressions
 ```
-<tuple-index-expr> := <expr> [ '?' ] '.' <int-decimal-literal>
+<tuple-index-expr> := <expr> [ '?' ] '.' <int-dec-lit-no-exp>
 ```
 
 A tuple index expression allows access to a field within a tuple type, using its index.

@@ -22,7 +22,7 @@
                    | <call-expr>
                    | <method-expr>
                    | <op-method-expr>
-                   | <field-expr>
+                   | <field-access-expr>
                    | <closure-expr>
                    | <closure-var-expr>
                    | <full-range-expr>

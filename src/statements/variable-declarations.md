@@ -15,7 +15,7 @@ Each variable introduced by a variable will live until the end of the current sc
 
 ## Simple variable declaration [↵](#variable-declarations)
 ```
-<simple-var-decl> := [ 'mut' ] <name> { ',' <name> }* ':' [ <type> ] '=' <expr> ';'
+<simple-var-decl> := { <attribute> }* [ 'mut' ] <name> { ',' <name> }* ':' [ <type> ] '=' <expr> ';'
 <var-name>        := <name> | '_`
 ```
 
@@ -74,7 +74,7 @@ Additionally, in this case, the use of an `_` will discard any of the values.
 
 ## Pattern variable declaration [↵](#variable-declarations)
 ```
-<pattern-var-decl>      := 'let' [ 'mut' ] <pattern-top-no-alt> [ ':' <type> ] '=' <expr> [ 'else' <block-expr> ]
+<pattern-var-decl>      := { <attribute> }* 'let' [ 'mut' ] <pattern-top-no-alt> [ ':' <type> ] '=' <expr> [ 'else' <block> ]
 <pattern-var-decl-expr> := <expr> ';'
                          | ? <expr>, except any expression supporting an 'else' ? 'else' <expr> ';'
 ```
@@ -122,7 +122,7 @@ If a refutable pattern is provided, the declaration must contain an `else` with 
 
 ## Uninit variable declaration [↵](#variable-declarations)
 ```
-<uninit-var-decl> := 'let?' [ 'mut' ] <name> { ',' <name> }* ':' <type> ';'
+<uninit-var-decl> := { <attribute> }* 'let?' [ 'mut' ] <name> { ',' <name> }* ':' <type> ';'
 ```
 
 An uninit variable declaration allows for a set of variables to be declared without an initial value.
@@ -156,7 +156,7 @@ To be able to use any of these variables, the compiler must be able to ensure th
 
 ## Unwrapping variable declaration [↵](#variable-declarations)
 ```
-<unwrap-var-decl> := 'let!' <name> [ ':' <type> ] '=' <expr> ';'
+<unwrap-var-decl> := { <attribute> }* 'let!' [ 'mut' ] <name> [ ':' <type> ] '=' <expr> ';'
 ```
 
 An unwrap variable declaration is a special declaration which allows the unwrapping of a value without incurring the cost of it.
